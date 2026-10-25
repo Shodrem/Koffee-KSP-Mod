@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "editable_component_vertex_groups": 75,
+  "reexport_identical_bytes": true,
+  "geometry_colliders_materials_exact": true,
+  "tangent_max_float_delta": 0,
+  "normal_max_quantized_length_error": 0.004434748792482068,
+  "normal_packing": "A=X, G=Y, R=B=255, +Y tangent convention",
+  "specular_alpha_range": [
+    0.08627451211214066,
+    0.43137258291244507
+  ],
+  "review_not_exported": true
+}

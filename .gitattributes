@@ -1,0 +1,24 @@
+# Preserve every file byte for byte; do not normalize line endings or encoding.
+* -text
+
+# Keep useful diffs for project text without enabling content conversion.
+*.cs diff
+*.csproj diff
+*.sln diff
+*.cfg diff
+*.md diff
+*.txt diff
+*.py diff
+*.ps1 diff
+*.json diff
+*.xml diff
+
+# Models, textures and dependencies are binary assets.
+*.mu binary
+*.blend binary
+*.fbx binary
+*.png binary
+*.dds binary
+*.tga binary
+*.xcf binary
+*.dll binary

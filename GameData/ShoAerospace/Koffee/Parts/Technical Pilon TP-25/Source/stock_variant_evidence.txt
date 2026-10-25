@@ -1,0 +1,3962 @@
+TYPE ModulePartVariants
+FIELD System.Collections.Generic.List`1[PartVariant] variantList
+FIELD System.Boolean useMultipleDragCubes
+FIELD System.Boolean useProceduralDragCubes
+FIELD System.Collections.Generic.List`1[UnityEngine.Material] partMaterials
+FIELD System.Int32 variantIndex
+FIELD System.Boolean useVariantMass
+FIELD ModuleJettison moduleJettison
+METHOD get_SelectedVariant
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0006 ldarg.0
+  0007 ldfld Int32 variantIndex
+  000C callvirt PartVariant get_Item(Int32)
+  0011 dup
+  0012 pop
+  0013 ret
+METHOD onVariantChanged
+  0000 ldarg.0
+  0001 call Void RefreshVariant()
+  0006 ldsfld EditorLogic fetch
+  000B callvirt Void SetBackup()
+  0010 ret
+METHOD onVariantSymmetrycallyChanged
+  0000 ldarg.0
+  0001 call Void RefreshVariant()
+  0006 ret
+METHOD ApplyVariant
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 ldarg.2
+  0003 ldarg.3
+  0004 ldarg.s
+  0006 ldc.i4.m1
+  0007 call Void ApplyVariant(Part, UnityEngine.Transform, PartVariant, UnityEngine.Material[], Boolean, Int32)
+  000C ret
+METHOD ApplyVariant
+  0000 ldarg.2
+  0001 brtrue.s 0017
+  0003 ldc.i4.3
+  0004 switch
+  000D ldc.i4.1
+  000E brtrue.s 0016
+  0010 ldtoken Void ApplyVariant(Part, UnityEngine.Transform, PartVariant, UnityEngine.Material[], Boolean, Int32)
+  0015 pop
+  0016 ret
+  0017 ldsfld KSP.UI.Screens.EditorPartIcon iconRequestedVariantChange
+  001C ldnull
+  001D call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0022 dup
+  0023 pop
+  0024 brfalse 00C2
+  0029 ldc.i4.7
+  002A switch
+  0033 ldsfld KSP.UI.Screens.EditorPartIcon iconRequestedVariantChange
+  0038 ldfld Boolean inInventory
+  003D brfalse 00C2
+  0042 ldc.i4.1
+  0043 switch
+  004C ldarg.s
+  004E ldc.i4.m1
+  004F beq.s 00C2
+  0051 ldc.i4.4
+  0052 switch
+  005B ldsfld KSP.UI.Screens.EditorPartIcon iconRequestedVariantChange
+  0060 callvirt UnityEngine.GameObject get_gameObject()
+  0065 dup
+  0066 pop
+  0067 callvirt UIPartActionInventorySlot GetComponent[UIPartActionInventorySlot]()
+  006C dup
+  006D pop
+  006E stloc.0
+  006F ldloc.0
+  0070 ldfld UIPartActionInventory inventoryPartActionUI
+  0075 ldfld ModuleInventoryPart inventoryPartModule
+  007A ldfld DictionaryValueList`2[System.Int32,StoredPart] storedParts
+  007F ldloc.0
+  0080 ldfld Int32 slotIndex
+  0085 ldloca.s
+  0087 callvirt Boolean TryGetValue(Int32, StoredPart ByRef)
+  008C dup
+  008D pop
+  008E brfalse.s 00C2
+  0090 ldc.i4.3
+  0091 switch
+  009A ldarg.2
+  009B brfalse.s 00B7
+  009D ldc.i4.1
+  009E switch
+  00A7 ldloc.1
+  00A8 ldarg.2
+  00A9 callvirt System.String get_Name()
+  00AE dup
+  00AF pop
+  00B0 stfld System.String variantName
+  00B5 br.s 00C2
+  00B7 ldloc.1
+  00B8 ldstr
+  00BD stfld System.String variantName
+  00C2 ldarg.1
+  00C3 ldnull
+  00C4 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  00C9 dup
+  00CA pop
+  00CB brfalse.s 00E5
+  00CD ldc.i4.4
+  00CE switch
+  00D7 ldarg.2
+  00D8 ldarg.1
+  00D9 callvirt UnityEngine.Transform get_transform()
+  00DE dup
+  00DF pop
+  00E0 callvirt Void UpdateModel(UnityEngine.Transform)
+  00E5 ldarg.2
+  00E6 callvirt System.Collections.Generic.List`1[UnityEngine.Material] get_Materials()
+  00EB dup
+  00EC pop
+  00ED brfalse 01F0
+  00F2 ldc.i4.3
+  00F3 switch
+  00FC ldc.i4.0
+  00FD stloc.2
+  00FE br 01D1
+  0103 ldc.i4.0
+  0104 stloc.3
+  0105 br 01BA
+  010A ldarg.3
+  010B ldloc.3
+  010C ldelem.ref
+  010D callvirt System.String get_name()
+  0112 dup
+  0113 pop
+  0114 ldarg.2
+  0115 callvirt System.Collections.Generic.List`1[UnityEngine.Material] get_Materials()
+  011A dup
+  011B pop
+  011C ldloc.2
+  011D callvirt UnityEngine.Material get_Item(Int32)
+  0122 dup
+  0123 pop
+  0124 callvirt System.String get_name()
+  0129 dup
+  012A pop
+  012B callvirt Boolean StartsWith(System.String)
+  0130 dup
+  0131 pop
+  0132 brfalse 01B6
+  0137 ldc.i4.1
+  0138 switch
+  0141 ldarg.s
+  0143 brfalse.s 017F
+  0145 ldc.i4.7
+  0146 switch
+  014F ldarg.3
+  0150 ldloc.3
+  0151 ldelem.ref
+  0152 callvirt UnityEngine.Shader get_shader()
+  0157 dup
+  0158 pop
+  0159 stloc.s
+  015B ldarg.3
+  015C ldloc.3
+  015D ldelem.ref
+  015E ldarg.2
+  015F callvirt System.Collections.Generic.List`1[UnityEngine.Material] get_Materials()
+  0164 dup
+  0165 pop
+  0166 ldloc.2
+  0167 callvirt UnityEngine.Material get_Item(Int32)
+  016C dup
+  016D pop
+  016E callvirt Void CopyPropertiesFromMaterial(UnityEngine.Material)
+  0173 ldarg.3
+  0174 ldloc.3
+  0175 ldelem.ref
+  0176 ldloc.s
+  0178 callvirt Void set_shader(UnityEngine.Shader)
+  017D br.s 01B6
+  017F ldarg.3
+  0180 ldloc.3
+  0181 ldelem.ref
+  0182 ldarg.2
+  0183 callvirt System.Collections.Generic.List`1[UnityEngine.Material] get_Materials()
+  0188 dup
+  0189 pop
+  018A ldloc.2
+  018B callvirt UnityEngine.Material get_Item(Int32)
+  0190 dup
+  0191 pop
+  0192 callvirt UnityEngine.Shader get_shader()
+  0197 dup
+  0198 pop
+  0199 callvirt Void set_shader(UnityEngine.Shader)
+  019E ldarg.3
+  019F ldloc.3
+  01A0 ldelem.ref
+  01A1 ldarg.2
+  01A2 callvirt System.Collections.Generic.List`1[UnityEngine.Material] get_Materials()
+  01A7 dup
+  01A8 pop
+  01A9 ldloc.2
+  01AA callvirt UnityEngine.Material get_Item(Int32)
+  01AF dup
+  01B0 pop
+  01B1 callvirt Void CopyPropertiesFromMaterial(UnityEngine.Material)
+  01B6 ldloc.3
+  01B7 ldc.i4.1
+  01B8 add
+  01B9 stloc.3
+  01BA ldloc.3
+  01BB ldarg.3
+  01BC ldlen
+  01BD conv.i4
+  01BE blt 010A
+  01C3 ldc.i4.6
+  01C4 switch
+  01CD ldloc.2
+  01CE ldc.i4.1
+  01CF add
+  01D0 stloc.2
+  01D1 ldloc.2
+  01D2 ldarg.2
+  01D3 callvirt System.Collections.Generic.List`1[UnityEngine.Material] get_Materials()
+  01D8 dup
+  01D9 pop
+  01DA callvirt Int32 get_Count()
+  01DF dup
+  01E0 pop
+  01E1 blt 0103
+  01E6 ldc.i4.2
+  01E7 switch
+  01F0 ldsfld GameScenes LoadedScene
+  01F5 ldc.i4.6
+  01F6 beq.s 0216
+  01F8 ldc.i4.2
+  01F9 switch
+  0202 ldsfld GameScenes LoadedScene
+  0207 brtrue 036D
+  020C ldc.i4.4
+  020D switch
+  0216 ldarg.0
+  0217 ldnull
+  0218 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  021D dup
+  021E pop
+  021F brfalse 031E
+  0224 ldc.i4.7
+  0225 switch
+  022E ldarg.0
+  022F ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0234 brfalse 031E
+  0239 ldc.i4.1
+  023A switch
+  0243 ldarg.2
+  0244 callvirt System.Collections.Generic.List`1[AttachNode] get_AttachNodes()
+  0249 dup
+  024A pop
+  024B callvirt Int32 get_Count()
+  0250 dup
+  0251 pop
+  0252 ldc.i4.0
+  0253 ble 031E
+  0258 ldc.i4.3
+  0259 switch
+  0262 ldc.i4.0
+  0263 stloc.s
+  0265 br 0300
+  026A ldc.i4.0
+  026B stloc.s
+  026D br.s 02DA
+  026F ldarg.0
+  0270 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0275 ldloc.s
+  0277 callvirt AttachNode get_Item(Int32)
+  027C dup
+  027D pop
+  027E ldfld System.String id
+  0283 ldarg.2
+  0284 callvirt System.Collections.Generic.List`1[AttachNode] get_AttachNodes()
+  0289 dup
+  028A pop
+  028B ldloc.s
+  028D callvirt AttachNode get_Item(Int32)
+  0292 dup
+  0293 pop
+  0294 ldfld System.String id
+  0299 call Boolean op_Equality(System.String, System.String)
+  029E dup
+  029F pop
+  02A0 brfalse.s 02D4
+  02A2 ldc.i4.7
+  02A3 switch
+  02AC ldarg.0
+  02AD ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  02B2 ldloc.s
+  02B4 callvirt AttachNode get_Item(Int32)
+  02B9 dup
+  02BA pop
+  02BB ldarg.2
+  02BC callvirt System.Collections.Generic.List`1[AttachNode] get_AttachNodes()
+  02C1 dup
+  02C2 pop
+  02C3 ldloc.s
+  02C5 callvirt AttachNode get_Item(Int32)
+  02CA dup
+  02CB pop
+  02CC ldarg.0
+  02CD call Void UpdateNode(AttachNode, AttachNode, Part)
+  02D2 br.s 02FA
+  02D4 ldloc.s
+  02D6 ldc.i4.1
+  02D7 add
+  02D8 stloc.s
+  02DA ldloc.s
+  02DC ldarg.2
+  02DD callvirt System.Collections.Generic.List`1[AttachNode] get_AttachNodes()
+  02E2 dup
+  02E3 pop
+  02E4 callvirt Int32 get_Count()
+  02E9 dup
+  02EA pop
+  02EB blt 026F
+  02F0 ldc.i4.7
+  02F1 switch
+  02FA ldloc.s
+  02FC ldc.i4.1
+  02FD add
+  02FE stloc.s
+  0300 ldloc.s
+  0302 ldarg.0
+  0303 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0308 callvirt Int32 get_Count()
+  030D dup
+  030E pop
+  030F blt 026A
+  0314 ldc.i4.4
+  0315 switch
+  031E ldarg.0
+  031F ldnull
+  0320 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0325 dup
+  0326 pop
+  0327 brfalse.s 036D
+  0329 ldc.i4.6
+  032A switch
+  0333 ldarg.0
+  0334 ldfld AttachNode srfAttachNode
+  0339 brfalse.s 036D
+  033B ldc.i4.5
+  033C switch
+  0345 ldarg.2
+  0346 callvirt AttachNode get_SrfAttachNode()
+  034B dup
+  034C pop
+  034D brfalse.s 036D
+  034F ldc.i4.1
+  0350 switch
+  0359 ldarg.0
+  035A ldfld AttachNode srfAttachNode
+  035F ldarg.2
+  0360 callvirt AttachNode get_SrfAttachNode()
+  0365 dup
+  0366 pop
+  0367 ldarg.0
+  0368 call Void UpdateNode(AttachNode, AttachNode, Part)
+  036D ldarg.0
+  036E ldnull
+  036F call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0374 dup
+  0375 pop
+  0376 brfalse 063A
+  037B ldc.i4.2
+  037C switch
+  0385 ldc.i4.0
+  0386 stloc.s
+  0388 br 046D
+  038D ldarg.0
+  038E callvirt System.Collections.Generic.List`1[ModuleAnimateGeneric] get_ModuleAnimateGenerics()
+  0393 dup
+  0394 pop
+  0395 ldloc.s
+  0397 callvirt ModuleAnimateGeneric get_Item(Int32)
+  039C dup
+  039D pop
+  039E callvirt Boolean get_AnimationIsDisabledByVariant()
+  03A3 dup
+  03A4 pop
+  03A5 brtrue.s 03FB
+  03A7 ldc.i4.3
+  03A8 switch
+  03B1 ldarg.2
+  03B2 callvirt System.Collections.Generic.List`1[System.String] get_DisabledAnimations()
+  03B7 dup
+  03B8 pop
+  03B9 ldarg.0
+  03BA callvirt System.Collections.Generic.List`1[ModuleAnimateGeneric] get_ModuleAnimateGenerics()
+  03BF dup
+  03C0 pop
+  03C1 ldloc.s
+  03C3 callvirt ModuleAnimateGeneric get_Item(Int32)
+  03C8 dup
+  03C9 pop
+  03CA ldfld System.String animationName
+  03CF callvirt Boolean Contains(System.String)
+  03D4 dup
+  03D5 pop
+  03D6 brfalse.s 03FB
+  03D8 ldc.i4.2
+  03D9 switch
+  03E2 ldarg.0
+  03E3 callvirt System.Collections.Generic.List`1[ModuleAnimateGeneric] get_ModuleAnimateGenerics()
+  03E8 dup
+  03E9 pop
+  03EA ldloc.s
+  03EC callvirt ModuleAnimateGeneric get_Item(Int32)
+  03F1 dup
+  03F2 pop
+  03F3 ldc.i4.1
+  03F4 callvirt Void VariantToggleAnimationDisabled(Boolean)
+  03F9 br.s 0467
+  03FB ldarg.0
+  03FC callvirt System.Collections.Generic.List`1[ModuleAnimateGeneric] get_ModuleAnimateGenerics()
+  0401 dup
+  0402 pop
+  0403 ldloc.s
+  0405 callvirt ModuleAnimateGeneric get_Item(Int32)
+  040A dup
+  040B pop
+  040C callvirt Boolean get_AnimationIsDisabledByVariant()
+  0411 dup
+  0412 pop
+  0413 brfalse.s 0467
+  0415 ldc.i4.3
+  0416 switch
+  041F ldarg.2
+  0420 callvirt System.Collections.Generic.List`1[System.String] get_DisabledAnimations()
+  0425 dup
+  0426 pop
+  0427 ldarg.0
+  0428 callvirt System.Collections.Generic.List`1[ModuleAnimateGeneric] get_ModuleAnimateGenerics()
+  042D dup
+  042E pop
+  042F ldloc.s
+  0431 callvirt ModuleAnimateGeneric get_Item(Int32)
+  0436 dup
+  0437 pop
+  0438 ldfld System.String animationName
+  043D callvirt Boolean Contains(System.String)
+  0442 dup
+  0443 pop
+  0444 brtrue.s 0467
+  0446 ldc.i4.3
+  0447 switch
+  0450 ldarg.0
+  0451 callvirt System.Collections.Generic.List`1[ModuleAnimateGeneric] get_ModuleAnimateGenerics()
+  0456 dup
+  0457 pop
+  0458 ldloc.s
+  045A callvirt ModuleAnimateGeneric get_Item(Int32)
+  045F dup
+  0460 pop
+  0461 ldc.i4.0
+  0462 callvirt Void VariantToggleAnimationDisabled(Boolean)
+  0467 ldloc.s
+  0469 ldc.i4.1
+  046A add
+  046B stloc.s
+  046D ldloc.s
+  046F ldarg.0
+  0470 callvirt System.Collections.Generic.List`1[ModuleAnimateGeneric] get_ModuleAnimateGenerics()
+  0475 dup
+  0476 pop
+  0477 callvirt Int32 get_Count()
+  047C dup
+  047D pop
+  047E blt 038D
+  0483 ldc.i4.1
+  0484 switch
+  048D ldarg.0
+  048E ldfld ModulePartVariants variants
+  0493 ldnull
+  0494 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0499 dup
+  049A pop
+  049B brfalse 0603
+  04A0 ldc.i4.1
+  04A1 switch
+  04AA ldc.i4.0
+  04AB stloc.s
+  04AD br 05E0
+  04B2 ldc.i4.0
+  04B3 stloc.s
+  04B5 br 05A7
+  04BA ldarg.0
+  04BB ldfld ModulePartVariants variants
+  04C0 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  04C5 ldloc.s
+  04C7 callvirt PartVariant get_Item(Int32)
+  04CC dup
+  04CD pop
+  04CE callvirt System.Collections.Generic.List`1[System.String] get_DisabledEvents()
+  04D3 dup
+  04D4 pop
+  04D5 ldloc.s
+  04D7 callvirt System.String get_Item(Int32)
+  04DC dup
+  04DD pop
+  04DE ldc.i4.1
+  04DF newarr System.Char
+  04E4 dup
+  04E5 ldc.i4.0
+  04E6 ldc.i4.s
+  04E8 stelem.i2
+  04E9 callvirt System.String[] Split(Char[])
+  04EE dup
+  04EF pop
+  04F0 stloc.s
+  04F2 ldarg.0
+  04F3 callvirt PartModuleList get_Modules()
+  04F8 dup
+  04F9 pop
+  04FA ldloc.s
+  04FC ldc.i4.0
+  04FD ldelem.ref
+  04FE callvirt PartModule get_Item(System.String)
+  0503 dup
+  0504 pop
+  0505 stloc.s
+  0507 ldloc.s
+  0509 ldnull
+  050A call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  050F dup
+  0510 pop
+  0511 brfalse 05A1
+  0516 ldc.i4.1
+  0517 switch
+  0520 ldloc.s
+  0522 callvirt BaseEventList get_Events()
+  0527 dup
+  0528 pop
+  0529 ldloc.s
+  052B ldc.i4.1
+  052C ldelem.ref
+  052D callvirt BaseEvent get_Item(System.String)
+  0532 dup
+  0533 pop
+  0534 stloc.s
+  0536 ldloc.s
+  0538 brfalse.s 05A1
+  053A ldc.i4.1
+  053B switch
+  0544 ldarg.0
+  0545 ldfld ModulePartVariants variants
+  054A ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  054F ldloc.s
+  0551 callvirt PartVariant get_Item(Int32)
+  0556 dup
+  0557 pop
+  0558 ldarg.2
+  0559 bne.un.s 0584
+  055B ldc.i4.6
+  055C switch
+  0565 ldloc.s
+  0567 callvirt Boolean get_EventIsDisabledByVariant()
+  056C dup
+  056D pop
+  056E brtrue.s 05A1
+  0570 ldc.i4.1
+  0571 switch
+  057A ldloc.s
+  057C ldc.i4.1
+  057D callvirt Void VariantToggleEventDisabled(Boolean)
+  0582 br.s 05A1
+  0584 ldloc.s
+  0586 callvirt Boolean get_EventIsDisabledByVariant()
+  058B dup
+  058C pop
+  058D brfalse.s 05A1
+  058F ldc.i4.6
+  0590 switch
+  0599 ldloc.s
+  059B ldc.i4.0
+  059C callvirt Void VariantToggleEventDisabled(Boolean)
+  05A1 ldloc.s
+  05A3 ldc.i4.1
+  05A4 add
+  05A5 stloc.s
+  05A7 ldloc.s
+  05A9 ldarg.0
+  05AA ldfld ModulePartVariants variants
+  05AF ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  05B4 ldloc.s
+  05B6 callvirt PartVariant get_Item(Int32)
+  05BB dup
+  05BC pop
+  05BD callvirt System.Collections.Generic.List`1[System.String] get_DisabledEvents()
+  05C2 dup
+  05C3 pop
+  05C4 callvirt Int32 get_Count()
+  05C9 dup
+  05CA pop
+  05CB blt 04BA
+  05D0 ldc.i4.2
+  05D1 switch
+  05DA ldloc.s
+  05DC ldc.i4.1
+  05DD add
+  05DE stloc.s
+  05E0 ldloc.s
+  05E2 ldarg.0
+  05E3 ldfld ModulePartVariants variants
+  05E8 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  05ED callvirt Int32 get_Count()
+  05F2 dup
+  05F3 pop
+  05F4 blt 04B2
+  05F9 ldc.i4.2
+  05FA switch
+  0603 ldarg.2
+  0604 callvirt AttachRules get_AttachRules()
+  0609 dup
+  060A pop
+  060B brfalse.s 0627
+  060D ldc.i4.6
+  060E switch
+  0617 ldarg.0
+  0618 ldarg.2
+  0619 callvirt AttachRules get_AttachRules()
+  061E dup
+  061F pop
+  0620 stfld AttachRules attachRules
+  0625 br.s 063A
+  0627 ldarg.0
+  0628 ldarg.0
+  0629 ldfld PartVariant baseVariant
+  062E callvirt AttachRules get_AttachRules()
+  0633 dup
+  0634 pop
+  0635 stfld AttachRules attachRules
+  063A ldsfld EventData`2[Part,PartVariant] onVariantApplied
+  063F ldarg.0
+  0640 ldarg.2
+  0641 callvirt Void Fire(Part, PartVariant)
+  0646 ldsfld Boolean LoadedSceneIsEditor
+  064B brfalse.s 0663
+  064D ldc.i4.1
+  064E switch
+  0657 ldsfld EventData`2[Part,PartVariant] onEditorVariantApplied
+  065C ldarg.0
+  065D ldarg.2
+  065E callvirt Void Fire(Part, PartVariant)
+  0663 ret
+METHOD UpdateNode
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 call Void UpdatePartPosition(AttachNode, AttachNode)
+  0007 ldarg.0
+  0008 ldarg.1
+  0009 ldfld UnityEngine.Vector3 originalPosition
+  000E stfld UnityEngine.Vector3 originalPosition
+  0013 ldarg.0
+  0014 ldarg.1
+  0015 ldfld UnityEngine.Vector3 position
+  001A stfld UnityEngine.Vector3 position
+  001F ldarg.0
+  0020 ldarg.1
+  0021 ldfld UnityEngine.Vector3 orientation
+  0026 stfld UnityEngine.Vector3 orientation
+  002B ldarg.0
+  002C ldarg.1
+  002D ldfld UnityEngine.Vector3 originalOrientation
+  0032 stfld UnityEngine.Vector3 originalOrientation
+  0037 ldarg.0
+  0038 ldarg.1
+  0039 ldfld Int32 size
+  003E stfld Int32 size
+  0043 ldarg.0
+  0044 ldfld UnityEngine.GameObject icon
+  0049 ldnull
+  004A call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  004F dup
+  0050 pop
+  0051 brfalse 00E5
+  0056 ldc.i4.1
+  0057 switch
+  0060 ldc.i4.1
+  0061 brtrue.s 0069
+  0063 ldtoken Void UpdateNode(AttachNode, AttachNode, Part)
+  0068 pop
+  0069 ldarg.0
+  006A ldfld UnityEngine.GameObject icon
+  006F callvirt UnityEngine.Transform get_transform()
+  0074 dup
+  0075 pop
+  0076 call UnityEngine.Vector3 get_one()
+  007B dup
+  007C pop
+  007D ldarg.0
+  007E ldfld Single radius
+  0083 call UnityEngine.Vector3 op_Multiply(UnityEngine.Vector3, Single)
+  0088 dup
+  0089 pop
+  008A ldarg.0
+  008B ldfld Int32 size
+  0090 brfalse.s 00A5
+  0092 ldc.i4.6
+  0093 switch
+  009C ldarg.0
+  009D ldfld Int32 size
+  00A2 conv.r4
+  00A3 br.s 00B2
+  00A5 ldarg.0
+  00A6 ldfld Int32 size
+  00AB conv.r4
+  00AC ldc.r4 0.5
+  00B1 add
+  00B2 call UnityEngine.Vector3 op_Multiply(UnityEngine.Vector3, Single)
+  00B7 dup
+  00B8 pop
+  00B9 callvirt Void set_localScale(UnityEngine.Vector3)
+  00BE ldarg.0
+  00BF ldfld UnityEngine.GameObject icon
+  00C4 callvirt UnityEngine.Transform get_transform()
+  00C9 dup
+  00CA pop
+  00CB ldarg.2
+  00CC callvirt UnityEngine.Transform get_transform()
+  00D1 dup
+  00D2 pop
+  00D3 ldarg.0
+  00D4 ldfld UnityEngine.Vector3 orientation
+  00D9 callvirt UnityEngine.Vector3 TransformDirection(UnityEngine.Vector3)
+  00DE dup
+  00DF pop
+  00E0 callvirt Void set_up(UnityEngine.Vector3)
+  00E5 ret
+METHOD UpdatePartPosition
+  0000 ldarg.0
+  0001 ldfld Part attachedPart
+  0006 ldnull
+  0007 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  000C dup
+  000D pop
+  000E brfalse.s 0024
+  0010 ldc.i4.1
+  0011 switch
+  001A ldc.i4.1
+  001B brtrue.s 0023
+  001D ldtoken Void UpdatePartPosition(AttachNode, AttachNode)
+  0022 pop
+  0023 ret
+  0024 ldarg.0
+  0025 ldfld Part owner
+  002A ldnull
+  002B call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0030 dup
+  0031 pop
+  0032 brtrue.s 0041
+  0034 ldc.i4.7
+  0035 switch
+  003E ldnull
+  003F br.s 004C
+  0041 ldarg.0
+  0042 ldfld Part owner
+  0047 ldfld Part potentialParent
+  004C stloc.0
+  004D ldarg.0
+  004E ldfld Part attachedPart
+  0053 call Part get_RootPart()
+  0058 dup
+  0059 pop
+  005A call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  005F dup
+  0060 pop
+  0061 brfalse 00FA
+  0066 ldc.i4.3
+  0067 switch
+  0070 ldarg.0
+  0071 ldfld Part attachedPart
+  0076 ldloc.0
+  0077 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  007C dup
+  007D pop
+  007E brfalse.s 00FA
+  0080 ldc.i4.6
+  0081 switch
+  008A ldarg.0
+  008B ldfld Part owner
+  0090 ldnull
+  0091 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0096 dup
+  0097 pop
+  0098 brfalse 0163
+  009D ldc.i4.7
+  009E switch
+  00A7 ldarg.0
+  00A8 ldfld Part owner
+  00AD callvirt UnityEngine.Transform get_transform()
+  00B2 dup
+  00B3 pop
+  00B4 ldarg.1
+  00B5 ldfld UnityEngine.Vector3 originalPosition
+  00BA callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  00BF dup
+  00C0 pop
+  00C1 ldarg.0
+  00C2 ldfld Part owner
+  00C7 callvirt UnityEngine.Transform get_transform()
+  00CC dup
+  00CD pop
+  00CE ldarg.0
+  00CF ldfld UnityEngine.Vector3 originalPosition
+  00D4 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  00D9 dup
+  00DA pop
+  00DB stloc.1
+  00DC ldloc.1
+  00DD call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  00E2 dup
+  00E3 pop
+  00E4 stloc.2
+  00E5 ldarg.0
+  00E6 ldfld Part attachedPart
+  00EB callvirt UnityEngine.Transform get_transform()
+  00F0 dup
+  00F1 pop
+  00F2 ldloc.2
+  00F3 ldc.i4.0
+  00F4 callvirt Void Translate(UnityEngine.Vector3, UnityEngine.Space)
+  00F9 ret
+  00FA ldloc.0
+  00FB ldnull
+  00FC call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0101 dup
+  0102 pop
+  0103 brfalse.s 0163
+  0105 ldc.i4.5
+  0106 switch
+  010F ldarg.0
+  0110 ldfld Part owner
+  0115 callvirt UnityEngine.Transform get_transform()
+  011A dup
+  011B pop
+  011C ldarg.1
+  011D ldfld UnityEngine.Vector3 originalPosition
+  0122 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  0127 dup
+  0128 pop
+  0129 stloc.3
+  012A ldarg.0
+  012B ldfld Part owner
+  0130 callvirt UnityEngine.Transform get_transform()
+  0135 dup
+  0136 pop
+  0137 ldarg.0
+  0138 ldfld UnityEngine.Vector3 originalPosition
+  013D callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  0142 dup
+  0143 pop
+  0144 ldloc.3
+  0145 call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  014A dup
+  014B pop
+  014C stloc.s
+  014E ldarg.0
+  014F ldfld Part owner
+  0154 callvirt UnityEngine.Transform get_transform()
+  0159 dup
+  015A pop
+  015B ldloc.s
+  015D ldc.i4.0
+  015E callvirt Void Translate(UnityEngine.Vector3, UnityEngine.Space)
+  0163 ret
+METHOD GetVariantIndex
+  0000 ldc.i4.0
+  0001 stloc.0
+  0002 ldc.i4.0
+  0003 stloc.1
+  0004 br.s 004F
+  0006 ldarg.0
+  0007 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  000C ldloc.1
+  000D callvirt PartVariant get_Item(Int32)
+  0012 dup
+  0013 pop
+  0014 callvirt System.String get_Name()
+  0019 dup
+  001A pop
+  001B ldarg.1
+  001C call Boolean op_Equality(System.String, System.String)
+  0021 dup
+  0022 pop
+  0023 brfalse.s 004B
+  0025 ldc.i4.5
+  0026 switch
+  002F ldc.i4.1
+  0030 brtrue.s 0038
+  0032 ldtoken Int32 GetVariantIndex(System.String)
+  0037 pop
+  0038 ldarg.0
+  0039 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  003E ldloc.1
+  003F callvirt PartVariant get_Item(Int32)
+  0044 dup
+  0045 pop
+  0046 pop
+  0047 ldloc.1
+  0048 stloc.0
+  0049 br.s 0069
+  004B ldloc.1
+  004C ldc.i4.1
+  004D add
+  004E stloc.1
+  004F ldloc.1
+  0050 ldarg.0
+  0051 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0056 callvirt Int32 get_Count()
+  005B dup
+  005C pop
+  005D blt.s 0006
+  005F ldc.i4.6
+  0060 switch
+  0069 ldloc.0
+  006A ret
+METHOD GetCurrentVariantIndex
+  0000 ldarg.0
+  0001 ldfld Int32 variantIndex
+  0006 ret
+METHOD GetVariantThemeIndex
+  0000 ldc.i4.0
+  0001 stloc.0
+  0002 ldc.i4.0
+  0003 stloc.1
+  0004 br.s 004D
+  0006 ldarg.0
+  0007 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  000C ldloc.1
+  000D callvirt PartVariant get_Item(Int32)
+  0012 dup
+  0013 pop
+  0014 ldfld System.String themeName
+  0019 ldarg.1
+  001A call Boolean op_Equality(System.String, System.String)
+  001F dup
+  0020 pop
+  0021 brfalse.s 0049
+  0023 ldc.i4.3
+  0024 switch
+  002D ldc.i4.1
+  002E brtrue.s 0036
+  0030 ldtoken Int32 GetVariantThemeIndex(System.String)
+  0035 pop
+  0036 ldarg.0
+  0037 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  003C ldloc.1
+  003D callvirt PartVariant get_Item(Int32)
+  0042 dup
+  0043 pop
+  0044 pop
+  0045 ldloc.1
+  0046 stloc.0
+  0047 br.s 0067
+  0049 ldloc.1
+  004A ldc.i4.1
+  004B add
+  004C stloc.1
+  004D ldloc.1
+  004E ldarg.0
+  004F ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0054 callvirt Int32 get_Count()
+  0059 dup
+  005A pop
+  005B blt.s 0006
+  005D ldc.i4.4
+  005E switch
+  0067 ldloc.0
+  0068 ret
+METHOD SetVariant
+  0000 ldarg.0
+  0001 call System.Collections.Generic.List`1[System.String] GetVariantNames()
+  0006 dup
+  0007 pop
+  0008 ldarg.1
+  0009 callvirt Boolean Contains(System.String)
+  000E dup
+  000F pop
+  0010 brtrue.s 004D
+  0012 ldc.i4.5
+  0013 switch
+  001C ldc.i4.1
+  001D brtrue.s 0025
+  001F ldtoken Boolean SetVariant(System.String)
+  0024 pop
+  0025 ldstr Variant name does not exist to be set. Part:{0} , VariantName: {1}
+  002A ldc.i4.2
+  002B newarr System.Object
+  0030 dup
+  0031 ldc.i4.0
+  0032 ldarg.0
+  0033 call Part get_part()
+  0038 dup
+  0039 pop
+  003A callvirt System.String get_name()
+  003F dup
+  0040 pop
+  0041 stelem.ref
+  0042 dup
+  0043 ldc.i4.1
+  0044 ldarg.1
+  0045 stelem.ref
+  0046 call Void LogErrorFormat(System.String, System.Object[])
+  004B ldc.i4.0
+  004C ret
+  004D ldarg.0
+  004E ldarg.0
+  004F ldarg.1
+  0050 call Int32 GetVariantIndex(System.String)
+  0055 dup
+  0056 pop
+  0057 stfld Int32 variantIndex
+  005C ldarg.0
+  005D call Void RefreshVariant()
+  0062 ldc.i4.1
+  0063 ret
+METHOD GetVariantNames
+  0000 newobj Void .ctor()
+  0005 stloc.0
+  0006 ldc.i4.0
+  0007 stloc.1
+  0008 br.s 0029
+  000A ldloc.0
+  000B ldarg.0
+  000C ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0011 ldloc.1
+  0012 callvirt PartVariant get_Item(Int32)
+  0017 dup
+  0018 pop
+  0019 callvirt System.String get_Name()
+  001E dup
+  001F pop
+  0020 callvirt Void Add(System.String)
+  0025 ldloc.1
+  0026 ldc.i4.1
+  0027 add
+  0028 stloc.1
+  0029 ldloc.1
+  002A ldarg.0
+  002B ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0030 callvirt Int32 get_Count()
+  0035 dup
+  0036 pop
+  0037 blt.s 000A
+  0039 ldc.i4.7
+  003A switch
+  0043 ldc.i4.1
+  0044 brtrue.s 004C
+  0046 ldtoken System.Collections.Generic.List`1[System.String] GetVariantNames()
+  004B pop
+  004C ldloc.0
+  004D ret
+METHOD HasVariant
+  0000 ldarg.0
+  0001 call System.Collections.Generic.List`1[System.String] GetVariantNames()
+  0006 dup
+  0007 pop
+  0008 ldarg.1
+  0009 callvirt Boolean Contains(System.String)
+  000E dup
+  000F pop
+  0010 ret
+METHOD SetVariantTheme
+  0000 ldarg.0
+  0001 call System.Collections.Generic.List`1[System.String] GetVariantThemeNames()
+  0006 dup
+  0007 pop
+  0008 ldarg.1
+  0009 callvirt Boolean Contains(System.String)
+  000E dup
+  000F pop
+  0010 brtrue.s 004D
+  0012 ldc.i4.2
+  0013 switch
+  001C ldc.i4.1
+  001D brtrue.s 0025
+  001F ldtoken Boolean SetVariantTheme(System.String)
+  0024 pop
+  0025 ldstr Variant theme does not exist to be set. Part:{0} , VariantName: {1}
+  002A ldc.i4.2
+  002B newarr System.Object
+  0030 dup
+  0031 ldc.i4.0
+  0032 ldarg.0
+  0033 call Part get_part()
+  0038 dup
+  0039 pop
+  003A callvirt System.String get_name()
+  003F dup
+  0040 pop
+  0041 stelem.ref
+  0042 dup
+  0043 ldc.i4.1
+  0044 ldarg.1
+  0045 stelem.ref
+  0046 call Void LogErrorFormat(System.String, System.Object[])
+  004B ldc.i4.0
+  004C ret
+  004D ldarg.0
+  004E ldarg.0
+  004F ldarg.1
+  0050 call Int32 GetVariantThemeIndex(System.String)
+  0055 dup
+  0056 pop
+  0057 stfld Int32 variantIndex
+  005C ldarg.0
+  005D call Void RefreshVariant()
+  0062 ldsfld EditorLogic fetch
+  0067 callvirt Void SetBackup()
+  006C ldc.i4.1
+  006D ret
+METHOD GetVariantThemeNames
+  0000 newobj Void .ctor()
+  0005 stloc.0
+  0006 ldc.i4.0
+  0007 stloc.1
+  0008 br.s 0027
+  000A ldloc.0
+  000B ldarg.0
+  000C ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0011 ldloc.1
+  0012 callvirt PartVariant get_Item(Int32)
+  0017 dup
+  0018 pop
+  0019 ldfld System.String themeName
+  001E callvirt Void Add(System.String)
+  0023 ldloc.1
+  0024 ldc.i4.1
+  0025 add
+  0026 stloc.1
+  0027 ldloc.1
+  0028 ldarg.0
+  0029 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  002E callvirt Int32 get_Count()
+  0033 dup
+  0034 pop
+  0035 blt.s 000A
+  0037 ldc.i4.1
+  0038 switch
+  0041 ldc.i4.1
+  0042 brtrue.s 004A
+  0044 ldtoken System.Collections.Generic.List`1[System.String] GetVariantThemeNames()
+  0049 pop
+  004A ldloc.0
+  004B ret
+METHOD HasVariantTheme
+  0000 ldarg.0
+  0001 call System.Collections.Generic.List`1[System.String] GetVariantThemeNames()
+  0006 dup
+  0007 pop
+  0008 ldarg.1
+  0009 callvirt Boolean Contains(System.String)
+  000E dup
+  000F pop
+  0010 ret
+METHOD RefreshVariant
+  0000 ldarg.0
+  0001 ldfld Int32 variantIndex
+  0006 ldc.i4.0
+  0007 blt.s 003B
+  0009 ldc.i4.7
+  000A switch
+  0013 ldc.i4.1
+  0014 brtrue.s 001C
+  0016 ldtoken Void RefreshVariant()
+  001B pop
+  001C ldarg.0
+  001D ldfld Int32 variantIndex
+  0022 ldarg.0
+  0023 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0028 callvirt Int32 get_Count()
+  002D dup
+  002E pop
+  002F ble.s 003C
+  0031 ldc.i4.1
+  0032 switch
+  003B ret
+  003C ldarg.0
+  003D call Part get_part()
+  0042 dup
+  0043 pop
+  0044 ldarg.0
+  0045 call Part get_part()
+  004A dup
+  004B pop
+  004C callvirt UnityEngine.Transform get_transform()
+  0051 dup
+  0052 pop
+  0053 ldstr model
+  0058 callvirt UnityEngine.Transform Find(System.String)
+  005D dup
+  005E pop
+  005F ldarg.0
+  0060 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0065 ldarg.0
+  0066 ldfld Int32 variantIndex
+  006B callvirt PartVariant get_Item(Int32)
+  0070 dup
+  0071 pop
+  0072 ldarg.0
+  0073 ldfld System.Collections.Generic.List`1[UnityEngine.Material] partMaterials
+  0078 callvirt UnityEngine.Material[] ToArray()
+  007D dup
+  007E pop
+  007F ldc.i4.0
+  0080 ldarg.0
+  0081 ldfld Int32 variantIndex
+  0086 call Void ApplyVariant(Part, UnityEngine.Transform, PartVariant, UnityEngine.Material[], Boolean, Int32)
+  008B ldarg.0
+  008C ldfld ModuleJettison moduleJettison
+  0091 ldnull
+  0092 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0097 dup
+  0098 pop
+  0099 brtrue.s 00D6
+  009B ldc.i4.3
+  009C switch
+  00A5 ldarg.0
+  00A6 ldfld ModuleJettison moduleJettison
+  00AB ldnull
+  00AC call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  00B1 dup
+  00B2 pop
+  00B3 brfalse.s 00DE
+  00B5 ldc.i4.4
+  00B6 switch
+  00BF ldarg.0
+  00C0 ldfld ModuleJettison moduleJettison
+  00C5 ldfld Boolean isJettisoned
+  00CA brfalse.s 00DE
+  00CC ldc.i4.2
+  00CD switch
+  00D6 ldarg.0
+  00D7 ldc.i4.1
+  00D8 call Void SetCubes(Boolean)
+  00DD ret
+  00DE ldarg.0
+  00DF ldfld ModuleJettison moduleJettison
+  00E4 ldnull
+  00E5 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  00EA dup
+  00EB pop
+  00EC brfalse.s 0116
+  00EE ldc.i4.4
+  00EF switch
+  00F8 ldarg.0
+  00F9 ldfld ModuleJettison moduleJettison
+  00FE ldfld Boolean isJettisoned
+  0103 brtrue.s 0116
+  0105 ldc.i4.1
+  0106 switch
+  010F ldarg.0
+  0110 ldc.i4.0
+  0111 call Void SetCubes(Boolean)
+  0116 ret
+METHOD SetCubes
+  0000 ldarg.0
+  0001 ldfld Boolean useMultipleDragCubes
+  0006 brfalse 0107
+  000B ldc.i4.5
+  000C switch
+  0015 ldc.i4.1
+  0016 brtrue.s 001E
+  0018 ldtoken Void SetCubes(Boolean)
+  001D pop
+  001E ldarg.0
+  001F call Part get_part()
+  0024 dup
+  0025 pop
+  0026 callvirt DragCubeList get_DragCubes()
+  002B dup
+  002C pop
+  002D callvirt Boolean get_Procedural()
+  0032 dup
+  0033 pop
+  0034 brtrue 0107
+  0039 ldc.i4.7
+  003A switch
+  0043 ldarg.0
+  0044 ldflda Int32 variantIndex
+  0049 call System.String ToString()
+  004E dup
+  004F pop
+  0050 stloc.0
+  0051 ldarg.0
+  0052 call Part get_part()
+  0057 dup
+  0058 pop
+  0059 callvirt DragCubeList get_DragCubes()
+  005E dup
+  005F pop
+  0060 ldloc.0
+  0061 callvirt DragCube GetCube(System.String)
+  0066 dup
+  0067 pop
+  0068 brfalse.s 00B6
+  006A ldc.i4.5
+  006B switch
+  0074 ldarg.0
+  0075 call Part get_part()
+  007A dup
+  007B pop
+  007C callvirt DragCubeList get_DragCubes()
+  0081 dup
+  0082 pop
+  0083 ldc.r4 0
+  0088 callvirt Void ResetCubeWeights(Single)
+  008D ldarg.1
+  008E brfalse.s 0107
+  0090 ldc.i4.4
+  0091 switch
+  009A ldarg.0
+  009B call Part get_part()
+  00A0 dup
+  00A1 pop
+  00A2 callvirt DragCubeList get_DragCubes()
+  00A7 dup
+  00A8 pop
+  00A9 ldloc.0
+  00AA ldc.r4 1
+  00AF callvirt Void SetCubeWeight(System.String, Single)
+  00B4 br.s 0107
+  00B6 ldsfld Boolean LoadedSceneIsFlight
+  00BB brfalse.s 0107
+  00BD ldc.i4.4
+  00BE switch
+  00C7 ldc.i4.5
+  00C8 newarr System.String
+  00CD dup
+  00CE ldc.i4.0
+  00CF ldstr [ModulePartVariants] Drag cube named
+  00D4 stelem.ref
+  00D5 dup
+  00D6 ldc.i4.1
+  00D7 ldloc.0
+  00D8 stelem.ref
+  00D9 dup
+  00DA ldc.i4.2
+  00DB ldstr  not found for multiple drag cubes for part
+  00E0 stelem.ref
+  00E1 dup
+  00E2 ldc.i4.3
+  00E3 ldarg.0
+  00E4 call Part get_part()
+  00E9 dup
+  00EA pop
+  00EB callvirt System.String get_name()
+  00F0 dup
+  00F1 pop
+  00F2 stelem.ref
+  00F3 dup
+  00F4 ldc.i4.4
+  00F5 ldstr  !
+  00FA stelem.ref
+  00FB call System.String Concat(System.String[])
+  0100 dup
+  0101 pop
+  0102 call Void LogError(System.Object)
+  0107 ldarg.0
+  0108 call Part get_part()
+  010D dup
+  010E pop
+  010F callvirt DragCubeList get_DragCubes()
+  0114 dup
+  0115 pop
+  0116 ldc.i4.1
+  0117 ldc.i4.1
+  0118 ldc.i4.1
+  0119 callvirt Void ForceUpdate(Boolean, Boolean, Boolean)
+  011E ret
+METHOD OnAwake
+  0000 ldarg.0
+  0001 call Void OnAwake()
+  0006 ldarg.0
+  0007 call Part get_part()
+  000C dup
+  000D pop
+  000E callvirt System.Collections.Generic.List`1[UnityEngine.Renderer] FindModelComponents[Renderer]()
+  0013 dup
+  0014 pop
+  0015 stloc.0
+  0016 ldarg.0
+  0017 call Part get_part()
+  001C dup
+  001D pop
+  001E ldstr #autoLOC_8007005
+  0023 call System.String Format(System.String)
+  0028 dup
+  0029 pop
+  002A ldstr #autoLOC_8007005
+  002F call System.String Format(System.String)
+  0034 dup
+  0035 pop
+  0036 ldarg.0
+  0037 call Part get_part()
+  003C dup
+  003D pop
+  003E ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0043 ldarg.0
+  0044 call Part get_part()
+  0049 dup
+  004A pop
+  004B ldfld AttachNode srfAttachNode
+  0050 newobj Void .ctor(System.String, System.String, System.Collections.Generic.List`1[AttachNode], AttachNode)
+  0055 stfld PartVariant baseVariant
+  005A ldarg.0
+  005B newobj Void .ctor()
+  0060 stfld System.Collections.Generic.List`1[UnityEngine.Material] partMaterials
+  0065 ldc.i4.0
+  0066 stloc.1
+  0067 br 014C
+  006C ldloc.0
+  006D ldloc.1
+  006E callvirt UnityEngine.Renderer get_Item(Int32)
+  0073 dup
+  0074 pop
+  0075 callvirt UnityEngine.Material get_material()
+  007A dup
+  007B pop
+  007C ldnull
+  007D call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0082 dup
+  0083 pop
+  0084 brfalse 0123
+  0089 ldc.i4.6
+  008A switch
+  0093 ldc.i4.1
+  0094 brtrue.s 009C
+  0096 ldtoken Void OnAwake()
+  009B pop
+  009C ldloc.0
+  009D ldloc.1
+  009E callvirt UnityEngine.Renderer get_Item(Int32)
+  00A3 dup
+  00A4 pop
+  00A5 callvirt UnityEngine.Material get_material()
+  00AA dup
+  00AB pop
+  00AC callvirt System.String get_name()
+  00B1 dup
+  00B2 pop
+  00B3 callvirt System.String ToLower()
+  00B8 dup
+  00B9 pop
+  00BA ldstr flag
+  00BF callvirt Boolean Contains(System.String)
+  00C4 dup
+  00C5 pop
+  00C6 brtrue.s 0123
+  00C8 ldc.i4.1
+  00C9 switch
+  00D2 ldloc.0
+  00D3 ldloc.1
+  00D4 callvirt UnityEngine.Renderer get_Item(Int32)
+  00D9 dup
+  00DA pop
+  00DB callvirt UnityEngine.Material get_material()
+  00E0 dup
+  00E1 pop
+  00E2 callvirt System.String get_name()
+  00E7 dup
+  00E8 pop
+  00E9 callvirt System.String ToLower()
+  00EE dup
+  00EF pop
+  00F0 ldstr auto truss
+  00F5 callvirt Boolean Contains(System.String)
+  00FA dup
+  00FB pop
+  00FC brtrue.s 0123
+  00FE ldc.i4.6
+  00FF switch
+  0108 ldarg.0
+  0109 ldfld System.Collections.Generic.List`1[UnityEngine.Material] partMaterials
+  010E ldloc.0
+  010F ldloc.1
+  0110 callvirt UnityEngine.Renderer get_Item(Int32)
+  0115 dup
+  0116 pop
+  0117 callvirt UnityEngine.Material get_material()
+  011C dup
+  011D pop
+  011E callvirt Void Add(UnityEngine.Material)
+  0123 ldarg.0
+  0124 call Part get_part()
+  0129 dup
+  012A pop
+  012B ldfld PartVariant baseVariant
+  0130 ldloc.0
+  0131 ldloc.1
+  0132 callvirt UnityEngine.Renderer get_Item(Int32)
+  0137 dup
+  0138 pop
+  0139 callvirt UnityEngine.Material get_material()
+  013E dup
+  013F pop
+  0140 callvirt Boolean TryCopyMaterial(UnityEngine.Material)
+  0145 dup
+  0146 pop
+  0147 pop
+  0148 ldloc.1
+  0149 ldc.i4.1
+  014A add
+  014B stloc.1
+  014C ldloc.1
+  014D ldloc.0
+  014E callvirt Int32 get_Count()
+  0153 dup
+  0154 pop
+  0155 blt 006C
+  015A ldc.i4.2
+  015B switch
+  0164 ret
+METHOD OnStart
+  0000 ldarg.1
+  0001 ldc.i4.1
+  0002 bne.un 008D
+  0007 ldc.i4.1
+  0008 switch
+  0011 ldc.i4.1
+  0012 brtrue.s 001A
+  0014 ldtoken Void OnStart(StartState)
+  0019 pop
+  001A ldarg.0
+  001B call BaseFieldList get_Fields()
+  0020 dup
+  0021 pop
+  0022 ldstr variantIndex
+  0027 callvirt BaseField get_Item(System.String)
+  002C dup
+  002D pop
+  002E callvirt UI_Control get_uiControlEditor()
+  0033 dup
+  0034 pop
+  0035 isinst UI_VariantSelector
+  003A dup
+  003B ldarg.0
+  003C ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0041 stfld System.Collections.Generic.List`1[PartVariant] variants
+  0046 dup
+  0047 dup
+  0048 ldfld Callback`2[BaseField,System.Object] onFieldChanged
+  004D ldarg.0
+  004E ldftn Void onVariantChanged(BaseField, System.Object)
+  0054 newobj Void .ctor(System.Object, IntPtr)
+  0059 call System.Delegate Combine(System.Delegate, System.Delegate)
+  005E dup
+  005F pop
+  0060 castclass Callback`2[BaseField,System.Object]
+  0065 stfld Callback`2[BaseField,System.Object] onFieldChanged
+  006A dup
+  006B ldfld Callback`2[BaseField,System.Object] onSymmetryFieldChanged
+  0070 ldarg.0
+  0071 ldftn Void onVariantSymmetrycallyChanged(BaseField, System.Object)
+  0077 newobj Void .ctor(System.Object, IntPtr)
+  007C call System.Delegate Combine(System.Delegate, System.Delegate)
+  0081 dup
+  0082 pop
+  0083 castclass Callback`2[BaseField,System.Object]
+  0088 stfld Callback`2[BaseField,System.Object] onSymmetryFieldChanged
+  008D ldarg.0
+  008E call Part get_part()
+  0093 dup
+  0094 pop
+  0095 ldnull
+  0096 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  009B dup
+  009C pop
+  009D brfalse.s 00C6
+  009F ldc.i4.5
+  00A0 switch
+  00A9 ldarg.0
+  00AA ldarg.0
+  00AB call Part get_part()
+  00B0 dup
+  00B1 pop
+  00B2 callvirt PartModuleList get_Modules()
+  00B7 dup
+  00B8 pop
+  00B9 ldc.i4.0
+  00BA callvirt ModuleJettison GetModule[ModuleJettison](Int32)
+  00BF dup
+  00C0 pop
+  00C1 stfld ModuleJettison moduleJettison
+  00C6 ldarg.0
+  00C7 call Void RefreshVariant()
+  00CC ret
+METHOD OnLoad
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 call Void OnLoad(ConfigNode)
+  0007 ldarg.0
+  0008 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  000D brtrue 0320
+  0012 ldc.i4.6
+  0013 switch
+  001C ldc.i4.1
+  001D brtrue.s 0025
+  001F ldtoken Void OnLoad(ConfigNode)
+  0024 pop
+  0025 ldarg.0
+  0026 newobj Void .ctor()
+  002B stfld System.Collections.Generic.List`1[PartVariant] variantList
+  0030 ldarg.1
+  0031 ldstr primaryColor
+  0036 callvirt System.String GetValue(System.String)
+  003B dup
+  003C pop
+  003D stloc.1
+  003E ldloc.1
+  003F call Boolean IsNullOrEmpty(System.String)
+  0044 dup
+  0045 pop
+  0046 brtrue.s 0065
+  0048 ldc.i4.7
+  0049 switch
+  0052 ldarg.0
+  0053 call Part get_part()
+  0058 dup
+  0059 pop
+  005A ldfld PartVariant baseVariant
+  005F ldloc.1
+  0060 callvirt Void set_PrimaryColor(System.String)
+  0065 ldarg.1
+  0066 ldstr secondaryColor
+  006B callvirt System.String GetValue(System.String)
+  0070 dup
+  0071 pop
+  0072 stloc.2
+  0073 ldloc.2
+  0074 call Boolean IsNullOrEmpty(System.String)
+  0079 dup
+  007A pop
+  007B brtrue.s 009A
+  007D ldc.i4.1
+  007E switch
+  0087 ldarg.0
+  0088 call Part get_part()
+  008D dup
+  008E pop
+  008F ldfld PartVariant baseVariant
+  0094 ldloc.2
+  0095 callvirt Void set_SecondaryColor(System.String)
+  009A ldarg.1
+  009B ldstr sizeGroup
+  00A0 callvirt System.String GetValue(System.String)
+  00A5 dup
+  00A6 pop
+  00A7 stloc.3
+  00A8 ldloc.3
+  00A9 call Boolean IsNullOrEmpty(System.String)
+  00AE dup
+  00AF pop
+  00B0 brtrue.s 00CF
+  00B2 ldc.i4.1
+  00B3 switch
+  00BC ldarg.0
+  00BD call Part get_part()
+  00C2 dup
+  00C3 pop
+  00C4 ldfld PartVariant baseVariant
+  00C9 ldloc.3
+  00CA callvirt Void set_SizeGroup(System.String)
+  00CF ldarg.1
+  00D0 ldstr baseName
+  00D5 callvirt System.String GetValue(System.String)
+  00DA dup
+  00DB pop
+  00DC stloc.s
+  00DE ldloc.s
+  00E0 call Boolean IsNullOrEmpty(System.String)
+  00E5 dup
+  00E6 pop
+  00E7 brtrue.s 011B
+  00E9 ldc.i4.2
+  00EA switch
+  00F3 ldarg.0
+  00F4 call Part get_part()
+  00F9 dup
+  00FA pop
+  00FB ldfld PartVariant baseVariant
+  0100 ldloc.s
+  0102 callvirt Void set_Name(System.String)
+  0107 ldarg.0
+  0108 call Part get_part()
+  010D dup
+  010E pop
+  010F ldfld PartVariant baseVariant
+  0114 ldloc.s
+  0116 callvirt Void set_DisplayName(System.String)
+  011B ldarg.1
+  011C ldstr baseDisplayName
+  0121 callvirt System.String GetValue(System.String)
+  0126 dup
+  0127 pop
+  0128 stloc.s
+  012A ldloc.s
+  012C call Boolean IsNullOrEmpty(System.String)
+  0131 dup
+  0132 pop
+  0133 brtrue.s 0153
+  0135 ldc.i4.7
+  0136 switch
+  013F ldarg.0
+  0140 call Part get_part()
+  0145 dup
+  0146 pop
+  0147 ldfld PartVariant baseVariant
+  014C ldloc.s
+  014E callvirt Void set_DisplayName(System.String)
+  0153 ldarg.1
+  0154 ldstr baseMass
+  0159 callvirt System.String GetValue(System.String)
+  015E dup
+  015F pop
+  0160 stloc.s
+  0162 ldloc.s
+  0164 call Boolean IsNullOrEmpty(System.String)
+  0169 dup
+  016A pop
+  016B brtrue.s 019E
+  016D ldc.i4.5
+  016E switch
+  0177 ldc.r4 0
+  017C stloc.s
+  017E ldloc.s
+  0180 ldloca.s
+  0182 call Boolean TryParse(System.String, Single ByRef)
+  0187 dup
+  0188 pop
+  0189 pop
+  018A ldarg.0
+  018B call Part get_part()
+  0190 dup
+  0191 pop
+  0192 ldfld PartVariant baseVariant
+  0197 ldloc.s
+  0199 callvirt Void set_Mass(Single)
+  019E ldarg.1
+  019F ldstr baseCost
+  01A4 callvirt System.String GetValue(System.String)
+  01A9 dup
+  01AA pop
+  01AB stloc.s
+  01AD ldloc.s
+  01AF call Boolean IsNullOrEmpty(System.String)
+  01B4 dup
+  01B5 pop
+  01B6 brtrue.s 01E9
+  01B8 ldc.i4.5
+  01B9 switch
+  01C2 ldc.r4 0
+  01C7 stloc.s
+  01C9 ldloc.s
+  01CB ldloca.s
+  01CD call Boolean TryParse(System.String, Single ByRef)
+  01D2 dup
+  01D3 pop
+  01D4 pop
+  01D5 ldarg.0
+  01D6 call Part get_part()
+  01DB dup
+  01DC pop
+  01DD ldfld PartVariant baseVariant
+  01E2 ldloc.s
+  01E4 callvirt Void set_Cost(Single)
+  01E9 ldarg.1
+  01EA ldstr baseThemeName
+  01EF callvirt System.String GetValue(System.String)
+  01F4 dup
+  01F5 pop
+  01F6 stloc.s
+  01F8 ldloc.s
+  01FA call Boolean IsNullOrEmpty(System.String)
+  01FF dup
+  0200 pop
+  0201 brtrue.s 0221
+  0203 ldc.i4.4
+  0204 switch
+  020D ldarg.0
+  020E call Part get_part()
+  0213 dup
+  0214 pop
+  0215 ldfld PartVariant baseVariant
+  021A ldloc.s
+  021C stfld System.String themeName
+  0221 ldarg.0
+  0222 call Part get_part()
+  0227 dup
+  0228 pop
+  0229 ldfld PartVariant baseVariant
+  022E ldarg.0
+  022F call Part get_part()
+  0234 dup
+  0235 pop
+  0236 ldfld AttachRules attachRules
+  023B callvirt Void set_AttachRules(AttachRules)
+  0240 ldarg.1
+  0241 ldstr VARIANT
+  0246 callvirt ConfigNode[] GetNodes(System.String)
+  024B dup
+  024C pop
+  024D stloc.s
+  024F ldc.i4.0
+  0250 stloc.s
+  0252 ldloc.s
+  0254 ldlen
+  0255 conv.i4
+  0256 stloc.s
+  0258 br.s 0291
+  025A ldloc.s
+  025C ldloc.s
+  025E ldelem.ref
+  025F stloc.s
+  0261 ldarg.0
+  0262 call Part get_part()
+  0267 dup
+  0268 pop
+  0269 ldfld PartVariant baseVariant
+  026E newobj Void .ctor(PartVariant)
+  0273 stloc.s
+  0275 ldloc.s
+  0277 ldloc.s
+  0279 callvirt Void Load(ConfigNode)
+  027E ldarg.0
+  027F ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0284 ldloc.s
+  0286 callvirt Void Add(PartVariant)
+  028B ldloc.s
+  028D ldc.i4.1
+  028E add
+  028F stloc.s
+  0291 ldloc.s
+  0293 ldloc.s
+  0295 blt.s 025A
+  0297 ldc.i4.2
+  0298 switch
+  02A1 ldsfld System.String Empty
+  02A6 stloc.s
+  02A8 ldarg.1
+  02A9 ldstr baseVariant
+  02AE ldloca.s
+  02B0 callvirt Boolean TryGetValue(System.String, System.String ByRef)
+  02B5 dup
+  02B6 pop
+  02B7 brfalse.s 0307
+  02B9 ldc.i4.7
+  02BA switch
+  02C3 ldarg.0
+  02C4 ldloc.s
+  02C6 call Int32 GetVariantIndex(System.String)
+  02CB dup
+  02CC pop
+  02CD stloc.s
+  02CF ldarg.0
+  02D0 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  02D5 ldloc.s
+  02D7 callvirt PartVariant get_Item(Int32)
+  02DC dup
+  02DD pop
+  02DE stloc.s
+  02E0 ldloc.s
+  02E2 brfalse.s 0320
+  02E4 ldc.i4.2
+  02E5 switch
+  02EE ldarg.0
+  02EF call Part get_part()
+  02F4 dup
+  02F5 pop
+  02F6 ldloc.s
+  02F8 stfld PartVariant baseVariant
+  02FD ldarg.0
+  02FE ldloc.s
+  0300 stfld Int32 variantIndex
+  0305 br.s 0320
+  0307 ldarg.0
+  0308 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  030D ldc.i4.0
+  030E ldarg.0
+  030F call Part get_part()
+  0314 dup
+  0315 pop
+  0316 ldfld PartVariant baseVariant
+  031B callvirt Void Insert(Int32, PartVariant)
+  0320 ldsfld System.String Empty
+  0325 stloc.0
+  0326 ldarg.1
+  0327 ldstr selectedVariant
+  032C ldloca.s
+  032E callvirt Boolean TryGetValue(System.String, System.String ByRef)
+  0333 dup
+  0334 pop
+  0335 pop
+  0336 ldloc.0
+  0337 call Boolean IsNullOrEmpty(System.String)
+  033C dup
+  033D pop
+  033E brtrue.s 0359
+  0340 ldc.i4.5
+  0341 switch
+  034A ldarg.0
+  034B ldarg.0
+  034C ldloc.0
+  034D call Int32 GetVariantIndex(System.String)
+  0352 dup
+  0353 pop
+  0354 stfld Int32 variantIndex
+  0359 ret
+METHOD OnSave
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 call Void OnSave(ConfigNode)
+  0007 ldarg.0
+  0008 ldfld Int32 variantIndex
+  000D ldc.i4.0
+  000E ble.s 005C
+  0010 ldc.i4.6
+  0011 switch
+  001A ldc.i4.1
+  001B brtrue.s 0023
+  001D ldtoken Void OnSave(ConfigNode)
+  0022 pop
+  0023 ldarg.0
+  0024 ldfld Int32 variantIndex
+  0029 ldarg.0
+  002A ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  002F callvirt Int32 get_Count()
+  0034 dup
+  0035 pop
+  0036 bge.s 005C
+  0038 ldc.i4.7
+  0039 switch
+  0042 ldarg.1
+  0043 ldstr selectedVariant
+  0048 ldarg.0
+  0049 call PartVariant get_SelectedVariant()
+  004E dup
+  004F pop
+  0050 callvirt System.String get_Name()
+  0055 dup
+  0056 pop
+  0057 callvirt Void AddValue(System.String, System.String)
+  005C ret
+METHOD GetModuleDisplayName
+  0000 ldstr #autoLOC_8007000
+  0005 call System.String Format(System.String)
+  000A dup
+  000B pop
+  000C ret
+METHOD GetModuleTitle
+  0000 call System.String GetTitle()
+  0005 dup
+  0006 pop
+  0007 ret
+METHOD GetInfo
+  0000 ldsfld System.String Empty
+  0005 stloc.0
+  0006 ldc.i4.0
+  0007 stloc.1
+  0008 br.s 0038
+  000A ldloc.0
+  000B ldarg.0
+  000C ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0011 ldloc.1
+  0012 callvirt PartVariant get_Item(Int32)
+  0017 dup
+  0018 pop
+  0019 callvirt System.String get_DisplayName()
+  001E dup
+  001F pop
+  0020 call System.String Format(System.String)
+  0025 dup
+  0026 pop
+  0027 ldstr
+  002C call System.String Concat(System.String, System.String, System.String)
+  0031 dup
+  0032 pop
+  0033 stloc.0
+  0034 ldloc.1
+  0035 ldc.i4.1
+  0036 add
+  0037 stloc.1
+  0038 ldloc.1
+  0039 ldarg.0
+  003A ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  003F callvirt Int32 get_Count()
+  0044 dup
+  0045 pop
+  0046 blt.s 000A
+  0048 ldc.i4.3
+  0049 switch
+  0052 ldc.i4.1
+  0053 brtrue.s 005B
+  0055 ldtoken System.String GetInfo()
+  005A pop
+  005B ldloc.0
+  005C ret
+METHOD GetDrawModulePanelCallback
+  0000 ldnull
+  0001 ret
+METHOD GetPrimaryField
+  0000 ldstr #autoLOC_8007002
+  0005 ldc.i4.1
+  0006 newarr System.Object
+  000B dup
+  000C ldc.i4.0
+  000D ldarg.0
+  000E ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0013 callvirt Int32 get_Count()
+  0018 dup
+  0019 pop
+  001A box System.Int32
+  001F stelem.ref
+  0020 call System.String Format(System.String, System.Object[])
+  0025 dup
+  0026 pop
+  0027 ret
+METHOD GetTitle
+  0000 ldstr PartVariants
+  0005 ret
+METHOD GetDragCubeNames
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[PartVariant] variantList
+  0006 callvirt Int32 get_Count()
+  000B dup
+  000C pop
+  000D stloc.0
+  000E ldloc.0
+  000F newarr System.String
+  0014 stloc.1
+  0015 ldc.i4.0
+  0016 stloc.2
+  0017 br.s 0029
+  0019 ldloc.1
+  001A ldloc.2
+  001B ldloca.s
+  001D call System.String ToString()
+  0022 dup
+  0023 pop
+  0024 stelem.ref
+  0025 ldloc.2
+  0026 ldc.i4.1
+  0027 add
+  0028 stloc.2
+  0029 ldloc.2
+  002A ldloc.0
+  002B blt.s 0019
+  002D ldc.i4.6
+  002E switch
+  0037 ldc.i4.1
+  0038 brtrue.s 0040
+  003A ldtoken System.String[] GetDragCubeNames()
+  003F pop
+  0040 ldloc.1
+  0041 ret
+METHOD AssumeDragCubePosition
+  0000 ldc.i4.0
+  0001 stloc.0
+  0002 ldarg.1
+  0003 ldloca.s
+  0005 call Boolean TryParse(System.String, Int32 ByRef)
+  000A dup
+  000B pop
+  000C brfalse.s 002E
+  000E ldc.i4.6
+  000F switch
+  0018 ldc.i4.1
+  0019 brtrue.s 0021
+  001B ldtoken Void AssumeDragCubePosition(System.String)
+  0020 pop
+  0021 ldarg.0
+  0022 ldloc.0
+  0023 stfld Int32 variantIndex
+  0028 ldarg.0
+  0029 call Void RefreshVariant()
+  002E ret
+METHOD UsesProceduralDragCubes
+  0000 ldarg.0
+  0001 ldfld Boolean useProceduralDragCubes
+  0006 ret
+METHOD GetModuleMass
+  0000 ldsfld Boolean LoadedSceneIsEditor
+  0005 brfalse.s 0021
+  0007 ldc.i4.2
+  0008 switch
+  0011 ldc.i4.1
+  0012 brtrue.s 001A
+  0014 ldtoken Single GetModuleMass(Single, ModifierStagingSituation)
+  0019 pop
+  001A ldarg.0
+  001B ldc.i4.1
+  001C stfld Boolean useVariantMass
+  0021 ldarg.0
+  0022 ldfld Boolean useVariantMass
+  0027 brfalse.s 0043
+  0029 ldc.i4.4
+  002A switch
+  0033 ldarg.0
+  0034 call PartVariant get_SelectedVariant()
+  0039 dup
+  003A pop
+  003B callvirt Single get_Mass()
+  0040 dup
+  0041 pop
+  0042 ret
+  0043 ldc.r4 0
+  0048 ret
+METHOD GetModuleMassChangeWhen
+  0000 ldc.i4.0
+  0001 ret
+METHOD GetModuleCost
+  0000 ldarg.0
+  0001 call PartVariant get_SelectedVariant()
+  0006 dup
+  0007 pop
+  0008 callvirt Single get_Cost()
+  000D dup
+  000E pop
+  000F ret
+METHOD GetModuleCostChangeWhen
+  0000 ldc.i4.0
+  0001 ret
+METHOD get_IsMultipleCubesActive
+  0000 ldarg.0
+  0001 ldfld Boolean useMultipleDragCubes
+  0006 ret
+TYPE PartVariant
+FIELD System.String name
+FIELD System.String displayName
+FIELD System.String primaryColor
+FIELD System.String secondaryColor
+FIELD System.String sizeGroup
+FIELD System.Collections.Generic.List`1[UnityEngine.Material] materials
+FIELD System.Collections.Generic.List`1[AttachNode] attachNodes
+FIELD AttachNode srfAttachNode
+FIELD UnityEngine.Transform modelTransform
+FIELD System.Collections.Generic.List`1[PartGameObjectInfo] infoGameObjects
+FIELD System.Collections.Generic.List`1[PartRawInfo] extraInfo
+FIELD System.Single mass
+FIELD System.Single cost
+FIELD System.Collections.Generic.List`1[System.String] disabledAnimations
+FIELD System.Collections.Generic.List`1[System.String] disabledEvents
+FIELD AttachRules attachRules
+FIELD System.String themeName
+METHOD get_Name
+  0000 ldarg.0
+  0001 ldfld System.String name
+  0006 ret
+METHOD set_Name
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld System.String name
+  0007 ret
+METHOD get_DisplayName
+  0000 ldarg.0
+  0001 ldfld System.String displayName
+  0006 ret
+METHOD set_DisplayName
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld System.String displayName
+  0007 ret
+METHOD get_PrimaryColor
+  0000 ldarg.0
+  0001 ldfld System.String primaryColor
+  0006 ret
+METHOD set_PrimaryColor
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld System.String primaryColor
+  0007 ret
+METHOD get_SecondaryColor
+  0000 ldarg.0
+  0001 ldfld System.String secondaryColor
+  0006 ret
+METHOD set_SecondaryColor
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld System.String secondaryColor
+  0007 ret
+METHOD get_SizeGroup
+  0000 ldarg.0
+  0001 ldfld System.String sizeGroup
+  0006 ret
+METHOD set_SizeGroup
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld System.String sizeGroup
+  0007 ret
+METHOD get_Materials
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[UnityEngine.Material] materials
+  0006 ret
+METHOD get_InfoGameObjects
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[PartGameObjectInfo] infoGameObjects
+  0006 ret
+METHOD get_AttachNodes
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0006 ret
+METHOD get_SrfAttachNode
+  0000 ldarg.0
+  0001 ldfld AttachNode srfAttachNode
+  0006 ret
+METHOD get_Mass
+  0000 ldarg.0
+  0001 ldfld Single mass
+  0006 ret
+METHOD set_Mass
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld Single mass
+  0007 ret
+METHOD get_Cost
+  0000 ldarg.0
+  0001 ldfld Single cost
+  0006 ret
+METHOD set_Cost
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld Single cost
+  0007 ret
+METHOD get_DisabledAnimations
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[System.String] disabledAnimations
+  0006 ret
+METHOD set_DisabledAnimations
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld System.Collections.Generic.List`1[System.String] disabledAnimations
+  0007 ret
+METHOD get_DisabledEvents
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[System.String] disabledEvents
+  0006 ret
+METHOD set_DisabledEvents
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld System.Collections.Generic.List`1[System.String] disabledEvents
+  0007 ret
+METHOD get_AttachRules
+  0000 ldarg.0
+  0001 ldfld AttachRules attachRules
+  0006 ret
+METHOD set_AttachRules
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld AttachRules attachRules
+  0007 ret
+METHOD Load
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 ldstr name
+  0007 callvirt System.String GetValue(System.String)
+  000C dup
+  000D pop
+  000E stfld System.String name
+  0013 ldarg.0
+  0014 ldarg.1
+  0015 ldstr displayName
+  001A callvirt System.String GetValue(System.String)
+  001F dup
+  0020 pop
+  0021 stfld System.String displayName
+  0026 ldarg.0
+  0027 ldfld System.String displayName
+  002C call Boolean IsNullOrEmpty(System.String)
+  0031 dup
+  0032 pop
+  0033 brfalse.s 0054
+  0035 ldc.i4.1
+  0036 switch
+  003F ldc.i4.1
+  0040 brtrue.s 0048
+  0042 ldtoken Void Load(ConfigNode)
+  0047 pop
+  0048 ldarg.0
+  0049 ldarg.0
+  004A ldfld System.String name
+  004F stfld System.String displayName
+  0054 ldarg.0
+  0055 ldarg.1
+  0056 ldstr primaryColor
+  005B callvirt System.String GetValue(System.String)
+  0060 dup
+  0061 pop
+  0062 stfld System.String primaryColor
+  0067 ldarg.0
+  0068 ldarg.1
+  0069 ldstr secondaryColor
+  006E callvirt System.String GetValue(System.String)
+  0073 dup
+  0074 pop
+  0075 stfld System.String secondaryColor
+  007A ldarg.0
+  007B ldarg.1
+  007C ldstr sizeGroup
+  0081 callvirt System.String GetValue(System.String)
+  0086 dup
+  0087 pop
+  0088 stfld System.String sizeGroup
+  008D ldc.r4 0
+  0092 stloc.0
+  0093 ldarg.1
+  0094 ldstr mass
+  0099 callvirt System.String GetValue(System.String)
+  009E dup
+  009F pop
+  00A0 ldloca.s
+  00A2 call Boolean TryParse(System.String, Single ByRef)
+  00A7 dup
+  00A8 pop
+  00A9 pop
+  00AA ldarg.0
+  00AB ldloc.0
+  00AC stfld Single mass
+  00B1 ldc.r4 0
+  00B6 stloc.1
+  00B7 ldarg.1
+  00B8 ldstr cost
+  00BD callvirt System.String GetValue(System.String)
+  00C2 dup
+  00C3 pop
+  00C4 ldloca.s
+  00C6 call Boolean TryParse(System.String, Single ByRef)
+  00CB dup
+  00CC pop
+  00CD pop
+  00CE ldarg.0
+  00CF ldloc.1
+  00D0 stfld Single cost
+  00D5 ldarg.1
+  00D6 ldstr GAMEOBJECTS
+  00DB callvirt ConfigNode GetNode(System.String)
+  00E0 dup
+  00E1 pop
+  00E2 stloc.2
+  00E3 ldloc.2
+  00E4 brfalse 0190
+  00E9 ldc.i4.6
+  00EA switch
+  00F3 ldarg.0
+  00F4 ldfld System.Collections.Generic.List`1[PartGameObjectInfo] infoGameObjects
+  00F9 callvirt Void Clear()
+  00FE ldloc.2
+  00FF callvirt ValueList get_values()
+  0104 dup
+  0105 pop
+  0106 callvirt System.Collections.IEnumerator GetEnumerator()
+  010B dup
+  010C pop
+  010D stloc.s
+  010F br.s 015A
+  0111 ldloc.s
+  0113 callvirt System.Object get_Current()
+  0118 dup
+  0119 pop
+  011A castclass ConfigNode+Value
+  011F stloc.s
+  0121 ldloc.s
+  0123 ldfld System.String value
+  0128 ldloca.s
+  012A call Boolean TryParse(System.String, Boolean ByRef)
+  012F dup
+  0130 pop
+  0131 brfalse.s 015A
+  0133 ldc.i4.3
+  0134 switch
+  013D ldloc.s
+  013F ldfld System.String name
+  0144 ldloc.s
+  0146 newobj Void .ctor(System.String, Boolean)
+  014B stloc.s
+  014D ldarg.0
+  014E ldfld System.Collections.Generic.List`1[PartGameObjectInfo] infoGameObjects
+  0153 ldloc.s
+  0155 callvirt Void Add(PartGameObjectInfo)
+  015A ldloc.s
+  015C callvirt Boolean MoveNext()
+  0161 dup
+  0162 pop
+  0163 brtrue.s 0111
+  0165 ldc.i4.3
+  0166 switch
+  016F leave.s 0190
+  0171 ldloc.s
+  0173 isinst System.IDisposable
+  0178 stloc.s
+  017A ldloc.s
+  017C brfalse.s 018F
+  017E ldc.i4.1
+  017F switch
+  0188 ldloc.s
+  018A callvirt Void Dispose()
+  018F endfinally
+  0190 ldarg.1
+  0191 ldstr EXTRA_INFO
+  0196 callvirt ConfigNode GetNode(System.String)
+  019B dup
+  019C pop
+  019D stloc.3
+  019E ldloc.3
+  019F brfalse 0234
+  01A4 ldc.i4.2
+  01A5 switch
+  01AE ldarg.0
+  01AF ldfld System.Collections.Generic.List`1[PartRawInfo] extraInfo
+  01B4 callvirt Void Clear()
+  01B9 ldloc.3
+  01BA callvirt ValueList get_values()
+  01BF dup
+  01C0 pop
+  01C1 callvirt System.Collections.IEnumerator GetEnumerator()
+  01C6 dup
+  01C7 pop
+  01C8 stloc.s
+  01CA br.s 01FE
+  01CC ldloc.s
+  01CE callvirt System.Object get_Current()
+  01D3 dup
+  01D4 pop
+  01D5 castclass ConfigNode+Value
+  01DA stloc.s
+  01DC ldloc.s
+  01DE ldfld System.String name
+  01E3 ldloc.s
+  01E5 ldfld System.String value
+  01EA newobj Void .ctor(System.String, System.String)
+  01EF stloc.s
+  01F1 ldarg.0
+  01F2 ldfld System.Collections.Generic.List`1[PartRawInfo] extraInfo
+  01F7 ldloc.s
+  01F9 callvirt Void Add(PartRawInfo)
+  01FE ldloc.s
+  0200 callvirt Boolean MoveNext()
+  0205 dup
+  0206 pop
+  0207 brtrue.s 01CC
+  0209 ldc.i4.5
+  020A switch
+  0213 leave.s 0234
+  0215 ldloc.s
+  0217 isinst System.IDisposable
+  021C stloc.s
+  021E ldloc.s
+  0220 brfalse.s 0233
+  0222 ldc.i4.6
+  0223 switch
+  022C ldloc.s
+  022E callvirt Void Dispose()
+  0233 endfinally
+  0234 ldarg.1
+  0235 ldstr NODES
+  023A callvirt ConfigNode GetNode(System.String)
+  023F dup
+  0240 pop
+  0241 stloc.s
+  0243 ldloc.s
+  0245 brfalse 0348
+  024A ldc.i4.3
+  024B switch
+  0254 ldloc.s
+  0256 callvirt ValueList get_values()
+  025B dup
+  025C pop
+  025D callvirt System.Collections.IEnumerator GetEnumerator()
+  0262 dup
+  0263 pop
+  0264 stloc.s
+  0266 br 030F
+  026B ldloc.s
+  026D callvirt System.Object get_Current()
+  0272 dup
+  0273 pop
+  0274 castclass ConfigNode+Value
+  0279 stloc.s
+  027B ldarg.0
+  027C ldloc.s
+  027E call AttachNode ParseNode(Value)
+  0283 dup
+  0284 pop
+  0285 stloc.s
+  0287 ldloc.s
+  0289 brfalse 030F
+  028E ldc.i4.6
+  028F switch
+  0298 ldloc.s
+  029A ldfld System.String id
+  029F ldstr attach
+  02A4 call Boolean op_Equality(System.String, System.String)
+  02A9 dup
+  02AA pop
+  02AB brtrue.s 02D6
+  02AD ldc.i4.3
+  02AE switch
+  02B7 ldloc.s
+  02B9 ldfld System.String id
+  02BE ldstr srfAttach
+  02C3 call Boolean op_Equality(System.String, System.String)
+  02C8 dup
+  02C9 pop
+  02CA brfalse.s 02E0
+  02CC ldc.i4.1
+  02CD switch
+  02D6 ldarg.0
+  02D7 ldloc.s
+  02D9 stfld AttachNode srfAttachNode
+  02DE br.s 030F
+  02E0 ldarg.0
+  02E1 ldloc.s
+  02E3 ldfld System.String id
+  02E8 call Int32 GetAttachedNodeIndex(System.String)
+  02ED dup
+  02EE pop
+  02EF stloc.s
+  02F1 ldloc.s
+  02F3 ldc.i4.m1
+  02F4 beq.s 030F
+  02F6 ldc.i4.5
+  02F7 switch
+  0300 ldarg.0
+  0301 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0306 ldloc.s
+  0308 ldloc.s
+  030A callvirt Void set_Item(Int32, AttachNode)
+  030F ldloc.s
+  0311 callvirt Boolean MoveNext()
+  0316 dup
+  0317 pop
+  0318 brtrue 026B
+  031D ldc.i4.7
+  031E switch
+  0327 leave.s 0348
+  0329 ldloc.s
+  032B isinst System.IDisposable
+  0330 stloc.s
+  0332 ldloc.s
+  0334 brfalse.s 0347
+  0336 ldc.i4.5
+  0337 switch
+  0340 ldloc.s
+  0342 callvirt Void Dispose()
+  0347 endfinally
+  0348 ldarg.1
+  0349 ldstr TEXTURE
+  034E callvirt ConfigNode[] GetNodes(System.String)
+  0353 dup
+  0354 pop
+  0355 stloc.s
+  0357 ldc.i4.0
+  0358 stloc.s
+  035A br.s 037D
+  035C newobj Void .ctor()
+  0361 stloc.s
+  0363 ldloc.s
+  0365 ldloc.s
+  0367 ldloc.s
+  0369 ldelem.ref
+  036A callvirt Void Load(ConfigNode)
+  036F ldarg.0
+  0370 ldloc.s
+  0372 call Void UpdateMaterial(PartMaterialInfo)
+  0377 ldloc.s
+  0379 ldc.i4.1
+  037A add
+  037B stloc.s
+  037D ldloc.s
+  037F ldloc.s
+  0381 ldlen
+  0382 conv.i4
+  0383 blt.s 035C
+  0385 ldc.i4.4
+  0386 switch
+  038F ldarg.1
+  0390 ldstr disabledAnimations
+  0395 callvirt Boolean HasValue(System.String)
+  039A dup
+  039B pop
+  039C brfalse.s 03F6
+  039E ldc.i4.6
+  039F switch
+  03A8 ldarg.1
+  03A9 ldstr disabledAnimations
+  03AE callvirt System.String GetValue(System.String)
+  03B3 dup
+  03B4 pop
+  03B5 ldc.i4.1
+  03B6 newarr System.Char
+  03BB dup
+  03BC ldc.i4.0
+  03BD ldc.i4.s
+  03BF stelem.i2
+  03C0 callvirt System.String[] Split(Char[])
+  03C5 dup
+  03C6 pop
+  03C7 stloc.s
+  03C9 ldc.i4.0
+  03CA stloc.s
+  03CC br.s 03E4
+  03CE ldarg.0
+  03CF ldfld System.Collections.Generic.List`1[System.String] disabledAnimations
+  03D4 ldloc.s
+  03D6 ldloc.s
+  03D8 ldelem.ref
+  03D9 callvirt Void Add(System.String)
+  03DE ldloc.s
+  03E0 ldc.i4.1
+  03E1 add
+  03E2 stloc.s
+  03E4 ldloc.s
+  03E6 ldloc.s
+  03E8 ldlen
+  03E9 conv.i4
+  03EA blt.s 03CE
+  03EC ldc.i4.5
+  03ED switch
+  03F6 ldarg.1
+  03F7 ldstr disabledEvents
+  03FC callvirt Boolean HasValue(System.String)
+  0401 dup
+  0402 pop
+  0403 brfalse.s 045D
+  0405 ldc.i4.2
+  0406 switch
+  040F ldarg.1
+  0410 ldstr disabledEvents
+  0415 callvirt System.String GetValue(System.String)
+  041A dup
+  041B pop
+  041C ldc.i4.1
+  041D newarr System.Char
+  0422 dup
+  0423 ldc.i4.0
+  0424 ldc.i4.s
+  0426 stelem.i2
+  0427 callvirt System.String[] Split(Char[])
+  042C dup
+  042D pop
+  042E stloc.s
+  0430 ldc.i4.0
+  0431 stloc.s
+  0433 br.s 044B
+  0435 ldarg.0
+  0436 ldfld System.Collections.Generic.List`1[System.String] disabledEvents
+  043B ldloc.s
+  043D ldloc.s
+  043F ldelem.ref
+  0440 callvirt Void Add(System.String)
+  0445 ldloc.s
+  0447 ldc.i4.1
+  0448 add
+  0449 stloc.s
+  044B ldloc.s
+  044D ldloc.s
+  044F ldlen
+  0450 conv.i4
+  0451 blt.s 0435
+  0453 ldc.i4.2
+  0454 switch
+  045D ldarg.1
+  045E ldstr themeName
+  0463 ldarg.0
+  0464 ldflda System.String themeName
+  0469 callvirt Boolean TryGetValue(System.String, System.String ByRef)
+  046E dup
+  046F pop
+  0470 pop
+  0471 ldstr
+  0476 stloc.s
+  0478 ldarg.1
+  0479 ldstr attachRules
+  047E ldloca.s
+  0480 callvirt Boolean TryGetValue(System.String, System.String ByRef)
+  0485 dup
+  0486 pop
+  0487 brfalse.s 04A2
+  0489 ldc.i4.4
+  048A switch
+  0493 ldarg.0
+  0494 ldloc.s
+  0496 call AttachRules Parse(System.String)
+  049B dup
+  049C pop
+  049D stfld AttachRules attachRules
+  04A2 ret
+METHOD GetAttachedNodeIndex
+  0000 ldc.i4.0
+  0001 stloc.0
+  0002 br.s 003A
+  0004 ldarg.0
+  0005 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  000A ldloc.0
+  000B callvirt AttachNode get_Item(Int32)
+  0010 dup
+  0011 pop
+  0012 ldfld System.String id
+  0017 ldarg.1
+  0018 call Boolean op_Equality(System.String, System.String)
+  001D dup
+  001E pop
+  001F brfalse.s 0036
+  0021 ldc.i4.7
+  0022 switch
+  002B ldc.i4.1
+  002C brtrue.s 0034
+  002E ldtoken Int32 GetAttachedNodeIndex(System.String)
+  0033 pop
+  0034 ldloc.0
+  0035 ret
+  0036 ldloc.0
+  0037 ldc.i4.1
+  0038 add
+  0039 stloc.0
+  003A ldloc.0
+  003B ldarg.0
+  003C ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0041 callvirt Int32 get_Count()
+  0046 dup
+  0047 pop
+  0048 blt.s 0004
+  004A ldc.i4.7
+  004B switch
+  0054 ldc.i4.m1
+  0055 ret
+METHOD Save
+  0000 ret
+METHOD UpdateMaterial
+  0000 newobj Void .ctor()
+  0005 stloc.0
+  0006 ldarg.1
+  0007 callvirt System.String get_MaterialName()
+  000C dup
+  000D pop
+  000E call Boolean IsNullOrEmpty(System.String)
+  0013 dup
+  0014 pop
+  0015 brtrue 0095
+  001A ldc.i4.1
+  001B switch
+  0024 ldc.i4.1
+  0025 brtrue.s 002D
+  0027 ldtoken Void UpdateMaterial(PartMaterialInfo)
+  002C pop
+  002D ldc.i4.0
+  002E stloc.1
+  002F br.s 0079
+  0031 ldarg.0
+  0032 ldfld System.Collections.Generic.List`1[UnityEngine.Material] materials
+  0037 ldloc.1
+  0038 callvirt UnityEngine.Material get_Item(Int32)
+  003D dup
+  003E pop
+  003F callvirt System.String get_name()
+  0044 dup
+  0045 pop
+  0046 ldarg.1
+  0047 callvirt System.String get_MaterialName()
+  004C dup
+  004D pop
+  004E callvirt Boolean StartsWith(System.String)
+  0053 dup
+  0054 pop
+  0055 brfalse.s 0075
+  0057 ldc.i4.2
+  0058 switch
+  0061 ldloc.0
+  0062 ldarg.0
+  0063 ldfld System.Collections.Generic.List`1[UnityEngine.Material] materials
+  0068 ldloc.1
+  0069 callvirt UnityEngine.Material get_Item(Int32)
+  006E dup
+  006F pop
+  0070 callvirt Void Add(UnityEngine.Material)
+  0075 ldloc.1
+  0076 ldc.i4.1
+  0077 add
+  0078 stloc.1
+  0079 ldloc.1
+  007A ldarg.0
+  007B ldfld System.Collections.Generic.List`1[UnityEngine.Material] materials
+  0080 callvirt Int32 get_Count()
+  0085 dup
+  0086 pop
+  0087 blt.s 0031
+  0089 ldc.i4.3
+  008A switch
+  0093 br.s 009C
+  0095 ldarg.0
+  0096 ldfld System.Collections.Generic.List`1[UnityEngine.Material] materials
+  009B stloc.0
+  009C ldc.i4.0
+  009D stloc.2
+  009E br.s 00E5
+  00A0 ldarg.1
+  00A1 callvirt UnityEngine.Shader get_CustomShader()
+  00A6 dup
+  00A7 pop
+  00A8 ldnull
+  00A9 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  00AE dup
+  00AF pop
+  00B0 brfalse.s 00D2
+  00B2 ldc.i4.7
+  00B3 switch
+  00BC ldloc.0
+  00BD ldloc.2
+  00BE callvirt UnityEngine.Material get_Item(Int32)
+  00C3 dup
+  00C4 pop
+  00C5 ldarg.1
+  00C6 callvirt UnityEngine.Shader get_CustomShader()
+  00CB dup
+  00CC pop
+  00CD callvirt Void set_shader(UnityEngine.Shader)
+  00D2 ldarg.1
+  00D3 ldloc.0
+  00D4 ldloc.2
+  00D5 callvirt UnityEngine.Material get_Item(Int32)
+  00DA dup
+  00DB pop
+  00DC callvirt Void ApplyCommands(UnityEngine.Material)
+  00E1 ldloc.2
+  00E2 ldc.i4.1
+  00E3 add
+  00E4 stloc.2
+  00E5 ldloc.2
+  00E6 ldloc.0
+  00E7 callvirt Int32 get_Count()
+  00EC dup
+  00ED pop
+  00EE blt.s 00A0
+  00F0 ldc.i4.2
+  00F1 switch
+  00FA ret
+METHOD UpdateMaterialFromExtraInfo
+  0000 ldstr
+  0005 stloc.0
+  0006 ldarg.1
+  0007 callvirt UnityEngine.Shader get_shader()
+  000C dup
+  000D pop
+  000E callvirt System.String get_name()
+  0013 dup
+  0014 pop
+  0015 ldstr (Mapped)
+  001A callvirt Boolean Contains(System.String)
+  001F dup
+  0020 pop
+  0021 brfalse.s 0042
+  0023 ldc.i4.5
+  0024 switch
+  002D ldc.i4.1
+  002E brtrue.s 0036
+  0030 ldtoken Void UpdateMaterialFromExtraInfo(UnityEngine.Material)
+  0035 pop
+  0036 ldarg.1
+  0037 ldstr _SpecMap
+  003C ldnull
+  003D callvirt Void SetTexture(System.String, UnityEngine.Texture)
+  0042 ldc.i4.0
+  0043 stloc.1
+  0044 br 014D
+  0049 ldarg.0
+  004A ldfld System.Collections.Generic.List`1[PartRawInfo] extraInfo
+  004F ldloc.1
+  0050 callvirt PartRawInfo get_Item(Int32)
+  0055 dup
+  0056 pop
+  0057 callvirt System.String get_Value()
+  005C dup
+  005D pop
+  005E stloc.0
+  005F ldloc.0
+  0060 call Boolean IsNullOrEmpty(System.String)
+  0065 dup
+  0066 pop
+  0067 brtrue 0149
+  006C ldc.i4.6
+  006D switch
+  0076 ldc.r4 0
+  007B stloc.2
+  007C ldloc.0
+  007D ldloca.s
+  007F call Boolean TryParse(System.String, Single ByRef)
+  0084 dup
+  0085 pop
+  0086 brfalse.s 00B3
+  0088 ldc.i4.7
+  0089 switch
+  0092 ldarg.1
+  0093 ldarg.0
+  0094 ldfld System.Collections.Generic.List`1[PartRawInfo] extraInfo
+  0099 ldloc.1
+  009A callvirt PartRawInfo get_Item(Int32)
+  009F dup
+  00A0 pop
+  00A1 callvirt System.String get_Name()
+  00A6 dup
+  00A7 pop
+  00A8 ldloc.2
+  00A9 callvirt Void SetFloat(System.String, Single)
+  00AE br 0149
+  00B3 ldloc.0
+  00B4 ldarg.1
+  00B5 callvirt System.String get_name()
+  00BA dup
+  00BB pop
+  00BC ldstr  (Instance)
+  00C1 ldstr
+  00C6 callvirt System.String Replace(System.String, System.String)
+  00CB dup
+  00CC pop
+  00CD callvirt Boolean Contains(System.String)
+  00D2 dup
+  00D3 pop
+  00D4 brtrue.s 011E
+  00D6 ldc.i4.1
+  00D7 switch
+  00E0 ldloc.0
+  00E1 ldarg.1
+  00E2 callvirt System.String get_name()
+  00E7 dup
+  00E8 pop
+  00E9 ldstr  (Instance)
+  00EE ldstr
+  00F3 callvirt System.String Replace(System.String, System.String)
+  00F8 dup
+  00F9 pop
+  00FA ldstr Flight
+  00FF ldstr
+  0104 callvirt System.String Replace(System.String, System.String)
+  0109 dup
+  010A pop
+  010B callvirt Boolean Contains(System.String)
+  0110 dup
+  0111 pop
+  0112 brfalse.s 0149
+  0114 ldc.i4.5
+  0115 switch
+  011E ldarg.1
+  011F ldarg.0
+  0120 ldfld System.Collections.Generic.List`1[PartRawInfo] extraInfo
+  0125 ldloc.1
+  0126 callvirt PartRawInfo get_Item(Int32)
+  012B dup
+  012C pop
+  012D callvirt System.String get_Name()
+  0132 dup
+  0133 pop
+  0134 call GameDatabase get_Instance()
+  0139 dup
+  013A pop
+  013B ldloc.0
+  013C ldc.i4.0
+  013D callvirt UnityEngine.Texture2D GetTexture(System.String, Boolean)
+  0142 dup
+  0143 pop
+  0144 callvirt Void SetTexture(System.String, UnityEngine.Texture)
+  0149 ldloc.1
+  014A ldc.i4.1
+  014B add
+  014C stloc.1
+  014D ldloc.1
+  014E ldarg.0
+  014F ldfld System.Collections.Generic.List`1[PartRawInfo] extraInfo
+  0154 callvirt Int32 get_Count()
+  0159 dup
+  015A pop
+  015B blt 0049
+  0160 ldc.i4.2
+  0161 switch
+  016A ldarg.1
+  016B callvirt UnityEngine.Shader get_shader()
+  0170 dup
+  0171 pop
+  0172 callvirt System.String get_name()
+  0177 dup
+  0178 pop
+  0179 ldstr (Mapped)
+  017E callvirt Boolean Contains(System.String)
+  0183 dup
+  0184 pop
+  0185 brfalse.s 01E8
+  0187 ldc.i4.3
+  0188 switch
+  0191 ldarg.1
+  0192 ldstr _SpecMap
+  0197 callvirt UnityEngine.Texture GetTexture(System.String)
+  019C dup
+  019D pop
+  019E ldnull
+  019F call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  01A4 dup
+  01A5 pop
+  01A6 brfalse.s 01E8
+  01A8 ldc.i4.2
+  01A9 switch
+  01B2 ldsfld Boolean LoadedSceneIsFlight
+  01B7 brfalse.s 01D6
+  01B9 ldc.i4.4
+  01BA switch
+  01C3 ldarg.1
+  01C4 ldstr KSP/Bumped Specular Opaque (Cutoff)
+  01C9 call UnityEngine.Shader Find(System.String)
+  01CE dup
+  01CF pop
+  01D0 callvirt Void set_shader(UnityEngine.Shader)
+  01D5 ret
+  01D6 ldarg.1
+  01D7 ldstr KSP/Bumped Specular (Cutoff)
+  01DC call UnityEngine.Shader Find(System.String)
+  01E1 dup
+  01E2 pop
+  01E3 callvirt Void set_shader(UnityEngine.Shader)
+  01E8 ret
+METHOD MaterialExists
+  0000 ldc.i4.0
+  0001 stloc.0
+  0002 ldc.i4.0
+  0003 stloc.1
+  0004 br.s 0040
+  0006 ldarg.1
+  0007 ldarg.0
+  0008 ldfld System.Collections.Generic.List`1[UnityEngine.Material] materials
+  000D ldloc.1
+  000E callvirt UnityEngine.Material get_Item(Int32)
+  0013 dup
+  0014 pop
+  0015 callvirt System.String get_name()
+  001A dup
+  001B pop
+  001C call Boolean op_Equality(System.String, System.String)
+  0021 dup
+  0022 pop
+  0023 brfalse.s 003C
+  0025 ldc.i4.1
+  0026 switch
+  002F ldc.i4.1
+  0030 brtrue.s 0038
+  0032 ldtoken Boolean MaterialExists(System.String)
+  0037 pop
+  0038 ldc.i4.1
+  0039 stloc.0
+  003A br.s 005A
+  003C ldloc.1
+  003D ldc.i4.1
+  003E add
+  003F stloc.1
+  0040 ldloc.1
+  0041 ldarg.0
+  0042 ldfld System.Collections.Generic.List`1[UnityEngine.Material] materials
+  0047 callvirt Int32 get_Count()
+  004C dup
+  004D pop
+  004E blt.s 0006
+  0050 ldc.i4.7
+  0051 switch
+  005A ldloc.0
+  005B ret
+METHOD TryCopyMaterial
+  0000 ldc.i4.0
+  0001 ldarg.0
+  0002 ldarg.1
+  0003 callvirt System.String get_name()
+  0008 dup
+  0009 pop
+  000A call Boolean MaterialExists(System.String)
+  000F dup
+  0010 pop
+  0011 brtrue.s 0047
+  0013 ldc.i4.2
+  0014 switch
+  001D ldc.i4.1
+  001E brtrue.s 0026
+  0020 ldtoken Boolean TryCopyMaterial(UnityEngine.Material)
+  0025 pop
+  0026 ldarg.1
+  0027 newobj Void .ctor(UnityEngine.Material)
+  002C stloc.0
+  002D ldloc.0
+  002E ldarg.1
+  002F callvirt System.String get_name()
+  0034 dup
+  0035 pop
+  0036 callvirt Void set_name(System.String)
+  003B ldarg.0
+  003C ldfld System.Collections.Generic.List`1[UnityEngine.Material] materials
+  0041 ldloc.0
+  0042 callvirt Void Add(UnityEngine.Material)
+  0047 ret
+METHOD UpdateModel
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[PartGameObjectInfo] infoGameObjects
+  0006 brfalse 00CB
+  000B ldc.i4.1
+  000C switch
+  0015 ldc.i4.1
+  0016 brtrue.s 001E
+  0018 ldtoken Void UpdateModel(UnityEngine.Transform)
+  001D pop
+  001E ldarg.0
+  001F ldfld System.Collections.Generic.List`1[PartGameObjectInfo] infoGameObjects
+  0024 callvirt Int32 get_Count()
+  0029 dup
+  002A pop
+  002B ldc.i4.0
+  002C ble 00CB
+  0031 ldc.i4.3
+  0032 switch
+  003B ldarg.1
+  003C ldnull
+  003D call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0042 dup
+  0043 pop
+  0044 brfalse 00CB
+  0049 ldc.i4.5
+  004A switch
+  0053 ldc.i4.0
+  0054 stloc.0
+  0055 br.s 00B1
+  0057 ldarg.0
+  0058 ldarg.1
+  0059 ldarg.0
+  005A ldfld System.Collections.Generic.List`1[PartGameObjectInfo] infoGameObjects
+  005F ldloc.0
+  0060 callvirt PartGameObjectInfo get_Item(Int32)
+  0065 dup
+  0066 pop
+  0067 callvirt System.String get_Name()
+  006C dup
+  006D pop
+  006E call UnityEngine.Transform FindChild(UnityEngine.Transform, System.String)
+  0073 dup
+  0074 pop
+  0075 stloc.1
+  0076 ldloc.1
+  0077 ldnull
+  0078 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  007D dup
+  007E pop
+  007F brfalse.s 00AD
+  0081 ldc.i4.4
+  0082 switch
+  008B ldloc.1
+  008C callvirt UnityEngine.GameObject get_gameObject()
+  0091 dup
+  0092 pop
+  0093 ldarg.0
+  0094 ldfld System.Collections.Generic.List`1[PartGameObjectInfo] infoGameObjects
+  0099 ldloc.0
+  009A callvirt PartGameObjectInfo get_Item(Int32)
+  009F dup
+  00A0 pop
+  00A1 callvirt Boolean get_Status()
+  00A6 dup
+  00A7 pop
+  00A8 callvirt Void SetActive(Boolean)
+  00AD ldloc.0
+  00AE ldc.i4.1
+  00AF add
+  00B0 stloc.0
+  00B1 ldloc.0
+  00B2 ldarg.0
+  00B3 ldfld System.Collections.Generic.List`1[PartGameObjectInfo] infoGameObjects
+  00B8 callvirt Int32 get_Count()
+  00BD dup
+  00BE pop
+  00BF blt.s 0057
+  00C1 ldc.i4.1
+  00C2 switch
+  00CB ret
+METHOD FindChild
+  0000 ldnull
+  0001 stloc.0
+  0002 ldarg.1
+  0003 ldc.i4.1
+  0004 callvirt UnityEngine.Transform[] GetComponentsInChildren[Transform](Boolean)
+  0009 dup
+  000A pop
+  000B stloc.1
+  000C ldc.i4.0
+  000D stloc.2
+  000E br.s 0041
+  0010 ldloc.1
+  0011 ldloc.2
+  0012 ldelem.ref
+  0013 callvirt System.String get_name()
+  0018 dup
+  0019 pop
+  001A ldarg.2
+  001B call Boolean op_Equality(System.String, System.String)
+  0020 dup
+  0021 pop
+  0022 brfalse.s 003D
+  0024 ldc.i4.3
+  0025 switch
+  002E ldc.i4.1
+  002F brtrue.s 0037
+  0031 ldtoken UnityEngine.Transform FindChild(UnityEngine.Transform, System.String)
+  0036 pop
+  0037 ldloc.1
+  0038 ldloc.2
+  0039 ldelem.ref
+  003A stloc.0
+  003B br.s 0051
+  003D ldloc.2
+  003E ldc.i4.1
+  003F add
+  0040 stloc.2
+  0041 ldloc.2
+  0042 ldloc.1
+  0043 ldlen
+  0044 conv.i4
+  0045 blt.s 0010
+  0047 ldc.i4.7
+  0048 switch
+  0051 ldloc.0
+  0052 ret
+METHOD GetExtraInfoValue
+  0000 ldsfld System.String Empty
+  0005 stloc.0
+  0006 ldc.i4.0
+  0007 stloc.1
+  0008 br.s 0056
+  000A ldarg.0
+  000B ldfld System.Collections.Generic.List`1[PartRawInfo] extraInfo
+  0010 ldloc.1
+  0011 callvirt PartRawInfo get_Item(Int32)
+  0016 dup
+  0017 pop
+  0018 callvirt System.String get_Name()
+  001D dup
+  001E pop
+  001F ldarg.1
+  0020 call Boolean op_Equality(System.String, System.String)
+  0025 dup
+  0026 pop
+  0027 brfalse.s 0052
+  0029 ldc.i4.1
+  002A switch
+  0033 ldc.i4.1
+  0034 brtrue.s 003C
+  0036 ldtoken System.String GetExtraInfoValue(System.String)
+  003B pop
+  003C ldarg.0
+  003D ldfld System.Collections.Generic.List`1[PartRawInfo] extraInfo
+  0042 ldloc.1
+  0043 callvirt PartRawInfo get_Item(Int32)
+  0048 dup
+  0049 pop
+  004A callvirt System.String get_Value()
+  004F dup
+  0050 pop
+  0051 stloc.0
+  0052 ldloc.1
+  0053 ldc.i4.1
+  0054 add
+  0055 stloc.1
+  0056 ldloc.1
+  0057 ldarg.0
+  0058 ldfld System.Collections.Generic.List`1[PartRawInfo] extraInfo
+  005D callvirt Int32 get_Count()
+  0062 dup
+  0063 pop
+  0064 blt.s 000A
+  0066 ldc.i4.3
+  0067 switch
+  0070 ldloc.0
+  0071 ret
+METHOD ParseNode
+  0000 ldnull
+  0001 stloc.0
+  0002 ldarg.1
+  0003 ldfld System.String name
+  0008 ldstr node
+  000D callvirt Boolean StartsWith(System.String)
+  0012 dup
+  0013 pop
+  0014 brfalse 02C6
+  0019 ldc.i4.7
+  001A switch
+  0023 ldc.i4.1
+  0024 brtrue.s 002C
+  0026 ldtoken AttachNode ParseNode(Value)
+  002B pop
+  002C ldarg.1
+  002D ldfld System.String value
+  0032 ldc.i4.1
+  0033 newarr System.Char
+  0038 dup
+  0039 ldc.i4.0
+  003A ldc.i4.s
+  003C stelem.i2
+  003D callvirt System.String[] Split(Char[])
+  0042 dup
+  0043 pop
+  0044 stloc.1
+  0045 ldarg.1
+  0046 ldfld System.String name
+  004B ldc.i4.1
+  004C newarr System.Char
+  0051 dup
+  0052 ldc.i4.0
+  0053 ldc.i4.s
+  0055 stelem.i2
+  0056 callvirt System.String[] Split(Char[])
+  005B dup
+  005C pop
+  005D stloc.2
+  005E ldloc.1
+  005F ldlen
+  0060 conv.i4
+  0061 ldc.i4.6
+  0062 bge.s 0087
+  0064 ldc.i4.4
+  0065 switch
+  006E ldstr ERROR: Bad node definition at
+  0073 ldarg.1
+  0074 ldfld System.String name
+  0079 call System.String Concat(System.String, System.String)
+  007E dup
+  007F pop
+  0080 call Void Warning(System.Object)
+  0085 ldnull
+  0086 ret
+  0087 newobj Void .ctor()
+  008C stloc.0
+  008D ldloc.0
+  008E ldloc.1
+  008F ldc.i4.0
+  0090 ldelem.ref
+  0091 call Single Parse(System.String)
+  0096 dup
+  0097 pop
+  0098 ldloc.1
+  0099 ldc.i4.1
+  009A ldelem.ref
+  009B call Single Parse(System.String)
+  00A0 dup
+  00A1 pop
+  00A2 ldloc.1
+  00A3 ldc.i4.2
+  00A4 ldelem.ref
+  00A5 call Single Parse(System.String)
+  00AA dup
+  00AB pop
+  00AC newobj Void .ctor(Single, Single, Single)
+  00B1 stfld UnityEngine.Vector3 position
+  00B6 ldloc.0
+  00B7 ldloc.1
+  00B8 ldc.i4.3
+  00B9 ldelem.ref
+  00BA call Single Parse(System.String)
+  00BF dup
+  00C0 pop
+  00C1 ldloc.1
+  00C2 ldc.i4.4
+  00C3 ldelem.ref
+  00C4 call Single Parse(System.String)
+  00C9 dup
+  00CA pop
+  00CB ldloc.1
+  00CC ldc.i4.5
+  00CD ldelem.ref
+  00CE call Single Parse(System.String)
+  00D3 dup
+  00D4 pop
+  00D5 newobj Void .ctor(Single, Single, Single)
+  00DA stfld UnityEngine.Vector3 orientation
+  00DF ldloc.0
+  00E0 ldloc.0
+  00E1 ldfld UnityEngine.Vector3 position
+  00E6 stfld UnityEngine.Vector3 originalPosition
+  00EB ldloc.0
+  00EC ldloc.0
+  00ED ldfld UnityEngine.Vector3 orientation
+  00F2 stfld UnityEngine.Vector3 originalOrientation
+  00F7 ldloc.1
+  00F8 ldlen
+  00F9 conv.i4
+  00FA ldc.i4.7
+  00FB blt.s 0119
+  00FD ldc.i4.2
+  00FE switch
+  0107 ldloc.0
+  0108 ldloc.1
+  0109 ldc.i4.6
+  010A ldelem.ref
+  010B call Int32 Parse(System.String)
+  0110 dup
+  0111 pop
+  0112 stfld Int32 size
+  0117 br.s 0120
+  0119 ldloc.0
+  011A ldc.i4.1
+  011B stfld Int32 size
+  0120 ldloc.1
+  0121 ldlen
+  0122 conv.i4
+  0123 ldc.i4.8
+  0124 blt.s 0142
+  0126 ldc.i4.4
+  0127 switch
+  0130 ldloc.0
+  0131 ldloc.1
+  0132 ldc.i4.7
+  0133 ldelem.ref
+  0134 call Int32 Parse(System.String)
+  0139 dup
+  013A pop
+  013B stfld AttachNodeMethod attachMethod
+  0140 br.s 01A8
+  0142 ldloc.2
+  0143 ldc.i4.1
+  0144 ldelem.ref
+  0145 ldstr stack
+  014A call Boolean op_Equality(System.String, System.String)
+  014F dup
+  0150 pop
+  0151 brfalse.s 0164
+  0153 ldc.i4.5
+  0154 switch
+  015D ldloc.0
+  015E ldc.i4.0
+  015F stfld AttachNodeMethod attachMethod
+  0164 ldloc.2
+  0165 ldc.i4.1
+  0166 ldelem.ref
+  0167 ldstr dock
+  016C call Boolean op_Equality(System.String, System.String)
+  0171 dup
+  0172 pop
+  0173 brfalse.s 0186
+  0175 ldc.i4.3
+  0176 switch
+  017F ldloc.0
+  0180 ldc.i4.0
+  0181 stfld AttachNodeMethod attachMethod
+  0186 ldloc.2
+  0187 ldc.i4.1
+  0188 ldelem.ref
+  0189 ldstr attach
+  018E call Boolean op_Equality(System.String, System.String)
+  0193 dup
+  0194 pop
+  0195 brfalse.s 01A8
+  0197 ldc.i4.3
+  0198 switch
+  01A1 ldloc.0
+  01A2 ldc.i4.1
+  01A3 stfld AttachNodeMethod attachMethod
+  01A8 ldloc.1
+  01A9 ldlen
+  01AA conv.i4
+  01AB ldc.i4.s
+  01AD blt.s 01DA
+  01AF ldc.i4.3
+  01B0 switch
+  01B9 ldloc.0
+  01BA ldloc.1
+  01BB ldc.i4.8
+  01BC ldelem.ref
+  01BD call Int32 Parse(System.String)
+  01C2 dup
+  01C3 pop
+  01C4 ldc.i4.0
+  01C5 bgt.s 01D4
+  01C7 ldc.i4.3
+  01C8 switch
+  01D1 ldc.i4.0
+  01D2 br.s 01D5
+  01D4 ldc.i4.1
+  01D5 stfld Boolean ResourceXFeed
+  01DA ldloc.1
+  01DB ldlen
+  01DC conv.i4
+  01DD ldc.i4.s
+  01DF blt.s 01FF
+  01E1 ldc.i4.6
+  01E2 switch
+  01EB ldloc.0
+  01EC ldloc.1
+  01ED ldc.i4.s
+  01EF ldelem.ref
+  01F0 call Int32 Parse(System.String)
+  01F5 dup
+  01F6 pop
+  01F7 ldc.i4.0
+  01F8 cgt
+  01FA stfld Boolean rigid
+  01FF ldstr Added
+  0204 ldarg.1
+  0205 ldfld System.String name
+  020A ldstr  at
+  020F ldarg.1
+  0210 ldfld System.String value
+  0215 call System.String Concat(System.String, System.String, System.String, System.String)
+  021A dup
+  021B pop
+  021C ldc.i4.s
+  021E call Void Log(System.Object, DebugLevel)
+  0223 ldloc.2
+  0224 ldc.i4.1
+  0225 ldelem.ref
+  0226 ldstr stack
+  022B call Boolean op_Equality(System.String, System.String)
+  0230 dup
+  0231 pop
+  0232 brfalse.s 025E
+  0234 ldc.i4.6
+  0235 switch
+  023E ldloc.2
+  023F ldlen
+  0240 conv.i4
+  0241 ldc.i4.2
+  0242 ble.s 0257
+  0244 ldc.i4.3
+  0245 switch
+  024E ldloc.0
+  024F ldloc.2
+  0250 ldc.i4.2
+  0251 ldelem.ref
+  0252 stfld System.String id
+  0257 ldloc.0
+  0258 ldc.i4.0
+  0259 stfld NodeType nodeType
+  025E ldloc.2
+  025F ldc.i4.1
+  0260 ldelem.ref
+  0261 ldstr dock
+  0266 call Boolean op_Equality(System.String, System.String)
+  026B dup
+  026C pop
+  026D brfalse.s 0299
+  026F ldc.i4.3
+  0270 switch
+  0279 ldloc.2
+  027A ldlen
+  027B conv.i4
+  027C ldc.i4.2
+  027D ble.s 0292
+  027F ldc.i4.2
+  0280 switch
+  0289 ldloc.0
+  028A ldloc.2
+  028B ldc.i4.2
+  028C ldelem.ref
+  028D stfld System.String id
+  0292 ldloc.0
+  0293 ldc.i4.2
+  0294 stfld NodeType nodeType
+  0299 ldloc.2
+  029A ldc.i4.1
+  029B ldelem.ref
+  029C ldstr attach
+  02A1 call Boolean op_Equality(System.String, System.String)
+  02A6 dup
+  02A7 pop
+  02A8 brfalse.s 02C6
+  02AA ldc.i4.7
+  02AB switch
+  02B4 ldloc.0
+  02B5 ldstr srfAttach
+  02BA stfld System.String id
+  02BF ldloc.0
+  02C0 ldc.i4.1
+  02C1 stfld NodeType nodeType
+  02C6 ldloc.0
+  02C7 ret
+TYPE AttachNode
+FIELD System.String id
+FIELD UnityEngine.Vector3 originalPosition
+FIELD UnityEngine.Vector3 originalOrientation
+FIELD UnityEngine.Vector3 originalSecondaryAxis
+FIELD UnityEngine.Vector3 position
+FIELD UnityEngine.Vector3 orientation
+FIELD UnityEngine.Vector3 secondaryAxis
+FIELD System.Int32 size
+FIELD System.Single radius
+FIELD System.Single breakingForce
+FIELD System.Single breakingTorque
+FIELD UnityEngine.Vector3 offset
+FIELD Part owner
+FIELD Part attachedPart
+FIELD System.String srfAttachMeshName
+FIELD UnityEngine.GameObject icon
+FIELD AttachNodeMethod attachMethod
+FIELD AttachNode+NodeType nodeType
+FIELD System.Boolean requestGate
+FIELD System.Boolean ResourceXFeed
+FIELD System.Boolean AllowOneWayXFeed
+FIELD System.Boolean rigid
+FIELD System.Single contactArea
+FIELD System.Single overrideDragArea
+FIELD System.Single nodeDistEpsilon
+FIELD UnityEngine.Transform nodeTransform
+FIELD System.UInt32 attachedPartId
+METHOD FindAttachedPart
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 ldarg.0
+  0003 ldfld UInt32 attachedPartId
+  0008 call Part GetPartByCraftID(System.Collections.Generic.List`1[Part], UInt32)
+  000D dup
+  000E pop
+  000F stfld Part attachedPart
+  0014 ret
+METHOD FindOpposingNode
+  0000 ldarg.0
+  0001 ldfld Part attachedPart
+  0006 ldnull
+  0007 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  000C dup
+  000D pop
+  000E brfalse.s 0037
+  0010 ldc.i4.7
+  0011 switch
+  001A ldc.i4.1
+  001B brtrue.s 0023
+  001D ldtoken AttachNode FindOpposingNode()
+  0022 pop
+  0023 ldarg.0
+  0024 ldfld Part attachedPart
+  0029 ldarg.0
+  002A ldfld Part owner
+  002F callvirt AttachNode FindAttachNodeByPart(Part)
+  0034 dup
+  0035 pop
+  0036 ret
+  0037 ldnull
+  0038 ret
+METHOD DestroyNodeIcon
+  0000 ldarg.0
+  0001 ldfld UnityEngine.GameObject icon
+  0006 callvirt UnityEngine.Renderer GetComponent[Renderer]()
+  000B dup
+  000C pop
+  000D callvirt UnityEngine.Material get_material()
+  0012 dup
+  0013 pop
+  0014 call Void Destroy(UnityEngine.Object)
+  0019 ldarg.0
+  001A ldfld UnityEngine.GameObject icon
+  001F call Void Destroy(UnityEngine.Object)
+  0024 ret
+METHOD Clone
+  0000 ldarg.0
+  0001 callvirt System.Object MemberwiseClone()
+  0006 dup
+  0007 pop
+  0008 castclass AttachNode
+  000D ret
+METHOD ReverseSrfNodeDirection
+  0000 ldarg.0
+  0001 ldfld Part owner
+  0006 ldnull
+  0007 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  000C dup
+  000D pop
+  000E brtrue.s 003D
+  0010 ldc.i4.5
+  0011 switch
+  001A ldc.i4.1
+  001B brtrue.s 0023
+  001D ldtoken Void ReverseSrfNodeDirection(AttachNode)
+  0022 pop
+  0023 ldarg.1
+  0024 ldfld Part owner
+  0029 ldnull
+  002A call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  002F dup
+  0030 pop
+  0031 brfalse.s 003E
+  0033 ldc.i4.7
+  0034 switch
+  003D ret
+  003E ldarg.1
+  003F ldnull
+  0040 stfld Part attachedPart
+  0045 ldarg.0
+  0046 ldarg.1
+  0047 ldfld Part owner
+  004C stfld Part attachedPart
+  0051 ldarg.1
+  0052 ldfld Part owner
+  0057 callvirt UnityEngine.Transform get_transform()
+  005C dup
+  005D pop
+  005E ldarg.1
+  005F ldfld UnityEngine.Vector3 position
+  0064 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  0069 dup
+  006A pop
+  006B stloc.0
+  006C ldarg.0
+  006D ldarg.0
+  006E ldfld Part owner
+  0073 callvirt UnityEngine.Transform get_transform()
+  0078 dup
+  0079 pop
+  007A ldloc.0
+  007B callvirt UnityEngine.Vector3 InverseTransformPoint(UnityEngine.Vector3)
+  0080 dup
+  0081 pop
+  0082 stfld UnityEngine.Vector3 position
+  0087 ret
+METHOD ChangeSrfNodePosition
+  0000 ldarg.0
+  0001 ldfld Part attachedPart
+  0006 ldnull
+  0007 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  000C dup
+  000D pop
+  000E brtrue.s 003D
+  0010 ldc.i4.2
+  0011 switch
+  001A ldc.i4.1
+  001B brtrue.s 0023
+  001D ldtoken Void ChangeSrfNodePosition()
+  0022 pop
+  0023 ldarg.0
+  0024 ldfld Part owner
+  0029 ldnull
+  002A call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  002F dup
+  0030 pop
+  0031 brfalse.s 003E
+  0033 ldc.i4.7
+  0034 switch
+  003D ret
+  003E ldarg.0
+  003F ldfld Part owner
+  0044 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0049 callvirt Int32 get_Count()
+  004E dup
+  004F pop
+  0050 stloc.0
+  0051 ldarg.0
+  0052 ldfld Part owner
+  0057 ldfld System.Collections.Generic.List`1[Part] children
+  005C callvirt Int32 get_Count()
+  0061 dup
+  0062 pop
+  0063 stloc.1
+  0064 ldloc.0
+  0065 newarr System.Boolean
+  006A stloc.2
+  006B ldc.i4.m1
+  006C stloc.3
+  006D ldc.i4.0
+  006E stloc.s
+  0070 br 01A7
+  0075 ldarg.0
+  0076 ldfld Part owner
+  007B ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0080 ldloc.s
+  0082 callvirt AttachNode get_Item(Int32)
+  0087 dup
+  0088 pop
+  0089 stloc.s
+  008B ldloc.2
+  008C ldloc.s
+  008E ldloc.s
+  0090 ldfld Part attachedPart
+  0095 ldnull
+  0096 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  009B dup
+  009C pop
+  009D stelem.i1
+  009E ldarg.0
+  009F ldfld UnityEngine.Vector3 position
+  00A4 ldloc.s
+  00A6 ldfld UnityEngine.Vector3 position
+  00AB call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  00B0 dup
+  00B1 pop
+  00B2 stloc.s
+  00B4 ldloca.s
+  00B6 call Single get_sqrMagnitude()
+  00BB dup
+  00BC pop
+  00BD ldarg.0
+  00BE ldfld Single nodeDistEpsilon
+  00C3 bge.un.s 00D2
+  00C5 ldc.i4.3
+  00C6 switch
+  00CF ldloc.s
+  00D1 stloc.3
+  00D2 ldloc.2
+  00D3 ldloc.s
+  00D5 ldelem.u1
+  00D6 brfalse 01A1
+  00DB ldc.i4.1
+  00DC switch
+  00E5 ldc.i4.0
+  00E6 stloc.s
+  00E8 br 018F
+  00ED ldarg.0
+  00EE ldfld Part owner
+  00F3 ldfld System.Collections.Generic.List`1[Part] children
+  00F8 ldloc.s
+  00FA callvirt Part get_Item(Int32)
+  00FF dup
+  0100 pop
+  0101 stloc.s
+  0103 ldloc.s
+  0105 ldfld AttachNode srfAttachNode
+  010A stloc.s
+  010C ldloc.s
+  010E ldfld Part attachedPart
+  0113 ldarg.0
+  0114 ldfld Part owner
+  0119 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  011E dup
+  011F pop
+  0120 brfalse.s 0189
+  0122 ldc.i4.2
+  0123 switch
+  012C ldarg.0
+  012D ldfld Part owner
+  0132 callvirt UnityEngine.Transform get_transform()
+  0137 dup
+  0138 pop
+  0139 ldloc.s
+  013B ldfld UnityEngine.Vector3 position
+  0140 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  0145 dup
+  0146 pop
+  0147 ldloc.s
+  0149 callvirt UnityEngine.Transform get_transform()
+  014E dup
+  014F pop
+  0150 ldloc.s
+  0152 ldfld UnityEngine.Vector3 position
+  0157 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  015C dup
+  015D pop
+  015E call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  0163 dup
+  0164 pop
+  0165 stloc.s
+  0167 ldloca.s
+  0169 call Single get_sqrMagnitude()
+  016E dup
+  016F pop
+  0170 ldarg.0
+  0171 ldfld Single nodeDistEpsilon
+  0176 bge.un.s 0189
+  0178 ldc.i4.7
+  0179 switch
+  0182 ldloc.2
+  0183 ldloc.s
+  0185 ldc.i4.0
+  0186 stelem.i1
+  0187 br.s 01A1
+  0189 ldloc.s
+  018B ldc.i4.1
+  018C add
+  018D stloc.s
+  018F ldloc.s
+  0191 ldloc.1
+  0192 blt 00ED
+  0197 ldc.i4.7
+  0198 switch
+  01A1 ldloc.s
+  01A3 ldc.i4.1
+  01A4 add
+  01A5 stloc.s
+  01A7 ldloc.s
+  01A9 ldloc.0
+  01AA blt 0075
+  01AF ldc.i4.4
+  01B0 switch
+  01B9 ldloc.3
+  01BA ldc.i4.0
+  01BB ble.s 01D7
+  01BD ldc.i4.2
+  01BE switch
+  01C7 ldloc.2
+  01C8 ldloc.3
+  01C9 ldelem.u1
+  01CA brfalse.s 01D7
+  01CC ldc.i4.6
+  01CD switch
+  01D6 ret
+  01D7 ldc.i4.0
+  01D8 stloc.s
+  01DA br.s 023D
+  01DC ldloc.2
+  01DD ldloc.s
+  01DF ldelem.u1
+  01E0 brfalse.s 0237
+  01E2 ldc.i4.2
+  01E3 switch
+  01EC ldarg.0
+  01ED ldarg.0
+  01EE ldfld Part owner
+  01F3 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  01F8 ldloc.s
+  01FA callvirt AttachNode get_Item(Int32)
+  01FF dup
+  0200 pop
+  0201 ldfld UnityEngine.Vector3 position
+  0206 stfld UnityEngine.Vector3 position
+  020B ldarg.0
+  020C ldarg.0
+  020D ldfld Part owner
+  0212 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0217 ldloc.s
+  0219 callvirt AttachNode get_Item(Int32)
+  021E dup
+  021F pop
+  0220 ldfld UnityEngine.Vector3 orientation
+  0225 stfld UnityEngine.Vector3 orientation
+  022A ldarg.0
+  022B ldarg.0
+  022C ldfld UnityEngine.Vector3 originalSecondaryAxis
+  0231 stfld UnityEngine.Vector3 secondaryAxis
+  0236 ret
+  0237 ldloc.s
+  0239 ldc.i4.1
+  023A add
+  023B stloc.s
+  023D ldloc.s
+  023F ldloc.0
+  0240 blt.s 01DC
+  0242 ldc.i4.6
+  0243 switch
+  024C ldstr [AttachNode]: Unable to invert surface node on {0}. Set to center of part.
+  0251 ldc.i4.1
+  0252 newarr System.Object
+  0257 dup
+  0258 ldc.i4.0
+  0259 ldarg.0
+  025A ldfld Part owner
+  025F ldfld AvailablePart partInfo
+  0264 ldfld System.String title
+  0269 stelem.ref
+  026A call Void LogWarningFormat(System.String, System.Object[])
+  026F ldarg.0
+  0270 call UnityEngine.Vector3 get_zero()
+  0275 dup
+  0276 pop
+  0277 stfld UnityEngine.Vector3 position
+  027C ldarg.0
+  027D ldarg.0
+  027E ldfld UnityEngine.Vector3 originalOrientation
+  0283 stfld UnityEngine.Vector3 orientation
+  0288 ldarg.0
+  0289 ldarg.0
+  028A ldfld UnityEngine.Vector3 originalSecondaryAxis
+  028F stfld UnityEngine.Vector3 secondaryAxis
+  0294 ret

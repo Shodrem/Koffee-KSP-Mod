@@ -1,0 +1,6 @@
+{
+  "result": "PASS",
+  "only_attachment_transforms_changed": true,
+  "render_geometry_colliders_materials_textures_exact": true,
+  "tangent_max_float_delta": 0
+}

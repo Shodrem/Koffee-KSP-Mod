@@ -1,0 +1,58 @@
+*.csproj.user
+bin/
+obj/
+
+# Local editor and build files
+.vs/
+.idea/
+__pycache__/
+*.pyc
+*.pdb
+*.log
+*.tmp
+*.blend1
+*.blend2
+
+# Generated plugin (build from src/Koffee)
+/GameData/ShoAerospace/Koffee/Plugins/Koffee.dll
+/GameData/ShoAerospace/Koffee/Plugins/Koffee.BRP.dll
+
+# Local references from the KSP installation
+/GameData/Squad/
+/GameData/SquadExpansion/
+/IVA-SRC/**/Squad/
+/IVA-SRC/**/SquadExpansion/
+
+# Backups, previous copies and generated previews
+/Utils/Backups/
+/Old/
+/output/
+**/OLD/
+
+# Keep archived project documentation in version control
+!/docs/OLD/
+!/docs/OLD/*.md
+
+# Third-party tool installers
+/Utils/PartTools_AssetBundles_2019.4.18f1/
+/Utils/PartTools_AssetBundles_2019.4.18f1.zip
+/Utils/TextMesh_Pro_-_Release_1.0.56.2017.3.0b2_dll_only.unitypackage
+
+# Local scratch files
+/tmp/
+
+# Public repository: source code, configuration and documentation.
+# Runtime binaries and art are distributed in release packages.
+/Meshes/
+/IVA-SRC/
+/Archive/
+*.dll
+*.exe
+*.mu
+*.blend
+*.fbx
+*.png
+*.dds
+*.tga
+*.xcf
+*.ksp

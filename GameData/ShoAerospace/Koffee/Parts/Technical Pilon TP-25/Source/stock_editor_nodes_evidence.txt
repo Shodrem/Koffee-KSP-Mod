@@ -1,0 +1,4810 @@
+TYPE Part
+FIELD Vessel vessel
+FIELD ShipConstruct ship
+FIELD System.Collections.Generic.List`1[Part] editorLinks
+FIELD System.Boolean editorFirstTimePlaced
+FIELD System.Boolean sameVesselCollision
+FIELD System.Collections.Generic.List`1[Part] symmetryCounterparts
+FIELD System.Boolean isClone
+FIELD Part originalPart
+FIELD System.Int32 stackSymmetry
+FIELD SymmetryMethod symMethod
+FIELD Part potentialParent
+FIELD AttachModes attachMode
+FIELD ProtoPartSnapshot protoPartSnapshot
+FIELD AvailablePart partInfo
+FIELD ModulePartVariants variants
+FIELD PartVariant baseVariant
+FIELD System.Collections.Generic.List`1[ModuleAnimateGeneric] moduleAnimateGenerics
+FIELD System.UInt32 persistentId
+FIELD System.UInt32 craftID
+FIELD System.UInt32 flightID
+FIELD System.UInt32 missionID
+FIELD System.UInt32 launchID
+FIELD Part parent
+FIELD System.Collections.Generic.List`1[Part] fuelLookupTargets
+FIELD System.Collections.Generic.List`1[Part] children
+FIELD UnityEngine.Transform partTransform
+FIELD CrashObjectName crashObjectName
+FIELD PartStates state
+FIELD PartStates ResumeState
+FIELD PartStates PreFailState
+FIELD System.Int32 stageOffset
+FIELD System.Int32 childStageOffset
+FIELD System.Int32 manualStageOffset
+FIELD System.Int32 defaultInverseStage
+FIELD System.Int32 inverseStage
+FIELD System.Int32 inStageIndex
+FIELD System.Int32 originalStage
+FIELD System.Int32 separationIndex
+FIELD System.String stagingIcon
+FIELD System.Boolean inverseStageCarryover
+FIELD KSP.UI.Screens.ProtoStageIcon stackIcon
+FIELD StackIconGrouping stackIconGrouping
+FIELD System.Boolean connected
+FIELD System.Boolean frozen
+FIELD System.Boolean attached
+FIELD System.Boolean compund
+FIELD Vessel+ControlLevel isControlSource
+FIELD System.Int32 PhysicsSignificance
+FIELD Part+PhysicalSignificance physicalSignificance
+FIELD Part+PhysicalSignificance previousPhysicalSignificance
+FIELD System.Int32 collisionEnhancerSkipFrames
+FIELD System.Boolean isPersistent
+FIELD System.Boolean started
+FIELD System.Boolean editorStarted
+FIELD System.String InternalModelName
+FIELD System.Int32 CrewCapacity
+FIELD System.Double crewRespawnTime
+FIELD System.Single habitableVolume
+FIELD System.Boolean crewTransferAvailable
+FIELD System.Collections.Generic.List`1[ProtoCrewMember] protoModuleCrew
+FIELD InternalModel internalModel
+FIELD UnityEngine.Transform airlock
+FIELD System.Boolean noAutoEVAAny
+FIELD System.Boolean noAutoEVAMulti
+FIELD System.Boolean hasKerbalOnLadder
+FIELD System.Single hatchObstructionCheckOutwardDistance
+FIELD System.Single hatchObstructionCheckInwardOffset
+FIELD System.Single hatchObstructionCheckInwardDistance
+FIELD System.Single hatchObstructionCheckSphereRadius
+FIELD System.Single hatchObstructionCheckSphereOffset
+FIELD CollisionEnhancer collisionEnhancer
+FIELD PQS_PartCollider terrainCollider
+FIELD PartBuoyancy partBuoyancy
+FIELD System.Collections.Generic.List`1[PartModule] dockingPorts
+FIELD UnityEngine.Vector3 orgPos
+FIELD UnityEngine.Quaternion orgRot
+FIELD UnityEngine.Vector3 attPos
+FIELD UnityEngine.Vector3 attPos0
+FIELD UnityEngine.Quaternion attRotation
+FIELD UnityEngine.Quaternion attRotation0
+FIELD UnityEngine.Quaternion initRotation
+FIELD PartJoint attachJoint
+FIELD System.Single breakingForce
+FIELD System.Single breakingTorque
+FIELD System.Single crashTolerance
+FIELD System.Double gTolerance
+FIELD System.Boolean rigidAttachment
+FIELD System.Single tempExplodeChance
+FIELD System.Single gExplodeChance
+FIELD System.Single presExplodeChance
+FIELD System.Boolean applyKerbalMassModification
+FIELD System.Single mass
+FIELD System.Single prefabMass
+FIELD System.Boolean needPrefabMass
+FIELD System.Double resourceThermalMass
+FIELD System.Single resourceMass
+FIELD System.Double physicsMass
+FIELD System.Double thermalMass
+FIELD System.Double thermalMassReciprocal
+FIELD System.Double thermalMassModifier
+FIELD System.Single moduleMass
+FIELD System.Single inventoryMass
+FIELD System.Single kerbalMass
+FIELD System.Single kerbalInventoryMass
+FIELD System.Single kerbalResourceMass
+FIELD System.Single partSeatMassReduction
+FIELD System.Double temperature
+FIELD System.Double maxTemp
+FIELD System.Double maxPressure
+FIELD System.Single gaugeThresholdMult
+FIELD System.Single edgeHighlightThresholdMult
+FIELD System.Single blackBodyRadiationAlphaMult
+FIELD System.Double heatConductivity
+FIELD System.Double heatConvectiveConstant
+FIELD System.Double emissiveConstant
+FIELD System.Double absorptiveConstant
+FIELD PartThermalData ptd
+FIELD System.Double skinMassPerArea
+FIELD System.Double skinThermalMassModifier
+FIELD System.Double skinThermalMass
+FIELD System.Double skinThermalMassRecip
+FIELD System.Double skinMaxTemp
+FIELD System.Double skinUnexposedTemperature
+FIELD System.Double skinUnexposedExternalTemp
+FIELD System.Double skinExposedArea
+FIELD System.Double skinExposedAreaFrac
+FIELD System.Double skinExposedMassMult
+FIELD System.Double skinUnexposedMassMult
+FIELD System.Double skinSkinConductionMult
+FIELD System.Double skinInternalConductionMult
+FIELD System.Double skinToInternalFlux
+FIELD System.Boolean explodeOverheat
+FIELD System.Double radiatorMax
+FIELD System.Double radiatorCritical
+FIELD System.Double radiatorHeadroom
+FIELD UnityEngine.Vector3 CoMOffset
+FIELD UnityEngine.Vector3 CoPOffset
+FIELD UnityEngine.Vector3 CoLOffset
+FIELD System.String FailureState
+FIELD System.Boolean _canFail
+FIELD UnityEngine.Vector3 CenterOfBuoyancy
+FIELD UnityEngine.Vector3 CenterOfDisplacement
+FIELD System.Single buoyancy
+FIELD System.Boolean buoyancyUseSine
+FIELD System.Boolean angularDragByFI
+FIELD System.Single boundsMultiplier
+FIELD UnityEngine.Vector3 boundsCentroidOffset
+FIELD System.String buoyancyUseCubeNamed
+FIELD System.Double submergedPortion
+FIELD System.Double submergedDynamicPressurekPa
+FIELD System.Double minDepth
+FIELD System.Double maxDepth
+FIELD System.Double depth
+FIELD System.Double submergedDragScalar
+FIELD System.Double submergedLiftScalar
+FIELD UnityEngine.Rigidbody rb
+FIELD UnityEngine.Rigidbody servoRb
+FIELD System.Boolean packed
+FIELD Part+DragModel dragModel
+FIELD System.Single maximum_drag
+FIELD System.Single minimum_drag
+FIELD DragCubeList dragCubes
+FIELD System.Boolean drawDragCubeGizmo
+FIELD UnityEngine.Vector3 dragReferenceVector
+FIELD UnityEngine.Vector3 surfaceAreas
+FIELD System.Single angularDrag
+FIELD System.Single waterAngularDragMultiplier
+FIELD UnityEngine.Vector3 inertiaTensor
+FIELD System.Double dynamicPressurekPa
+FIELD System.Double staticPressureAtm
+FIELD System.Double atmDensity
+FIELD System.Double skinTemperature
+FIELD System.Double analyticSkinInsulationFactor
+FIELD System.Double analyticInternalInsulationFactor
+FIELD UnityEngine.Vector3 dragVector
+FIELD System.Single dragVectorSqrMag
+FIELD System.Single dragVectorMag
+FIELD UnityEngine.Vector3 dragVectorDir
+FIELD UnityEngine.Vector3 dragVectorDirLocal
+FIELD System.Single dragScalar
+FIELD System.Double machNumber
+FIELD System.Boolean hasLiftModule
+FIELD System.Single bodyLiftMultiplier
+FIELD System.Boolean bodyLiftOnlyUnattachedLift
+FIELD System.Boolean bodyLiftOnlyUnattachedLiftActual
+FIELD System.String bodyLiftOnlyAttachName
+FIELD ILiftProvider bodyLiftOnlyProvider
+FIELD System.Single bodyLiftScalar
+FIELD UnityEngine.Vector3 bodyLiftLocalPosition
+FIELD UnityEngine.Vector3 bodyLiftLocalVector
+FIELD System.Double radiativeArea
+FIELD System.Double exposedArea
+FIELD System.Double aerodynamicArea
+FIELD System.String customPartData
+FIELD System.Collections.Generic.List`1[FXGroup] fxGroups
+FIELD System.Single explosionPotential
+FIELD System.Boolean ActivatesEvenIfDisconnected
+FIELD System.Boolean fuelCrossFeed
+FIELD Part editorCollision
+FIELD UnityEngine.Collider collider
+FIELD AsteroidCollider asteroidCollider
+FIELD System.Boolean partTweakerSelected
+FIELD System.Single scaleFactor
+FIELD System.Single rescaleFactor
+FIELD Callback OnJustAboutToDie
+FIELD Callback OnJustAboutToBeDestroyed
+FIELD Callback OnEditorAttach
+FIELD Callback OnEditorDetach
+FIELD Callback OnEditorDestroy
+FIELD System.Boolean stageAfter
+FIELD System.Boolean stageBefore
+FIELD System.Boolean skipColliderIgnores
+FIELD System.Boolean listenersSet
+FIELD System.Boolean hasHeiarchyModel
+FIELD System.String initialVesselName
+FIELD VesselType vesselType
+FIELD System.String flagURL
+FIELD PartValues partValues
+FIELD MaterialColorUpdater temperatureRenderer
+FIELD System.Boolean overrideSkillUpdate
+FIELD System.String overrideSkillUpdateModules
+FIELD System.Collections.Generic.List`1[System.String] partRendererBoundsIgnore
+FIELD System.Collections.Generic.List`1[IConstruction] constructionModules
+FIELD UnityEngine.Transform referenceTransform
+FIELD UIPartActionWindow _partActionWindow
+FIELD UnityEngine.GameObject surfaceAttachGO
+FIELD DictionaryValueList`2[UnityEngine.Collider,System.Int32] currentCollisions
+FIELD System.Boolean GroundContact
+FIELD System.Boolean PermanentGroundContact
+FIELD System.Boolean WaterContact
+FIELD UnityEngine.Vector3 vel
+FIELD System.Collections.Generic.List`1[UnityEngine.Collider] cargoColliders
+FIELD System.Boolean checkAfterResetCollisions
+FIELD UnityEngine.Vector3 posBackup
+FIELD UnityEngine.Vector3 velBackup
+FIELD UnityEngine.Vector3 angVelBackup
+FIELD System.Double partWeight
+FIELD ModuleCargoPart cpCache
+FIELD System.Single cpMass
+FIELD ProtoCrewMember[] partCrew
+FIELD KSP.UI.Screens.ProtoStageIconInfo tempIndicator
+FIELD System.Boolean needsCollidersReset
+FIELD System.UInt32 lastFuelRequestId
+FIELD System.String NoCrossFeedNodeKey
+FIELD System.Collections.Generic.List`1[Part] resourceTargets
+FIELD System.Collections.Generic.List`1[UnityEngine.MeshRenderer] modelMeshRenderersCache
+FIELD System.Collections.Generic.List`1[UnityEngine.SkinnedMeshRenderer] modelSkinnedMeshRenderersCache
+FIELD System.Collections.Generic.List`1[UnityEngine.Renderer] modelRenderersCache
+FIELD BaseEventList events
+FIELD BaseFieldList fields
+FIELD BaseActionList actions
+FIELD PartModuleList modules
+FIELD Part+ReflectedAttributes <PartAttributes>k__BackingField
+FIELD System.Collections.Generic.Dictionary`2[System.Type,PartModule] cachedModules
+FIELD System.Collections.Generic.Dictionary`2[System.Type,System.Collections.Generic.List`1[PartModule]] cachedModuleLists
+FIELD AttachRules attachRules
+FIELD System.Collections.Generic.List`1[AttachNode] attachNodes
+FIELD AttachNode srfAttachNode
+FIELD AttachNodeMethod attachMethod
+FIELD AttachNode topNode
+FIELD System.Boolean drawAttachNodeGizmo
+FIELD EffectList effects
+FIELD System.String partName
+FIELD System.Int32 lastRequestID
+FIELD PartSet crossfeedPartSet
+FIELD PartSet simulationCrossfeedPartSet
+FIELD PartResourceList _resources
+FIELD PartResourceList _simulationResources
+FIELD System.Int32 resourcePriorityOffset
+FIELD System.Boolean resourcePriorityUseParentInverseStage
+FIELD System.Boolean alwaysShowResourcePriority
+FIELD System.Boolean fuelFlowOverlayEnabled
+FIELD System.Double resourceRequestRemainingThreshold
+FIELD System.Double stackPriThreshold
+FIELD UnityEngine.Vector3 mirrorAxis
+FIELD UnityEngine.Vector3 mirrorRefAxis
+FIELD UnityEngine.Vector3 mirrorVector
+FIELD System.Boolean isMirrored
+FIELD Highlighting.Highlighter hl
+FIELD Part+HighlightType highlightType
+FIELD UnityEngine.Color highlightColor
+FIELD System.Boolean highlightActive
+FIELD System.Boolean recurseHighlight
+FIELD System.Collections.Generic.List`1[UnityEngine.Renderer] highlightRenderer
+FIELD UnityEngine.MaterialPropertyBlock _mpb
+FIELD System.Boolean rendererlistscreated
+FIELD UnityEngine.Color currentHighlightColor
+FIELD System.Boolean highlightBlocked
+FIELD System.Boolean mouseEntered
+FIELD System.Boolean mouseOver
+FIELD Part+OnActionDelegate onMouseEnter
+FIELD Part+OnActionDelegate onMouseExit
+FIELD Part+OnActionDelegate onMouseDown
+FIELD UnityEngine.Vector3 moduleSize
+FIELD UnityEngine.Vector3 prefabSize
+FIELD ArrowPointer dragArrowPtr
+FIELD ArrowPointer bodyLiftArrowPtr
+FIELD System.Boolean aeroDisplayWasActive
+FIELD System.Double thermalConvectionFlux
+FIELD System.Double thermalConductionFlux
+FIELD System.Double thermalRadiationFlux
+FIELD System.Double thermalInternalFlux
+FIELD System.Double thermalInternalFluxPrevious
+FIELD System.Double thermalSkinFlux
+FIELD System.Double thermalSkinFluxPrevious
+FIELD System.Double thermalExposedFlux
+FIELD System.Double thermalExposedFluxPrevious
+FIELD System.String isShieldedDisplay
+FIELD BaseField shieldedFld
+FIELD System.Boolean recheckShielding
+FIELD System.Boolean partIsShielded
+FIELD System.Collections.Generic.List`1[IAirstreamShield] airstreamShields
+FIELD System.Boolean canAimCamera
+FIELD System.Boolean stagingOn
+FIELD System.Boolean stagingIconAlwaysShown
+FIELD System.Collections.Generic.List`1[PartJoint] autoStrutJoints
+FIELD System.Collections.Generic.List`1[Vectrosity.VectorLine] autoStrutLines
+FIELD Vessel autoStrutVessel
+FIELD System.Boolean autoStrutCycling
+FIELD System.Boolean autoStrutQuickViz
+FIELD System.Single autoStrutQuickVizStart
+FIELD System.Single autoStrutHighMass
+FIELD Vessel autoStrutCacheVessel
+FIELD System.Single autoStrutCacheTick
+FIELD UnityEngine.Vector3 strutOffset
+FIELD Part+AutoStrutMode autoStrutMode
+FIELD System.Boolean autoStrutExcludeParent
+FIELD System.Boolean autoStrutEnableOptionFlight
+FIELD System.Boolean autoStrutEnableOptionEditor
+FIELD UnityEngine.Coroutine cyclingAutoStruts
+FIELD Part+ShowRigidAttachmentOption showRigidOption
+FIELD System.Collections.Generic.List`1[Part+ForceHolder] forces
+FIELD Vector3d force
+FIELD Vector3d torque
+FIELD VesselNaming vesselNaming
+FIELD KSP.UI.Screens.VesselRenameDialog renameDialog
+FIELD System.String vesselNamingDisplayName
+FIELD System.String vesselNamingDisplayPriority
+FIELD UnityEngine.LayerMask layerMask
+FIELD System.Collections.Generic.List`1[Part] allParts
+FIELD Part+voidPartDelegate CheckPartTemp
+FIELD Part+voidPartDelegate CheckPartPressure
+FIELD Part+voidPartDelegate CheckPartG
+FIELD System.UInt32 fuelRequestID
+FIELD System.Collections.Generic.Dictionary`2[System.Type,Part+ReflectedAttributes] reflectedAttributeCache
+FIELD System.Int32 ResourceRequestID
+FIELD UnityEngine.Color defaultHighlightPart
+FIELD UnityEngine.Color defaultHighlightNone
+FIELD System.Single defaultHighlightFalloff
+FIELD System.Boolean AlwaysRecheckShielding
+FIELD Part+voidPartDelegate UpgradeStatsDel
+FIELD System.String cacheAutoLOC_439839
+FIELD System.String cacheAutoLOC_439840
+FIELD System.String cacheAutoLOC_7001406
+FIELD System.String cacheAutoLOC_211269
+FIELD System.String cacheAutoLOC_211272
+FIELD System.String cacheAutoLOC_211274
+FIELD System.String cacheAutoLOC_7000027
+FIELD System.String cacheAutoLOC_211097
+FIELD System.String untagged
+FIELD System.Single autoStrutQuickVizDuration
+FIELD System.Single autoStrutQuickVizHold
+FIELD System.Single autoStrutQuickVizFade
+METHOD ToggleSameVesselInteraction
+METHOD SetSameVesselInteraction
+METHOD RemoveSameVesselInteraction
+METHOD getSymmetryCounterPart
+METHOD isSymmetryCounterPart
+METHOD get_isVesselEVA
+METHOD isKerbalEVA
+METHOD isCargoPart
+METHOD isInventoryPart
+METHOD isGroundDeployable
+METHOD isLaunchClamp
+METHOD isAnchoredDecoupler
+METHOD isDecoupler
+METHOD isDockingPort
+METHOD isAirIntake
+METHOD isSolarPanel
+METHOD isRadiator
+METHOD isAntenna
+METHOD isGenerator
+METHOD isFairing
+METHOD isEngine
+METHOD isEngine
+METHOD isParachute
+METHOD isRobotic
+METHOD isRobotic
+METHOD isRoboticRotor
+METHOD isRoboticRotor
+METHOD isRoboticHinge
+METHOD isRoboticHinge
+METHOD isRoboticPiston
+METHOD isRoboticPiston
+METHOD isRoboticRotationServo
+METHOD isRoboticRotationServo
+METHOD isChildOfRoboticRotor
+METHOD isChildOfRoboticRotor
+METHOD isControlSurface
+METHOD isControlSurface
+METHOD isBaseServo
+METHOD isRoboticController
+METHOD isRoboticController
+METHOD isKerbalSeat
+METHOD hasWheelDamage
+METHOD hasWheelDamage
+METHOD isTrackingShipConstructIDChanges
+METHOD get_ModuleAnimateGenerics
+METHOD get_localRoot
+METHOD set_State
+METHOD get_State
+METHOD get_hasStagingIcon
+  0000 ldarg.0
+  0001 ldfld System.String stagingIcon
+  0006 ldsfld System.String Empty
+  000B call Boolean op_Inequality(System.String, System.String)
+  0010 dup
+  0011 pop
+  0012 ret
+METHOD get_isAttached
+  0000 ldarg.0
+  0001 ldfld Boolean attached
+  0006 ret
+METHOD set_isAttached
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 stfld Boolean attached
+  0007 ret
+METHOD get_isCompund
+METHOD get_isAttachable
+  0000 ldarg.0
+  0001 ldfld AttachModes attachMode
+  0006 ldc.i4.1
+  0007 bne.un.s 001E
+  0009 ldc.i4.1
+  000A switch
+  0013 ldc.i4.1
+  0014 brtrue.s 001C
+  0016 ldtoken Boolean get_isAttachable()
+  001B pop
+  001C ldc.i4.1
+  001D ret
+  001E ldc.i4.0
+  001F stloc.0
+  0020 ldarg.0
+  0021 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0026 callvirt Int32 get_Count()
+  002B dup
+  002C pop
+  002D stloc.1
+  002E br.s 005D
+  0030 ldarg.0
+  0031 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0036 ldloc.0
+  0037 callvirt AttachNode get_Item(Int32)
+  003C dup
+  003D pop
+  003E ldfld Part attachedPart
+  0043 ldnull
+  0044 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0049 dup
+  004A pop
+  004B brfalse.s 0059
+  004D ldc.i4.3
+  004E switch
+  0057 ldc.i4.1
+  0058 ret
+  0059 ldloc.0
+  005A ldc.i4.1
+  005B add
+  005C stloc.0
+  005D ldloc.0
+  005E ldloc.1
+  005F blt.s 0030
+  0061 ldc.i4.4
+  0062 switch
+  006B ldc.i4.0
+  006C ret
+METHOD get_isControllable
+METHOD get_NoAutoEVA
+METHOD get_WCoM
+METHOD get_CanFail
+METHOD set_CanFail
+METHOD get_Rigidbody
+METHOD get_DragCubes
+METHOD findFxGroup
+METHOD get_PartTweakerSelected
+METHOD set_PartTweakerSelected
+METHOD get_orbit
+METHOD get_PartValues
+METHOD GetReferenceTransform
+METHOD GetReferenceParent
+METHOD GetPartColliders
+METHOD GetPartRenderers
+METHOD SetReferenceTransform
+METHOD SetSymmetryValues
+METHOD get_PartActionWindow
+METHOD OnLoad
+METHOD RelinkPrefab
+METHOD Awake
+METHOD Start
+METHOD CheckBodyLiftAttachment
+  0000 ldarg.0
+  0001 ldc.i4.0
+  0002 stfld Boolean bodyLiftOnlyUnattachedLiftActual
+  0007 ldarg.0
+  0008 ldfld Boolean bodyLiftOnlyUnattachedLift
+  000D brfalse 00DA
+  0012 ldc.i4.2
+  0013 switch
+  001C ldc.i4.1
+  001D brtrue.s 0025
+  001F ldtoken Void CheckBodyLiftAttachment()
+  0024 pop
+  0025 ldarg.0
+  0026 ldfld System.String bodyLiftOnlyAttachName
+  002B call Boolean IsNullOrEmpty(System.String)
+  0030 dup
+  0031 pop
+  0032 brtrue 00DA
+  0037 ldc.i4.1
+  0038 switch
+  0041 ldarg.0
+  0042 ldarg.0
+  0043 ldfld System.String bodyLiftOnlyAttachName
+  0048 call AttachNode FindAttachNode(System.String)
+  004D dup
+  004E pop
+  004F ldfld Part attachedPart
+  0054 stloc.0
+  0055 ldloc.0
+  0056 ldnull
+  0057 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  005C dup
+  005D pop
+  005E brfalse 00DA
+  0063 ldc.i4.6
+  0064 switch
+  006D ldarg.0
+  006E ldnull
+  006F stfld ILiftProvider bodyLiftOnlyProvider
+  0074 ldloc.0
+  0075 callvirt PartModuleList get_Modules()
+  007A dup
+  007B pop
+  007C callvirt Int32 get_Count()
+  0081 dup
+  0082 pop
+  0083 stloc.1
+  0084 br.s 00C8
+  0086 ldloc.0
+  0087 callvirt PartModuleList get_Modules()
+  008C dup
+  008D pop
+  008E ldloc.1
+  008F callvirt PartModule get_Item(Int32)
+  0094 dup
+  0095 pop
+  0096 isinst ILiftProvider
+  009B brfalse.s 00C8
+  009D ldc.i4.7
+  009E switch
+  00A7 ldarg.0
+  00A8 ldloc.0
+  00A9 ldfld PartModuleList modules
+  00AE ldloc.1
+  00AF callvirt PartModule get_Item(Int32)
+  00B4 dup
+  00B5 pop
+  00B6 isinst ILiftProvider
+  00BB stfld ILiftProvider bodyLiftOnlyProvider
+  00C0 ldarg.0
+  00C1 ldc.i4.1
+  00C2 stfld Boolean bodyLiftOnlyUnattachedLiftActual
+  00C7 ret
+  00C8 ldloc.1
+  00C9 dup
+  00CA ldc.i4.1
+  00CB sub
+  00CC stloc.1
+  00CD ldc.i4.0
+  00CE bgt.s 0086
+  00D0 ldc.i4.5
+  00D1 switch
+  00DA ret
+METHOD CheckTransferDialog
+METHOD OnEnable
+METHOD OnDisable
+METHOD OnDestroy
+METHOD SameVesselCollision
+METHOD OnPartCreatedFomInventory
+METHOD OnInventoryModeDisable
+METHOD OnInventoryModeEnable
+METHOD OnConstructionModeUpdate
+METHOD OnConstructionModeFixedUpdate
+METHOD OnWillBeCopied
+METHOD OnWasCopied
+METHOD OnCopy
+METHOD OnWillBeMirrored
+METHOD CreateAttachJoint
+  0000 ldarg.0
+  0001 ldfld Part parent
+  0006 call Boolean op_Implicit(UnityEngine.Object)
+  000B dup
+  000C pop
+  000D brfalse 0091
+  0012 ldc.i4.2
+  0013 switch
+  001C ldc.i4.1
+  001D brtrue.s 0025
+  001F ldtoken Void CreateAttachJoint(AttachModes)
+  0024 pop
+  0025 ldarg.0
+  0026 ldfld Boolean attached
+  002B brfalse.s 0091
+  002D ldc.i4.4
+  002E switch
+  0037 ldarg.0
+  0038 ldarg.0
+  0039 ldfld Part parent
+  003E call AttachNode FindAttachNodeByPart(Part)
+  0043 dup
+  0044 pop
+  0045 stloc.0
+  0046 ldarg.0
+  0047 ldfld Part parent
+  004C ldarg.0
+  004D callvirt AttachNode FindAttachNodeByPart(Part)
+  0052 dup
+  0053 pop
+  0054 stloc.1
+  0055 ldarg.0
+  0056 ldfld PartJoint attachJoint
+  005B ldnull
+  005C call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0061 dup
+  0062 pop
+  0063 brfalse.s 007A
+  0065 ldc.i4.4
+  0066 switch
+  006F ldarg.0
+  0070 ldfld PartJoint attachJoint
+  0075 callvirt Void DestroyJoint()
+  007A ldarg.0
+  007B ldarg.0
+  007C ldarg.0
+  007D ldfld Part parent
+  0082 ldloc.0
+  0083 ldloc.1
+  0084 ldarg.1
+  0085 call PartJoint Create(Part, Part, AttachNode, AttachNode, AttachModes)
+  008A dup
+  008B pop
+  008C stfld PartJoint attachJoint
+  0091 ret
+METHOD ResetCollisionIgnores
+METHOD SetCollisionIgnores
+METHOD SpawnIVA
+METHOD DespawnIVA
+METHOD RemoveCrewmember
+METHOD AddCrewmember
+METHOD AddCrewmemberAt
+METHOD RegisterCrew
+METHOD UnregisterCrew
+METHOD GetCrewCountOfExperienceEffect
+METHOD GetCrewOfExperienceEffect
+METHOD OnLevelLoaded
+METHOD freeze
+METHOD unfreeze
+METHOD setParent
+METHOD clearParent
+METHOD addChild
+METHOD removeChild
+METHOD hasIndirectChild
+METHOD hasIndirectParent
+METHOD onAttach
+  0000 ldarg.0
+  0001 ldarg.1
+  0002 callvirt Void onPartAttach(Part)
+  0007 ldarg.0
+  0008 ldfld Callback OnEditorAttach
+  000D callvirt Void Invoke()
+  0012 ldarg.0
+  0013 ldc.i4.1
+  0014 stfld Boolean connected
+  0019 ldc.i4.0
+  001A stloc.0
+  001B ldarg.0
+  001C ldfld System.Collections.Generic.List`1[Part] children
+  0021 callvirt Int32 get_Count()
+  0026 dup
+  0027 pop
+  0028 stloc.1
+  0029 br.s 0044
+  002B ldarg.0
+  002C ldfld System.Collections.Generic.List`1[Part] children
+  0031 ldloc.0
+  0032 callvirt Part get_Item(Int32)
+  0037 dup
+  0038 pop
+  0039 ldarg.0
+  003A ldc.i4.0
+  003B callvirt Void onAttach(Part, Boolean)
+  0040 ldloc.0
+  0041 ldc.i4.1
+  0042 add
+  0043 stloc.0
+  0044 ldloc.0
+  0045 ldloc.1
+  0046 blt.s 002B
+  0048 ldc.i4.4
+  0049 switch
+  0052 ldc.i4.1
+  0053 brtrue.s 005B
+  0055 ldtoken Void onAttach(Part, Boolean)
+  005A pop
+  005B ldarg.0
+  005C call Void RefreshHighlighter()
+  0061 ldarg.0
+  0062 call Void CycleAutoStrut()
+  0067 ldarg.0
+  0068 call Void SetRemoveSymmetryVisibililty()
+  006D ldarg.2
+  006E brtrue.s 007B
+  0070 ldc.i4.4
+  0071 switch
+  007A ret
+  007B ldarg.0
+  007C call Part get_localRoot()
+  0081 dup
+  0082 pop
+  0083 call Void GenerateStagingSequence(Part)
+  0088 ret
+METHOD OnAttachFlight
+  0000 ldarg.1
+  0001 ldfld Vessel vessel
+  0006 ldnull
+  0007 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  000C dup
+  000D pop
+  000E brfalse.s 0024
+  0010 ldc.i4.1
+  0011 switch
+  001A ldc.i4.1
+  001B brtrue.s 0023
+  001D ldtoken Void OnAttachFlight(Part)
+  0022 pop
+  0023 ret
+  0024 ldarg.0
+  0025 ldarg.1
+  0026 stfld Part parent
+  002B ldarg.0
+  002C ldarg.1
+  002D ldfld Vessel vessel
+  0032 stfld Vessel vessel
+  0037 ldarg.0
+  0038 ldarg.1
+  0039 callvirt Void onPartAttach(Part)
+  003E ldarg.0
+  003F ldfld Vessel vessel
+  0044 callvirt System.Collections.Generic.List`1[Part] get_Parts()
+  0049 dup
+  004A pop
+  004B ldarg.0
+  004C callvirt Void Add(Part)
+  0051 ldarg.1
+  0052 ldarg.0
+  0053 callvirt Void addChild(Part)
+  0058 ldarg.0
+  0059 ldfld Vessel vessel
+  005E ldfld VesselType vesselType
+  0063 ldc.i4.0
+  0064 ble.s 008C
+  0066 ldc.i4.7
+  0067 switch
+  0070 ldarg.0
+  0071 ldfld Vessel vessel
+  0076 ldfld VesselType vesselType
+  007B ldc.i4.s
+  007D bne.un 014E
+  0082 ldc.i4.3
+  0083 switch
+  008C ldarg.0
+  008D ldfld VesselType vesselType
+  0092 ldc.i4.0
+  0093 ble 014E
+  0098 ldc.i4.3
+  0099 switch
+  00A2 ldarg.0
+  00A3 ldfld Vessel vessel
+  00A8 ldarg.0
+  00A9 ldfld VesselType vesselType
+  00AE stfld VesselType vesselType
+  00B3 call Boolean get_CommNetEnabled()
+  00B8 dup
+  00B9 pop
+  00BA brfalse.s 012A
+  00BC ldc.i4.6
+  00BD switch
+  00C6 call CommNet.CommNetScenario get_Instance()
+  00CB dup
+  00CC pop
+  00CD ldnull
+  00CE call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  00D3 dup
+  00D4 pop
+  00D5 brfalse.s 012A
+  00D7 ldc.i4.6
+  00D8 switch
+  00E1 ldarg.0
+  00E2 ldfld Vessel vessel
+  00E7 callvirt CommNet.CommNetVessel FindVesselModuleImplementing[CommNetVessel]()
+  00EC dup
+  00ED pop
+  00EE stloc.1
+  00EF ldloc.1
+  00F0 ldnull
+  00F1 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  00F6 dup
+  00F7 pop
+  00F8 brfalse.s 012A
+  00FA ldc.i4.3
+  00FB switch
+  0104 ldarg.0
+  0105 ldfld Vessel vessel
+  010A callvirt UnityEngine.GameObject get_gameObject()
+  010F dup
+  0110 pop
+  0111 callvirt CommNet.CommNetVessel AddComponent[CommNetVessel]()
+  0116 dup
+  0117 pop
+  0118 stloc.1
+  0119 ldarg.0
+  011A ldfld Vessel vessel
+  011F ldfld System.Collections.Generic.List`1[VesselModule] vesselModules
+  0124 ldloc.1
+  0125 callvirt Void Add(VesselModule)
+  012A ldarg.0
+  012B call ModuleCommand FindModuleImplementing[ModuleCommand]()
+  0130 dup
+  0131 pop
+  0132 stloc.0
+  0133 ldloc.0
+  0134 ldnull
+  0135 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  013A dup
+  013B pop
+  013C brfalse.s 014E
+  013E ldc.i4.3
+  013F switch
+  0148 ldloc.0
+  0149 callvirt Void UpdateControlState()
+  014E ldarg.0
+  014F ldfld Vessel vessel
+  0154 ldfld Part rootPart
+  0159 ldnull
+  015A call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  015F dup
+  0160 pop
+  0161 brfalse.s 0186
+  0163 ldc.i4.6
+  0164 switch
+  016D ldarg.0
+  016E call Game get_CurrentGame()
+  0173 dup
+  0174 pop
+  0175 ldfld FlightState flightState
+  017A call UInt32 GetUniqueFlightID(FlightState)
+  017F dup
+  0180 pop
+  0181 stfld UInt32 flightID
+  0186 ldarg.0
+  0187 ldfld UnityEngine.Rigidbody rb
+  018C call Boolean op_Implicit(UnityEngine.Object)
+  0191 dup
+  0192 pop
+  0193 brfalse.s 01CA
+  0195 ldc.i4.7
+  0196 switch
+  019F ldarg.0
+  01A0 ldfld PhysicalSignificance physicalSignificance
+  01A5 brtrue.s 01BF
+  01A7 ldc.i4.4
+  01A8 switch
+  01B1 ldarg.0
+  01B2 ldfld UnityEngine.Rigidbody rb
+  01B7 ldc.i4.0
+  01B8 callvirt Void set_isKinematic(Boolean)
+  01BD br.s 01CA
+  01BF ldarg.0
+  01C0 ldfld UnityEngine.Rigidbody rb
+  01C5 call Void Destroy(UnityEngine.Object)
+  01CA ldarg.0
+  01CB ldc.i4.0
+  01CC stfld PartStates state
+  01D1 ldarg.0
+  01D2 ldc.i4.0
+  01D3 stfld PartStates ResumeState
+  01D8 ldarg.0
+  01D9 ldc.i4.0
+  01DA stfld PartStates PreFailState
+  01DF ldarg.0
+  01E0 ldc.i4.1
+  01E1 stfld Boolean connected
+  01E6 ldarg.0
+  01E7 ldarg.1
+  01E8 ldfld Vessel vessel
+  01ED ldfld Part rootPart
+  01F2 call Void UpdateOrgPosAndRot(Part)
+  01F7 ldarg.0
+  01F8 callvirt Void OnInventoryModeEnable()
+  01FD ldc.i4.0
+  01FE stloc.2
+  01FF br.s 022C
+  0201 ldarg.0
+  0202 ldfld PartModuleList modules
+  0207 ldloc.2
+  0208 callvirt PartModule get_Item(Int32)
+  020D dup
+  020E pop
+  020F ldc.i4.1
+  0210 callvirt Void set_enabled(Boolean)
+  0215 ldarg.0
+  0216 ldfld PartModuleList modules
+  021B ldloc.2
+  021C callvirt PartModule get_Item(Int32)
+  0221 dup
+  0222 pop
+  0223 callvirt Void OnInventoryModeEnable()
+  0228 ldloc.2
+  0229 ldc.i4.1
+  022A add
+  022B stloc.2
+  022C ldloc.2
+  022D ldarg.0
+  022E ldfld PartModuleList modules
+  0233 callvirt Int32 get_Count()
+  0238 dup
+  0239 pop
+  023A blt.s 0201
+  023C ldc.i4.7
+  023D switch
+  0246 ldarg.0
+  0247 ldfld Boolean sameVesselCollision
+  024C brtrue.s 026D
+  024E ldc.i4.5
+  024F switch
+  0258 ldarg.0
+  0259 callvirt UnityEngine.Collider[] GetPartColliders()
+  025E dup
+  025F pop
+  0260 stloc.3
+  0261 ldarg.1
+  0262 ldfld Vessel vessel
+  0267 ldloc.3
+  0268 call Void IgnoreCollidersOnVessel(Vessel, UnityEngine.Collider[])
+  026D ldarg.0
+  026E ldc.i4.1
+  026F call Void set_enabled(Boolean)
+  0274 ldarg.0
+  0275 call Void InitializeModules()
+  027A ldarg.0
+  027B call Void SetupHighlighter()
+  0280 ldarg.0
+  0281 call Void RefreshHighlighter()
+  0286 ldarg.0
+  0287 call Void CycleAutoStrut()
+  028C ldarg.0
+  028D ldfld PhysicalSignificance physicalSignificance
+  0292 ldc.i4.1
+  0293 bne.un.s 02B6
+  0295 ldc.i4.7
+  0296 switch
+  029F ldarg.0
+  02A0 call UnityEngine.Transform get_transform()
+  02A5 dup
+  02A6 pop
+  02A7 ldarg.1
+  02A8 callvirt UnityEngine.Transform get_transform()
+  02AD dup
+  02AE pop
+  02AF callvirt Void SetParent(UnityEngine.Transform)
+  02B4 br.s 02C4
+  02B6 ldarg.0
+  02B7 call UnityEngine.Transform get_transform()
+  02BC dup
+  02BD pop
+  02BE ldnull
+  02BF callvirt Void SetParent(UnityEngine.Transform)
+  02C4 ldsfld EventData`1[Vessel] onVesselWasModified
+  02C9 ldarg.0
+  02CA ldfld Vessel vessel
+  02CF callvirt Void Fire(Vessel)
+  02D4 ldsfld EventData`1[Vessel] onVesselPartCountChanged
+  02D9 ldarg.0
+  02DA ldfld Vessel vessel
+  02DF callvirt Void Fire(Vessel)
+  02E4 ldarg.0
+  02E5 ldarg.0
+  02E6 call System.Collections.IEnumerator WaitForStart()
+  02EB dup
+  02EC pop
+  02ED call UnityEngine.Coroutine StartCoroutine(System.Collections.IEnumerator)
+  02F2 dup
+  02F3 pop
+  02F4 pop
+  02F5 ret
+METHOD WaitForStart
+METHOD onDetach
+METHOD OnDetachFlight
+METHOD OnDelete
+METHOD force_activate
+METHOD force_activate
+METHOD activate
+METHOD deactivate
+METHOD decouple
+METHOD Decoupling
+METHOD FindNonPhysicslessChildren
+METHOD FindNonPhysicslessParent
+METHOD PromoteToPhysicalPart
+METHOD DemoteToPhysicslessPart
+METHOD GetPhysicslessChildMass
+METHOD FindPartThroughNodes
+  0000 ldarg.2
+  0001 ldarg.0
+  0002 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0007 dup
+  0008 pop
+  0009 brfalse.s 0020
+  000B ldc.i4.6
+  000C switch
+  0015 ldc.i4.1
+  0016 brtrue.s 001E
+  0018 ldtoken AttachNode FindPartThroughNodes(Part, Part)
+  001D pop
+  001E ldnull
+  001F ret
+  0020 ldc.i4.0
+  0021 stloc.1
+  0022 ldarg.0
+  0023 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0028 callvirt Int32 get_Count()
+  002D dup
+  002E pop
+  002F stloc.2
+  0030 br 00B5
+  0035 ldarg.0
+  0036 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  003B ldloc.1
+  003C callvirt AttachNode get_Item(Int32)
+  0041 dup
+  0042 pop
+  0043 stloc.0
+  0044 ldloc.0
+  0045 ldfld Part attachedPart
+  004A ldarg.1
+  004B call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0050 dup
+  0051 pop
+  0052 brfalse.s 0060
+  0054 ldc.i4.2
+  0055 switch
+  005E ldloc.0
+  005F ret
+  0060 ldloc.0
+  0061 ldfld Part attachedPart
+  0066 ldnull
+  0067 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  006C dup
+  006D pop
+  006E brtrue.s 00B1
+  0070 ldc.i4.5
+  0071 switch
+  007A ldloc.0
+  007B ldfld Part attachedPart
+  0080 ldarg.2
+  0081 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0086 dup
+  0087 pop
+  0088 brtrue.s 00B1
+  008A ldc.i4.6
+  008B switch
+  0094 ldloc.0
+  0095 ldfld Part attachedPart
+  009A ldarg.1
+  009B ldarg.0
+  009C callvirt AttachNode FindPartThroughNodes(Part, Part)
+  00A1 dup
+  00A2 pop
+  00A3 brfalse.s 00B1
+  00A5 ldc.i4.3
+  00A6 switch
+  00AF ldloc.0
+  00B0 ret
+  00B1 ldloc.1
+  00B2 ldc.i4.1
+  00B3 add
+  00B4 stloc.1
+  00B5 ldloc.1
+  00B6 ldloc.2
+  00B7 blt 0035
+  00BC ldc.i4.3
+  00BD switch
+  00C6 ldarg.0
+  00C7 ldfld AttachNode srfAttachNode
+  00CC brfalse 0166
+  00D1 ldc.i4.5
+  00D2 switch
+  00DB ldarg.0
+  00DC ldfld AttachNode srfAttachNode
+  00E1 ldfld Part attachedPart
+  00E6 ldarg.1
+  00E7 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  00EC dup
+  00ED pop
+  00EE brfalse.s 0101
+  00F0 ldc.i4.7
+  00F1 switch
+  00FA ldarg.0
+  00FB ldfld AttachNode srfAttachNode
+  0100 ret
+  0101 ldarg.0
+  0102 ldfld AttachNode srfAttachNode
+  0107 ldfld Part attachedPart
+  010C ldnull
+  010D call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0112 dup
+  0113 pop
+  0114 brtrue.s 0166
+  0116 ldc.i4.4
+  0117 switch
+  0120 ldarg.0
+  0121 ldfld AttachNode srfAttachNode
+  0126 ldfld Part attachedPart
+  012B ldarg.2
+  012C call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0131 dup
+  0132 pop
+  0133 brtrue.s 0166
+  0135 ldc.i4.4
+  0136 switch
+  013F ldarg.0
+  0140 ldfld AttachNode srfAttachNode
+  0145 ldfld Part attachedPart
+  014A ldarg.1
+  014B ldarg.0
+  014C callvirt AttachNode FindPartThroughNodes(Part, Part)
+  0151 dup
+  0152 pop
+  0153 brfalse.s 0166
+  0155 ldc.i4.5
+  0156 switch
+  015F ldarg.0
+  0160 ldfld AttachNode srfAttachNode
+  0165 ret
+  0166 ldnull
+  0167 ret
+METHOD disconnect
+METHOD CleanSymmetryVesselReferencesRecursively
+METHOD CleanSymmetryReferences
+METHOD CleanSymmetryVesselReferences
+METHOD SetLayer
+METHOD OnPartJointBreak
+METHOD Couple
+METHOD SetHierarchyRoot
+METHOD UpdateOrgPosAndRot
+METHOD SetVessel
+METHOD Undock
+METHOD get_Landed
+METHOD get_Splashed
+METHOD OnCollisionEnter
+METHOD LandedCollisionChecks
+METHOD OnCollisionExit
+METHOD CheckOtherGroundContact
+METHOD CheckCollision
+METHOD HandleCollision
+METHOD OnTouchDown
+METHOD OnSplashDown
+METHOD OnLiftOff
+METHOD checkLanded
+METHOD checkSplashed
+METHOD checkPermanentLandedAt
+METHOD Pack
+METHOD Unpack
+METHOD ResetJoints
+METHOD ResumeVelocity
+METHOD EnableCollisions
+METHOD DisableCollisions
+METHOD SetDetectCollisions
+METHOD OnTriggerEnter
+METHOD OnTriggerExit
+METHOD OnCollisionStay
+METHOD ResetCollisions
+METHOD ResetCollisionsCheck
+METHOD SetOpacity
+METHOD SetShader
+METHOD propagateControlUpdate
+METHOD partPause
+METHOD partUnpause
+METHOD UpdateMass
+METHOD IsUnderConstructionWeightLimit
+METHOD FixedUpdate
+METHOD _CheckPartTemp
+METHOD _CheckPartPressure
+METHOD _CheckPartG
+METHOD ValidateInertiaTensor
+METHOD HeatGaugeUpdate
+METHOD ResetMPB
+METHOD Update
+  0000 call Boolean get_Pause()
+  0005 dup
+  0006 pop
+  0007 brtrue.s 0055
+  0009 ldc.i4.4
+  000A switch
+  0013 ldc.i4.1
+  0014 brtrue.s 001C
+  0016 ldtoken Void Update()
+  001B pop
+  001C ldarg.0
+  001D ldfld PartStates state
+  0022 ldc.i4.3
+  0023 beq.s 0055
+  0025 ldc.i4.3
+  0026 switch
+  002F ldarg.0
+  0030 ldfld PartStates state
+  0035 ldc.i4.5
+  0036 beq.s 0055
+  0038 ldc.i4.6
+  0039 switch
+  0042 ldarg.0
+  0043 ldfld PartStates state
+  0048 ldc.i4.6
+  0049 bne.un.s 0056
+  004B ldc.i4.2
+  004C switch
+  0055 ret
+  0056 ldsfld Boolean LoadedSceneIsEditor
+  005B brfalse.s 008C
+  005D ldc.i4.7
+  005E switch
+  0067 ldsfld EditorLogic fetch
+  006C ldnull
+  006D call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0072 dup
+  0073 pop
+  0074 brfalse.s 008C
+  0076 ldc.i4.7
+  0077 switch
+  0080 ldarg.0
+  0081 callvirt Void onEditorUpdate()
+  0086 ldarg.0
+  0087 call Void updateMirroring()
+  008C ldarg.0
+  008D call Void UpdateMouseOver()
+  0092 ldsfld Boolean LoadedSceneIsFlight
+  0097 brfalse.s 00C6
+  0099 ldc.i4.6
+  009A switch
+  00A3 ldarg.0
+  00A4 ldfld Boolean started
+  00A9 brfalse.s 00C6
+  00AB ldc.i4.7
+  00AC switch
+  00B5 ldsfld Boolean ready
+  00BA brtrue.s 00C7
+  00BC ldc.i4.1
+  00BD switch
+  00C6 ret
+  00C7 ldarg.0
+  00C8 ldfld MaterialColorUpdater temperatureRenderer
+  00CD brfalse.s 00F6
+  00CF ldc.i4.7
+  00D0 switch
+  00D9 ldarg.0
+  00DA ldfld Double skinTemperature
+  00DF conv.r4
+  00E0 ldarg.0
+  00E1 call UnityEngine.Color GetBlackBodyRadiation(Single, Part)
+  00E6 dup
+  00E7 pop
+  00E8 stloc.0
+  00E9 ldarg.0
+  00EA ldfld MaterialColorUpdater temperatureRenderer
+  00EF ldloc.0
+  00F0 ldc.i4.0
+  00F1 callvirt Void Update(UnityEngine.Color, Boolean)
+  00F6 ldarg.0
+  00F7 ldfld Boolean overrideSkillUpdate
+  00FC brtrue.s 011B
+  00FE ldc.i4.5
+  00FF switch
+  0108 ldarg.0
+  0109 ldfld Int32 CrewCapacity
+  010E ldc.i4.0
+  010F ble.s 0126
+  0111 ldc.i4.4
+  0112 switch
+  011B ldarg.0
+  011C ldfld PartValues partValues
+  0121 callvirt Void Update()
+  0126 ldarg.0
+  0127 callvirt Void onPartUpdate()
+  012C ldarg.0
+  012D ldfld PartStates state
+  0132 ldc.i4.1
+  0133 bne.un.s 0145
+  0135 ldc.i4.5
+  0136 switch
+  013F ldarg.0
+  0140 callvirt Void onActiveUpdate()
+  0145 ldarg.0
+  0146 call Void ModulesOnUpdate()
+  014B ldarg.0
+  014C call Void InternalOnUpdate()
+  0151 ldarg.0
+  0152 call Void UpdateAeroDisplay()
+  0157 ldarg.0
+  0158 ldfld System.Collections.Generic.List`1[ProtoCrewMember] protoModuleCrew
+  015D brfalse.s 01A1
+  015F ldc.i4.7
+  0160 switch
+  0169 ldc.i4.0
+  016A stloc.1
+  016B ldarg.0
+  016C ldfld System.Collections.Generic.List`1[ProtoCrewMember] protoModuleCrew
+  0171 callvirt Int32 get_Count()
+  0176 dup
+  0177 pop
+  0178 stloc.2
+  0179 br.s 0193
+  017B ldarg.0
+  017C ldfld System.Collections.Generic.List`1[ProtoCrewMember] protoModuleCrew
+  0181 ldloc.1
+  0182 callvirt ProtoCrewMember get_Item(Int32)
+  0187 dup
+  0188 pop
+  0189 ldarg.0
+  018A callvirt Void ActiveUpdate(Part)
+  018F ldloc.1
+  0190 ldc.i4.1
+  0191 add
+  0192 stloc.1
+  0193 ldloc.1
+  0194 ldloc.2
+  0195 blt.s 017B
+  0197 ldc.i4.6
+  0198 switch
+  01A1 ret
+METHOD ScheduleSetCollisionIgnores
+METHOD LateUpdate
+METHOD explode
+METHOD explode
+METHOD Die
+METHOD onBackup
+METHOD onFlightStateSave
+METHOD onFlightStateLoad
+METHOD OnSave
+METHOD OnLoad
+METHOD onEditorStartTweak
+METHOD onEditorEndTweak
+METHOD onStartComplete
+METHOD onPartLoad
+METHOD onPartAwake
+METHOD onCopy
+METHOD onWillBeCopied
+METHOD onWasCopied
+METHOD onPartStart
+METHOD onPartAttach
+  0000 ret
+METHOD onPartDetach
+METHOD onFlightStart
+METHOD onFlightStartAtLaunchPad
+METHOD onDecouple
+METHOD onDisconnect
+METHOD onPack
+METHOD onUnpack
+METHOD onJointDisable
+METHOD onJointReset
+METHOD onPartLiftOff
+METHOD onPartTouchdown
+METHOD onPartSplashdown
+METHOD onPartActivate
+METHOD onCtrlUpd
+METHOD onGamePause
+METHOD onGameResume
+METHOD onPartFixedUpdate
+METHOD onPartUpdate
+METHOD onEditorUpdate
+METHOD onActiveFixedUpdate
+METHOD onActiveUpdate
+METHOD onPartDeactivate
+METHOD onPartExplode
+METHOD onPartDelete
+METHOD onPartDestroy
+METHOD getFuelReqId
+METHOD RequestFuel
+METHOD FindFuel
+METHOD DrainFuel
+METHOD RequestRCS
+METHOD drawStats
+METHOD OnGetStats
+METHOD OnDrawStats
+METHOD OnDrawGizmos
+METHOD OnDrawGizmos_DragCube
+METHOD FindChildPart
+METHOD FindChildPart
+METHOD FindChildPart
+METHOD FindChildPart
+METHOD FindChildPart
+METHOD FindChildPart
+METHOD FindChildParts
+METHOD FindChildParts
+METHOD FindChildParts
+METHOD FindModelTransform
+METHOD FindHeirarchyTransform
+METHOD FindModelTransformByLayer
+METHOD FindHeirarchyTransformByLayer
+METHOD FindModelTransforms
+METHOD FindModelTransformsWithTag
+METHOD FindHeirarchyTransforms
+METHOD FindHeirarchyTransformsByTag
+METHOD FindModelComponent
+METHOD FindModelComponent
+METHOD FindModelComponent
+METHOD FindModelComponents
+METHOD FindModelComponents
+METHOD FindModelComponents
+METHOD ResetAllModelComponentCacheLists
+METHOD FindModelMeshRenderersCached
+METHOD ResetModelMeshRenderersCache
+METHOD FindModelSkinnedMeshRenderersCached
+METHOD ResetModelSkinnedMeshRenderersCache
+METHOD FindModelRenderersCached
+METHOD ResetModelRenderersCache
+METHOD FindModelAnimator
+METHOD FindModelAnimator
+METHOD FindModelAnimators
+METHOD FindModelAnimator
+METHOD FindModelAnimators
+METHOD get_ClassName
+METHOD get_ClassID
+METHOD get_Events
+METHOD get_Fields
+METHOD get_Actions
+METHOD get_Modules
+METHOD ModularSetup
+METHOD get_PartAttributes
+METHOD set_PartAttributes
+METHOD GetReflectedAttributes
+METHOD ModulesOnActivate
+METHOD ModulesOnDeactivate
+METHOD GetModuleStartState
+METHOD ModulesOnStart
+METHOD ModulesOnStartFinished
+METHOD ModulesBeforePartAttachJoint
+  0000 ldarg.0
+  0001 call StartState GetModuleStartState()
+  0006 dup
+  0007 pop
+  0008 stloc.0
+  0009 ldc.i4.0
+  000A stloc.2
+  000B ldarg.0
+  000C call PartModuleList get_Modules()
+  0011 dup
+  0012 pop
+  0013 callvirt Int32 get_Count()
+  0018 dup
+  0019 pop
+  001A stloc.3
+  001B br.s 006D
+  001D ldarg.0
+  001E ldfld PartModuleList modules
+  0023 ldloc.2
+  0024 callvirt PartModule get_Item(Int32)
+  0029 dup
+  002A pop
+  002B stloc.1
+  002C ldloc.1
+  002D ldloc.0
+  002E callvirt Void OnStartBeforePartAttachJoint(StartState)
+  0033 leave.s 0069
+  0035 stloc.s
+  0037 ldc.i4.4
+  0038 newarr System.Object
+  003D dup
+  003E ldc.i4.0
+  003F ldstr Module
+  0044 stelem.ref
+  0045 dup
+  0046 ldc.i4.1
+  0047 ldloc.1
+  0048 ldfld System.String moduleName
+  004D stelem.ref
+  004E dup
+  004F ldc.i4.2
+  0050 ldstr  threw during ModulesBeforePartAttachJoint:
+  0055 stelem.ref
+  0056 dup
+  0057 ldc.i4.3
+  0058 ldloc.s
+  005A stelem.ref
+  005B call System.String Concat(System.Object[])
+  0060 dup
+  0061 pop
+  0062 call Void LogError(System.Object)
+  0067 leave.s 0069
+  0069 ldloc.2
+  006A ldc.i4.1
+  006B add
+  006C stloc.2
+  006D ldloc.2
+  006E ldloc.3
+  006F blt.s 001D
+  0071 ldc.i4.5
+  0072 switch
+  007B ldc.i4.1
+  007C brtrue.s 0084
+  007E ldtoken Void ModulesBeforePartAttachJoint()
+  0083 pop
+  0084 ret
+METHOD ModulesOnFixedUpdate
+METHOD ModulesOnUpdate
+METHOD InitializeModules
+METHOD AddModule
+METHOD AddModule
+METHOD LoadModule
+METHOD RemoveModule
+METHOD RemoveModules
+METHOD ClearModuleReferenceCache
+METHOD FindModuleImplementing
+METHOD HasModuleImplementing
+METHOD FindParentModuleImplementing
+METHOD FindModulesImplementing
+METHOD AddAttachNode
+  0000 ldarg.1
+  0001 ldstr name
+  0006 callvirt System.String GetValue(System.String)
+  000B dup
+  000C pop
+  000D stloc.0
+  000E ldarg.1
+  000F ldstr transform
+  0014 callvirt System.String GetValue(System.String)
+  0019 dup
+  001A pop
+  001B stloc.1
+  001C ldloc.0
+  001D brtrue.s 003D
+  001F ldc.i4.2
+  0020 switch
+  0029 ldc.i4.1
+  002A brtrue.s 0032
+  002C ldtoken Void AddAttachNode(ConfigNode)
+  0031 pop
+  0032 ldstr Part: Cannot add attach node. Node requires a 'name' value.
+  0037 newobj Void .ctor(System.String)
+  003C throw
+  003D ldloc.1
+  003E brtrue.s 0055
+  0040 ldc.i4.6
+  0041 switch
+  004A ldstr Part: Cannot add attach node. Node requires a 'transform' value.
+  004F newobj Void .ctor(System.String)
+  0054 throw
+  0055 ldarg.0
+  0056 ldloc.1
+  0057 call UnityEngine.Transform FindModelTransform(System.String)
+  005C dup
+  005D pop
+  005E stloc.2
+  005F ldloc.2
+  0060 ldnull
+  0061 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0066 dup
+  0067 pop
+  0068 brfalse.s 008C
+  006A ldc.i4.6
+  006B switch
+  0074 ldstr Part: Cannot add attach node. Transform of name '
+  0079 ldloc.1
+  007A ldstr ' not found
+  007F call System.String Concat(System.String, System.String, System.String)
+  0084 dup
+  0085 pop
+  0086 newobj Void .ctor(System.String)
+  008B throw
+  008C ldc.i4.1
+  008D stloc.3
+  008E ldarg.1
+  008F ldstr size
+  0094 callvirt Boolean HasValue(System.String)
+  0099 dup
+  009A pop
+  009B brfalse.s 00E2
+  009D ldc.i4.4
+  009E switch
+  00A7 ldarg.1
+  00A8 ldstr size
+  00AD callvirt System.String GetValue(System.String)
+  00B2 dup
+  00B3 pop
+  00B4 ldloca.s
+  00B6 call Boolean TryParse(System.String, Int32 ByRef)
+  00BB dup
+  00BC pop
+  00BD brtrue.s 00E2
+  00BF ldc.i4.4
+  00C0 switch
+  00C9 ldstr Part: Attach Node ('
+  00CE ldloc.0
+  00CF ldstr ') 'size' value is incorrect format
+  00D4 call System.String Concat(System.String, System.String, System.String)
+  00D9 dup
+  00DA pop
+  00DB call Void LogError(System.Object)
+  00E0 ldc.i4.1
+  00E1 stloc.3
+  00E2 ldc.i4.0
+  00E3 stloc.s
+  00E5 ldloc.0
+  00E6 ldstr srfAttach
+  00EB call Boolean op_Equality(System.String, System.String)
+  00F0 dup
+  00F1 pop
+  00F2 brtrue.s 0117
+  00F4 ldc.i4.2
+  00F5 switch
+  00FE ldloc.0
+  00FF ldstr attach
+  0104 call Boolean op_Equality(System.String, System.String)
+  0109 dup
+  010A pop
+  010B brfalse.s 011A
+  010D ldc.i4.3
+  010E switch
+  0117 ldc.i4.1
+  0118 stloc.s
+  011A ldarg.1
+  011B ldstr method
+  0120 callvirt Boolean HasValue(System.String)
+  0125 dup
+  0126 pop
+  0127 brfalse.s 0177
+  0129 ldc.i4.3
+  012A switch
+  0133 ldtoken AttachNodeMethod
+  0138 call System.Type GetTypeFromHandle(System.RuntimeTypeHandle)
+  013D dup
+  013E pop
+  013F ldarg.1
+  0140 ldstr method
+  0145 callvirt System.String GetValue(System.String)
+  014A dup
+  014B pop
+  014C ldc.i4.1
+  014D call System.Object Parse(System.Type, System.String, Boolean)
+  0152 dup
+  0153 pop
+  0154 unbox.any AttachNodeMethod
+  0159 stloc.s
+  015B leave.s 0177
+  015D pop
+  015E ldstr Part: Attach Node ('
+  0163 ldloc.0
+  0164 ldstr ') 'method' value is incorrect format
+  0169 call System.String Concat(System.String, System.String, System.String)
+  016E dup
+  016F pop
+  0170 call Void LogError(System.Object)
+  0175 leave.s 0177
+  0177 ldc.i4.1
+  0178 stloc.s
+  017A ldarg.1
+  017B ldstr crossfeed
+  0180 ldloca.s
+  0182 callvirt Boolean TryGetValue(System.String, Boolean ByRef)
+  0187 dup
+  0188 pop
+  0189 pop
+  018A ldc.i4.0
+  018B stloc.s
+  018D ldarg.1
+  018E ldstr rigid
+  0193 ldloca.s
+  0195 callvirt Boolean TryGetValue(System.String, Boolean ByRef)
+  019A dup
+  019B pop
+  019C pop
+  019D ldloc.0
+  019E ldloc.2
+  019F ldloc.3
+  01A0 ldloc.s
+  01A2 ldloc.s
+  01A4 ldloc.s
+  01A6 newobj Void .ctor(System.String, UnityEngine.Transform, Int32, AttachNodeMethod, Boolean, Boolean)
+  01AB stloc.s
+  01AD ldloc.s
+  01AF ldarg.0
+  01B0 stfld Part owner
+  01B5 ldarg.0
+  01B6 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  01BB ldloc.s
+  01BD callvirt Void Add(AttachNode)
+  01C2 ret
+METHOD UpdateAttachNodes
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0006 callvirt Int32 get_Count()
+  000B dup
+  000C pop
+  000D stloc.1
+  000E ldc.i4.0
+  000F stloc.2
+  0010 br 008F
+  0015 ldarg.0
+  0016 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  001B ldloc.2
+  001C callvirt AttachNode get_Item(Int32)
+  0021 dup
+  0022 pop
+  0023 stloc.0
+  0024 ldloc.0
+  0025 ldfld UnityEngine.Transform nodeTransform
+  002A ldnull
+  002B call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0030 dup
+  0031 pop
+  0032 brtrue.s 008B
+  0034 ldc.i4.4
+  0035 switch
+  003E ldc.i4.1
+  003F brtrue.s 0047
+  0041 ldtoken Void UpdateAttachNodes()
+  0046 pop
+  0047 ldloc.0
+  0048 ldarg.0
+  0049 call UnityEngine.Transform get_transform()
+  004E dup
+  004F pop
+  0050 ldloc.0
+  0051 ldfld UnityEngine.Transform nodeTransform
+  0056 callvirt UnityEngine.Vector3 get_position()
+  005B dup
+  005C pop
+  005D callvirt UnityEngine.Vector3 InverseTransformPoint(UnityEngine.Vector3)
+  0062 dup
+  0063 pop
+  0064 stfld UnityEngine.Vector3 position
+  0069 ldloc.0
+  006A ldarg.0
+  006B call UnityEngine.Transform get_transform()
+  0070 dup
+  0071 pop
+  0072 ldloc.0
+  0073 ldfld UnityEngine.Transform nodeTransform
+  0078 callvirt UnityEngine.Vector3 get_forward()
+  007D dup
+  007E pop
+  007F callvirt UnityEngine.Vector3 InverseTransformDirection(UnityEngine.Vector3)
+  0084 dup
+  0085 pop
+  0086 stfld UnityEngine.Vector3 orientation
+  008B ldloc.2
+  008C ldc.i4.1
+  008D add
+  008E stloc.2
+  008F ldloc.2
+  0090 ldloc.1
+  0091 blt 0015
+  0096 ldc.i4.3
+  0097 switch
+  00A0 ret
+METHOD UpdateSrfAttachNode
+  0000 ldarg.0
+  0001 ldfld AttachNode srfAttachNode
+  0006 brfalse 0096
+  000B ldc.i4.7
+  000C switch
+  0015 ldc.i4.1
+  0016 brtrue.s 001E
+  0018 ldtoken Void UpdateSrfAttachNode()
+  001D pop
+  001E ldarg.0
+  001F ldfld AttachNode srfAttachNode
+  0024 ldfld UnityEngine.Transform nodeTransform
+  0029 ldnull
+  002A call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  002F dup
+  0030 pop
+  0031 brfalse.s 003E
+  0033 ldc.i4.3
+  0034 switch
+  003D ret
+  003E ldarg.0
+  003F ldfld AttachNode srfAttachNode
+  0044 ldarg.0
+  0045 call UnityEngine.Transform get_transform()
+  004A dup
+  004B pop
+  004C ldarg.0
+  004D ldfld AttachNode srfAttachNode
+  0052 ldfld UnityEngine.Transform nodeTransform
+  0057 callvirt UnityEngine.Vector3 get_position()
+  005C dup
+  005D pop
+  005E callvirt UnityEngine.Vector3 InverseTransformPoint(UnityEngine.Vector3)
+  0063 dup
+  0064 pop
+  0065 stfld UnityEngine.Vector3 position
+  006A ldarg.0
+  006B ldfld AttachNode srfAttachNode
+  0070 ldarg.0
+  0071 call UnityEngine.Transform get_transform()
+  0076 dup
+  0077 pop
+  0078 ldarg.0
+  0079 ldfld AttachNode srfAttachNode
+  007E ldfld UnityEngine.Transform nodeTransform
+  0083 callvirt UnityEngine.Vector3 get_forward()
+  0088 dup
+  0089 pop
+  008A callvirt UnityEngine.Vector3 InverseTransformDirection(UnityEngine.Vector3)
+  008F dup
+  0090 pop
+  0091 stfld UnityEngine.Vector3 orientation
+  0096 ret
+METHOD SetupAttachNodes
+  0000 ldarg.0
+  0001 ldarg.0
+  0002 ldstr top
+  0007 call AttachNode FindAttachNode(System.String)
+  000C dup
+  000D pop
+  000E stfld AttachNode topNode
+  0013 ldarg.0
+  0014 ldarg.0
+  0015 ldstr attach
+  001A call AttachNode FindAttachNode(System.String)
+  001F dup
+  0020 pop
+  0021 stfld AttachNode srfAttachNode
+  0026 ldarg.0
+  0027 ldfld AttachNode srfAttachNode
+  002C brtrue.s 0055
+  002E ldc.i4.1
+  002F switch
+  0038 ldc.i4.1
+  0039 brtrue.s 0041
+  003B ldtoken Void SetupAttachNodes()
+  0040 pop
+  0041 ldarg.0
+  0042 ldarg.0
+  0043 ldstr srfAttach
+  0048 call AttachNode FindAttachNode(System.String)
+  004D dup
+  004E pop
+  004F stfld AttachNode srfAttachNode
+  0054 ret
+  0055 ldarg.0
+  0056 ldfld AttachNode srfAttachNode
+  005B ldstr srfAttach
+  0060 stfld System.String id
+  0065 ret
+METHOD FindAttachNode
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0006 callvirt Int32 get_Count()
+  000B dup
+  000C pop
+  000D stloc.1
+  000E ldc.i4.0
+  000F stloc.2
+  0010 br.s 004A
+  0012 ldarg.0
+  0013 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0018 ldloc.2
+  0019 callvirt AttachNode get_Item(Int32)
+  001E dup
+  001F pop
+  0020 stloc.0
+  0021 ldloc.0
+  0022 ldfld System.String id
+  0027 ldarg.1
+  0028 call Boolean op_Equality(System.String, System.String)
+  002D dup
+  002E pop
+  002F brfalse.s 0046
+  0031 ldc.i4.7
+  0032 switch
+  003B ldc.i4.1
+  003C brtrue.s 0044
+  003E ldtoken AttachNode FindAttachNode(System.String)
+  0043 pop
+  0044 ldloc.0
+  0045 ret
+  0046 ldloc.2
+  0047 ldc.i4.1
+  0048 add
+  0049 stloc.2
+  004A ldloc.2
+  004B ldloc.1
+  004C blt.s 0012
+  004E ldc.i4.5
+  004F switch
+  0058 ldnull
+  0059 ret
+METHOD FindAttachNodes
+  0000 newobj Void .ctor()
+  0005 stloc.0
+  0006 ldarg.0
+  0007 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  000C callvirt Int32 get_Count()
+  0011 dup
+  0012 pop
+  0013 stloc.2
+  0014 ldc.i4.0
+  0015 stloc.3
+  0016 br.s 0055
+  0018 ldarg.0
+  0019 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  001E ldloc.3
+  001F callvirt AttachNode get_Item(Int32)
+  0024 dup
+  0025 pop
+  0026 stloc.1
+  0027 ldloc.1
+  0028 ldfld System.String id
+  002D ldarg.1
+  002E callvirt Boolean Contains(System.String)
+  0033 dup
+  0034 pop
+  0035 brfalse.s 0051
+  0037 ldc.i4.7
+  0038 switch
+  0041 ldc.i4.1
+  0042 brtrue.s 004A
+  0044 ldtoken AttachNode[] FindAttachNodes(System.String)
+  0049 pop
+  004A ldloc.0
+  004B ldloc.1
+  004C callvirt Void Add(AttachNode)
+  0051 ldloc.3
+  0052 ldc.i4.1
+  0053 add
+  0054 stloc.3
+  0055 ldloc.3
+  0056 ldloc.2
+  0057 blt.s 0018
+  0059 ldc.i4.6
+  005A switch
+  0063 ldloc.0
+  0064 callvirt Int32 get_Count()
+  0069 dup
+  006A pop
+  006B ldc.i4.0
+  006C ble.s 0081
+  006E ldc.i4.4
+  006F switch
+  0078 ldloc.0
+  0079 callvirt AttachNode[] ToArray()
+  007E dup
+  007F pop
+  0080 ret
+  0081 ldnull
+  0082 ret
+METHOD FindAttachNodeByPart
+  0000 ldarg.1
+  0001 ldnull
+  0002 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0007 dup
+  0008 pop
+  0009 brfalse.s 0020
+  000B ldc.i4.5
+  000C switch
+  0015 ldc.i4.1
+  0016 brtrue.s 001E
+  0018 ldtoken AttachNode FindAttachNodeByPart(Part)
+  001D pop
+  001E ldnull
+  001F ret
+  0020 ldarg.0
+  0021 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0026 callvirt Int32 get_Count()
+  002B dup
+  002C pop
+  002D stloc.1
+  002E ldc.i4.0
+  002F stloc.2
+  0030 br.s 0061
+  0032 ldarg.0
+  0033 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0038 ldloc.2
+  0039 callvirt AttachNode get_Item(Int32)
+  003E dup
+  003F pop
+  0040 stloc.0
+  0041 ldloc.0
+  0042 ldfld Part attachedPart
+  0047 ldarg.1
+  0048 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  004D dup
+  004E pop
+  004F brfalse.s 005D
+  0051 ldc.i4.4
+  0052 switch
+  005B ldloc.0
+  005C ret
+  005D ldloc.2
+  005E ldc.i4.1
+  005F add
+  0060 stloc.2
+  0061 ldloc.2
+  0062 ldloc.1
+  0063 blt.s 0032
+  0065 ldc.i4.2
+  0066 switch
+  006F ldarg.0
+  0070 ldfld AttachNode srfAttachNode
+  0075 ldfld Part attachedPart
+  007A ldarg.1
+  007B call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0080 dup
+  0081 pop
+  0082 brfalse.s 0095
+  0084 ldc.i4.1
+  0085 switch
+  008E ldarg.0
+  008F ldfld AttachNode srfAttachNode
+  0094 ret
+  0095 ldnull
+  0096 ret
+METHOD EffectSetup
+METHOD get_Effects
+METHOD InitializeEffects
+METHOD LoadEffects
+METHOD SaveEffects
+METHOD Effect
+METHOD Effect
+METHOD AttributeSetup
+METHOD SendEvent
+METHOD SendEvent
+METHOD SendEvent
+METHOD CreateEventList
+METHOD CreateEventListRecursive
+METHOD NewRequestID
+METHOD AlreadyProcessedRequest
+METHOD get_Resources
+METHOD get_SimulationResources
+METHOD SetupResources
+METHOD SetupSimulationResources
+METHOD ResetSimulationResources
+METHOD ResetSimulationResources
+METHOD ResetSimulation
+METHOD AddResource
+METHOD SetResource
+METHOD RemoveResource
+METHOD RemoveResource
+METHOD RemoveResource
+METHOD RequestResource
+METHOD RequestResource
+METHOD RequestResource
+METHOD RequestResource
+METHOD RequestResource
+METHOD RequestResource
+METHOD RequestResource
+METHOD RequestResource
+METHOD RequestResource
+METHOD RequestResource
+METHOD requestResource
+METHOD requestResource
+METHOD GetResourceMass
+METHOD GetResourceMass
+METHOD GetResourceMass
+METHOD GetResourceMass
+METHOD TransferResource
+METHOD TransferResource
+METHOD TransferResource
+METHOD GetConnectedResourceTotals
+METHOD GetConnectedResourceTotals
+METHOD GetConnectedResourceTotals
+METHOD GetConnectedResourceTotals
+METHOD GetConnectedResourceTotals
+METHOD GetConnectedResourceTotals
+METHOD CanCrossfeed
+METHOD CanCrossfeed
+METHOD GetComponentUpwards
+METHOD GetComponentUpwards
+METHOD FromGO
+METHOD PartToVesselSpaceRot
+METHOD PartToVesselSpacePos
+METHOD PartToVesselSpaceDir
+METHOD VesselToPartSpaceRot
+METHOD VesselToPartSpacePos
+METHOD VesselToPartSpaceDir
+METHOD GetPartsOutTo
+METHOD updateMirroring
+METHOD SetMirror
+METHOD SetupHighlighter
+METHOD RefreshHighlighter
+METHOD get_highlighter
+METHOD set_highlighter
+METHOD get_HighlightActive
+METHOD set_HighlightActive
+METHOD get_RecurseHighlight
+METHOD set_RecurseHighlight
+METHOD SetHighlightType
+METHOD SetHighlightColor
+METHOD SetHighlightColor
+METHOD SetHighlightDefault
+METHOD SetHighlight
+METHOD get_HighlightRenderer
+METHOD set_HighlightRenderer
+METHOD get_mpb
+METHOD Highlight
+METHOD Highlight
+METHOD CreateRendererLists
+METHOD HighlightRecursive
+METHOD HighlightRecursive
+METHOD VesselModified
+METHOD partHideUI
+METHOD partShowUI
+METHOD OnCurrentMousePartChanged
+METHOD get_MouseOver
+METHOD OnMouseIsOver
+METHOD HandleMouseOver
+METHOD OnMouseHasExited
+METHOD UpdateMouseOver
+METHOD OnMouseDown
+METHOD AddOnMouseEnter
+METHOD RemoveOnMouseEnter
+METHOD AddOnMouseExit
+METHOD RemoveOnMouseExit
+METHOD AddOnMouseDown
+METHOD RemoveOnMouseDown
+METHOD AddInternalPart
+METHOD CreateInternalModel
+METHOD InternalOnUpdate
+METHOD InternalFixedUpdate
+METHOD GetModuleCosts
+METHOD GetModuleMass
+METHOD GetModuleSize
+METHOD UpdateAeroDisplay
+METHOD AddThermalFlux
+METHOD AddSkinThermalFlux
+METHOD AddExposedThermalFlux
+METHOD get_ShieldedFromAirstream
+METHOD set_ShieldedFromAirstream
+METHOD AddShield
+METHOD RemoveShield
+METHOD OnShieldModified
+METHOD RecheckShielding
+METHOD GainCameraAim
+METHOD LoseCameraAim
+METHOD AimCamera
+METHOD ResetCamera
+METHOD SpawnTransferDialog
+METHOD GetResourcePriority
+METHOD ResetPri
+METHOD ChangeResourcePriority
+METHOD UpdateStageability
+METHOD ShowUpgradeStats
+METHOD AllowAutoStruts
+METHOD ToggleAutoStrut
+METHOD UpdateAutoStrut
+METHOD SetAutoStrutText
+METHOD OnPartEvent
+METHOD OnPartEventFromToAction
+METHOD CycleAutoStrut
+METHOD HasAutoStrutDefined
+METHOD SecureAutoStruts
+METHOD SecureAutoStrut
+METHOD DrawAutoStrutLine
+METHOD ReleaseAutoStruts
+METHOD CheckAutoStruts
+METHOD CheckTargetAutoStruts
+METHOD GetAutoStrutAnchor
+METHOD GetMassivePart
+METHOD GetMassiveParentPart
+METHOD GetMassiveChildPart
+METHOD MassivePartCheck
+METHOD HasFreePivot
+METHOD HasFreePivotBetweenRoot
+METHOD AttachedPartNode
+  0000 ldnull
+  0001 stloc.0
+  0002 ldarg.3
+  0003 ldc.i4.0
+  0004 stind.i1
+  0005 ldarg.1
+  0006 ldnull
+  0007 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  000C dup
+  000D pop
+  000E brtrue.s 0038
+  0010 ldc.i4.6
+  0011 switch
+  001A ldc.i4.1
+  001B brtrue.s 0023
+  001D ldtoken AttachNode AttachedPartNode(Part, Part, Boolean ByRef)
+  0022 pop
+  0023 ldarg.2
+  0024 ldnull
+  0025 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  002A dup
+  002B pop
+  002C brfalse.s 003A
+  002E ldc.i4.6
+  002F switch
+  0038 ldloc.0
+  0039 ret
+  003A ldc.i4.0
+  003B stloc.1
+  003C br.s 00A4
+  003E ldarg.2
+  003F ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0044 ldloc.1
+  0045 callvirt AttachNode get_Item(Int32)
+  004A dup
+  004B pop
+  004C ldfld Part attachedPart
+  0051 ldnull
+  0052 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0057 dup
+  0058 pop
+  0059 brfalse.s 00A0
+  005B ldc.i4.6
+  005C switch
+  0065 ldarg.2
+  0066 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  006B ldloc.1
+  006C callvirt AttachNode get_Item(Int32)
+  0071 dup
+  0072 pop
+  0073 ldfld Part attachedPart
+  0078 ldfld UInt32 persistentId
+  007D ldarg.1
+  007E ldfld UInt32 persistentId
+  0083 bne.un.s 00A0
+  0085 ldc.i4.2
+  0086 switch
+  008F ldarg.2
+  0090 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0095 ldloc.1
+  0096 callvirt AttachNode get_Item(Int32)
+  009B dup
+  009C pop
+  009D stloc.0
+  009E br.s 00BE
+  00A0 ldloc.1
+  00A1 ldc.i4.1
+  00A2 add
+  00A3 stloc.1
+  00A4 ldloc.1
+  00A5 ldarg.2
+  00A6 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  00AB callvirt Int32 get_Count()
+  00B0 dup
+  00B1 pop
+  00B2 blt.s 003E
+  00B4 ldc.i4.6
+  00B5 switch
+  00BE ldarg.2
+  00BF ldfld AttachNode srfAttachNode
+  00C4 brfalse.s 011D
+  00C6 ldc.i4.5
+  00C7 switch
+  00D0 ldarg.2
+  00D1 ldfld AttachNode srfAttachNode
+  00D6 ldfld Part attachedPart
+  00DB ldnull
+  00DC call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  00E1 dup
+  00E2 pop
+  00E3 brfalse.s 011D
+  00E5 ldc.i4.3
+  00E6 switch
+  00EF ldarg.2
+  00F0 ldfld AttachNode srfAttachNode
+  00F5 ldfld Part attachedPart
+  00FA ldfld UInt32 persistentId
+  00FF ldarg.1
+  0100 ldfld UInt32 persistentId
+  0105 bne.un.s 011D
+  0107 ldc.i4.7
+  0108 switch
+  0111 ldarg.2
+  0112 ldfld AttachNode srfAttachNode
+  0117 stloc.0
+  0118 ldarg.3
+  0119 ldc.i4.1
+  011A stind.i1
+  011B br.s 017A
+  011D ldarg.1
+  011E ldfld AttachNode srfAttachNode
+  0123 brfalse.s 017A
+  0125 ldc.i4.6
+  0126 switch
+  012F ldarg.1
+  0130 ldfld AttachNode srfAttachNode
+  0135 ldfld Part attachedPart
+  013A ldnull
+  013B call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0140 dup
+  0141 pop
+  0142 brfalse.s 017A
+  0144 ldc.i4.7
+  0145 switch
+  014E ldarg.1
+  014F ldfld AttachNode srfAttachNode
+  0154 ldfld Part attachedPart
+  0159 ldfld UInt32 persistentId
+  015E ldarg.2
+  015F ldfld UInt32 persistentId
+  0164 bne.un.s 017A
+  0166 ldc.i4.1
+  0167 switch
+  0170 ldarg.1
+  0171 ldfld AttachNode srfAttachNode
+  0176 stloc.0
+  0177 ldarg.3
+  0178 ldc.i4.1
+  0179 stind.i1
+  017A ldloc.0
+  017B ret
+METHOD HasFreePivotBetweenParentPart
+METHOD ToggleRigidAttachment
+  0000 ldarg.0
+  0001 ldarg.0
+  0002 ldfld Boolean rigidAttachment
+  0007 ldc.i4.0
+  0008 ceq
+  000A stfld Boolean rigidAttachment
+  000F ldarg.0
+  0010 call Void ApplyRigidAttachment()
+  0015 ldsfld Boolean AUTOSTRUT_SYMMETRY
+  001A brfalse.s 0070
+  001C ldc.i4.1
+  001D switch
+  0026 ldc.i4.1
+  0027 brtrue.s 002F
+  0029 ldtoken Void ToggleRigidAttachment()
+  002E pop
+  002F ldarg.0
+  0030 ldfld System.Collections.Generic.List`1[Part] symmetryCounterparts
+  0035 callvirt Int32 get_Count()
+  003A dup
+  003B pop
+  003C stloc.0
+  003D br.s 005E
+  003F ldarg.0
+  0040 ldfld System.Collections.Generic.List`1[Part] symmetryCounterparts
+  0045 ldloc.0
+  0046 callvirt Part get_Item(Int32)
+  004B dup
+  004C pop
+  004D dup
+  004E ldarg.0
+  004F ldfld Boolean rigidAttachment
+  0054 stfld Boolean rigidAttachment
+  0059 callvirt Void ApplyRigidAttachment()
+  005E ldloc.0
+  005F dup
+  0060 ldc.i4.1
+  0061 sub
+  0062 stloc.0
+  0063 ldc.i4.0
+  0064 bgt.s 003F
+  0066 ldc.i4.3
+  0067 switch
+  0070 ret
+METHOD ApplyRigidAttachment
+  0000 ldarg.0
+  0001 call Void SetupRigidAttachmentUI()
+  0006 ldsfld Boolean LoadedSceneIsFlight
+  000B brfalse.s 0062
+  000D ldc.i4.5
+  000E switch
+  0017 ldc.i4.1
+  0018 brtrue.s 0020
+  001A ldtoken Void ApplyRigidAttachment()
+  001F pop
+  0020 ldarg.0
+  0021 call Void ResetJoints()
+  0026 ldarg.0
+  0027 ldfld PartJoint attachJoint
+  002C call Boolean op_Implicit(UnityEngine.Object)
+  0031 dup
+  0032 pop
+  0033 brfalse.s 0062
+  0035 ldc.i4.6
+  0036 switch
+  003F ldarg.0
+  0040 ldfld PartJoint attachJoint
+  0045 ldc.i4.1
+  0046 ldarg.0
+  0047 ldfld Boolean rigidAttachment
+  004C callvirt Void SetUnbreakable(Boolean, Boolean)
+  0051 ldarg.0
+  0052 ldarg.0
+  0053 call System.Collections.IEnumerator SetJoints()
+  0058 dup
+  0059 pop
+  005A call UnityEngine.Coroutine StartCoroutine(System.Collections.IEnumerator)
+  005F dup
+  0060 pop
+  0061 pop
+  0062 ret
+METHOD SetJoints
+METHOD SetupRigidAttachmentUI
+  0000 ldarg.0
+  0001 call BaseEventList get_Events()
+  0006 dup
+  0007 pop
+  0008 ldstr ToggleRigidAttachment
+  000D callvirt BaseEvent get_Item(System.String)
+  0012 dup
+  0013 pop
+  0014 ldarg.0
+  0015 ldfld Boolean rigidAttachment
+  001A brtrue.s 0036
+  001C ldc.i4.1
+  001D switch
+  0026 ldc.i4.1
+  0027 brtrue.s 002F
+  0029 ldtoken Void SetupRigidAttachmentUI()
+  002E pop
+  002F ldstr #autoLOC_6001326
+  0034 br.s 003B
+  0036 ldstr #autoLOC_6001327
+  003B callvirt Void set_guiName(System.String)
+  0040 ret
+METHOD get_RigidBodyPart
+METHOD AddForce
+METHOD AddImpulse
+METHOD AddForceAtPosition
+METHOD AddTorque
+METHOD OnPointerClick
+METHOD FindTransformInChildrenExplicit
+METHOD HasValidContractObjective
+METHOD OnStageIconDestroy
+  0000 ldarg.0
+  0001 ldnull
+  0002 stfld KSP.UI.Screens.ProtoStageIconInfo tempIndicator
+  0007 ret
+METHOD AddPartModuleAdjusterList
+METHOD RemovePartModuleAdjusterList
+METHOD PartRepair
+METHOD SetVesselNaming
+METHOD onVesselNamingAccept
+METHOD OnVesselRename
+METHOD RefreshVesselNamingPAWDisplay
+METHOD onVesselNamingDismiss
+METHOD onVesselNamingRemove
+METHOD RemoveFromSymmetry
+METHOD SetRemoveSymmetryVisibililty
+METHOD CacheLocalStrings
+METHOD GetBoundsPoints
+METHOD CacheIConstructionPartModules
+METHOD PartCanBeDetached
+METHOD PartCanBeOffset
+METHOD PartCanBeRotated
+TYPE EditorLogic
+FIELD EditorToolsUI toolsUI
+FIELD UnityEngine.Camera editorCamera
+FIELD EditorCamera editorCam
+FIELD UnityEngine.Camera editorCargoCamera
+FIELD System.Collections.Generic.List`1[System.String] availableCargoParts
+FIELD System.String startPodId
+FIELD UnityEngine.Quaternion vesselRotation
+FIELD System.Single dragSharpness
+FIELD System.Single srfAttachAngleSnap
+FIELD System.Single srfAttachAngleSnapFine
+FIELD System.Boolean disallowSave
+FIELD System.Int32 sceneToLoad
+FIELD Part rootPart
+FIELD UnityEngine.AudioClip attachClip
+FIELD UnityEngine.AudioClip deletePartClip
+FIELD UnityEngine.AudioClip partGrabClip
+FIELD UnityEngine.AudioClip partReleaseClip
+FIELD UnityEngine.AudioClip cannotPlaceClip
+FIELD UnityEngine.AudioClip tweakGrabClip
+FIELD UnityEngine.AudioClip tweakReleaseClip
+FIELD UnityEngine.AudioClip reRootClip
+FIELD System.String launchSiteName
+FIELD PSystemSetup+SpaceCenterFacility selectedLaunchFacility
+FIELD LaunchSite selectedLaunchSite
+FIELD UnityEngine.Ray ray
+FIELD UnityEngine.RaycastHit hit
+FIELD UnityEngine.Collider FairingHitCollider
+FIELD System.Int32 undoLevel
+FIELD System.Int32 layerMask
+FIELD System.Int32 undoLimit
+FIELD ShipConstruct ship
+FIELD ConstructionMode constructionMode
+FIELD Attachment attachment
+FIELD Attachment[] cPartAttachments
+FIELD UnityEngine.UI.Button partPanelBtn
+FIELD UnityEngine.UI.Button actionPanelBtn
+FIELD UnityEngine.UI.Button crewPanelBtn
+FIELD UnityEngine.UI.Button switchEditorBtn
+FIELD UnityEngine.UI.Button cargoPanelBtn
+FIELD KSP.UI.UIStateToggleButton editorBtnStateToggle
+FIELD UnityEngine.RectTransform crewBtnOrigPos
+FIELD UnityEngine.RectTransform cargoBtnOrigPos
+FIELD UnityEngine.RectTransform editorBtnOrigPos
+FIELD UnityEngine.UI.Button saveBtn
+FIELD UnityEngine.UI.Button launchBtn
+FIELD UnityEngine.UI.Button exitBtn
+FIELD UnityEngine.UI.Button loadBtn
+FIELD UnityEngine.UI.Button newBtn
+FIELD UnityEngine.UI.Button steamBtn
+FIELD UnityEngine.GameObject launchSiteSelector
+FIELD UnityEngine.UI.Button coordSpaceBtn
+FIELD TMPro.TextMeshProUGUI coordSpaceText
+FIELD UnityEngine.UI.Button radialSymmetryBtn
+FIELD TMPro.TextMeshProUGUI radialSymmetryText
+FIELD KSP.UI.UIOnClick symmetryButton
+FIELD KSP.UI.UIStateImage symmetrySprite
+FIELD KSP.UI.UIStateImage mirrorSprite
+FIELD KSP.UI.UIOnClick angleSnapButton
+FIELD KSP.UI.UIStateImage angleSnapSprite
+FIELD TMPro.TMP_InputField shipNameField
+FIELD TMPro.TMP_InputField shipDescriptionField
+FIELD FlagBrowserButton flagBrowserButton
+FIELD UnityEngine.Collider[] modalAreas
+FIELD System.Boolean allowSrfAttachment
+FIELD System.Boolean allowNodeAttachment
+FIELD UnityEngine.GUISkin shipBrowserSkin
+FIELD UnityEngine.Texture2D shipFileImage
+FIELD System.Collections.Generic.List`1[KSP.UI.Screens.MissionRecoveryDialog] missionDialogs
+FIELD SymmetryMethod symmetryMethod
+FIELD SymmetryMethod symmetryMethodTmp
+FIELD System.Int32 symmetryMode
+FIELD System.Int32 symmetryModeTmp
+FIELD System.Int32 symmetryModeBeforeNodeAttachment
+FIELD System.Boolean tmpSymMethodInUse
+FIELD EditorPartListFilter`1[AvailablePart] rootPartsOnlyFilter
+FIELD EditorPartListFilter`1[AvailablePart] inaccessiblePartsFilter
+FIELD UnityEngine.Quaternion gizmoAttRotate
+FIELD UnityEngine.Quaternion gizmoAttRotate0
+FIELD EditorGizmos.GizmoRotate gizmoRotate
+FIELD EditorGizmos.GizmoOffset gizmoOffset
+FIELD UnityEngine.Space symmetryCoordSpace
+FIELD UnityEngine.AudioSource audioSource
+FIELD System.Boolean setSteamExportItemPublic
+FIELD System.String setSteamExportItemChangeLog
+FIELD System.String setSteamModsText
+FIELD System.String steamExportTempPath
+FIELD VesselType setSteamVesselType
+FIELD System.Boolean setSteamRobiticsTag
+FIELD System.Collections.Generic.List`1[Steamworks.AppId_t] appDependenciesToRemove
+FIELD System.Collections.Generic.List`1[System.String] steamTags
+FIELD System.String steamThumbURL
+FIELD Steamworks.ERemoteStoragePublishedFileVisibility steamVisibility
+FIELD System.Single steamTotalCost
+FIELD System.Int32 steamCrewCapacity
+FIELD System.Double timeSteamCommsStarted
+FIELD PopupDialog steamCommsDialog
+FIELD System.Boolean steamUploadingNewItem
+FIELD System.Boolean skipPartAttach
+FIELD KSP.UI.Screens.CraftBrowserDialog craftBrowserDialog
+FIELD KFSMState st_podSelect
+FIELD KFSMState st_idle
+FIELD KFSMState st_place
+FIELD KFSMState st_offset_select
+FIELD KFSMState st_offset_tweak
+FIELD KFSMState st_rotate_select
+FIELD KFSMState st_rotate_tweak
+FIELD KFSMState st_root_unselected
+FIELD KFSMState st_root_select
+FIELD KFSMEvent on_podSelect
+FIELD KFSMEvent on_partCreated
+FIELD KFSMEvent on_partPicked
+FIELD KFSMEvent on_partCopied
+FIELD KFSMEvent on_partReveal
+FIELD KFSMEvent on_partDropped
+FIELD KFSMEvent on_partAttached
+FIELD KFSMEvent on_partDeleted
+FIELD KFSMEvent on_partLost
+FIELD KFSMEvent on_podDeleted
+FIELD KFSMEvent on_partOverInventoryPAW
+FIELD KFSMEvent on_goToModeOffset
+FIELD KFSMEvent on_offsetSelect
+FIELD KFSMEvent on_offsetDeselect
+FIELD KFSMEvent on_offsetReset
+FIELD KFSMEvent on_goToModeRotate
+FIELD KFSMEvent on_rotateSelect
+FIELD KFSMEvent on_rotateDeselect
+FIELD KFSMEvent on_rotateReset
+FIELD KFSMEvent on_goToModeRoot
+FIELD KFSMEvent on_rootPickSet
+FIELD KFSMEvent on_rootDeselect
+FIELD KFSMEvent on_rootSelect
+FIELD KFSMEvent on_rootSelectFail
+FIELD KFSMEvent on_goToModePlace
+FIELD KFSMEvent on_undoRedo
+FIELD KFSMEvent on_newShip
+FIELD KFSMEvent on_shipLoaded
+FIELD UnityEngine.Quaternion attRot0
+FIELD System.Int32 symUpdateMode
+FIELD Part symUpdateParent
+FIELD AttachNode symUpdateAttachNode
+FIELD UnityEngine.Vector3 gizmoPivot
+FIELD UnityEngine.Quaternion refRot
+FIELD UnityEngine.Vector3 offsetGap
+FIELD System.Single threshold
+FIELD AttachNode childToParent
+FIELD AttachNode parentToChild
+FIELD UnityEngine.Vector3 diff
+FIELD System.Collections.Generic.List`1[PartSelector] rootCandidates
+FIELD System.Int32 undoIndexAtLastSave
+FIELD System.String vesselNameAtLastSave
+FIELD System.String vesselNameAtLastSave_Sanitized
+FIELD System.String savedCraftPath
+FIELD PreFlightTests.LaunchSiteClear launchSiteClearTest
+FIELD System.Boolean panelButtonsLocked
+FIELD System.Double startTime
+FIELD System.Double modeStartTime
+FIELD System.Collections.Generic.Dictionary`2[System.String,System.Double] timeInMode
+FIELD EditorScreen currentMode
+FIELD System.String autoshipname
+FIELD KSP.UI.Screens.EditorPartIcon iconRequestedVariantChange
+FIELD EditorLogic fetch
+FIELD EditorLogic+EditorModes Mode
+FIELD System.String FlagURL
+METHOD get_FSMStarted
+METHOD get_currentStateName
+METHOD get_lastEventName
+METHOD get_autoShipName
+METHOD get_initialPodPosition
+METHOD get_VesselRotation
+METHOD get_AllowSave
+METHOD get_editorBounds
+METHOD get_SelectedPart
+METHOD get_RootPart
+METHOD get_LayerMask
+METHOD get_EditorConstructionMode
+METHOD get_ShipFileImage
+METHOD Awake
+METHOD OnDestroy
+METHOD Start
+METHOD StartEditor
+METHOD FlagSetup
+METHOD OnMissionFlagSelect
+METHOD SelectPanelParts
+METHOD SelectPanelCargo
+METHOD SelectPanelParts
+METHOD SelectPanelActions
+METHOD SwitchEditor
+METHOD SelectPanelCrew
+METHOD symButton
+METHOD nextSymMode
+METHOD prevSymMode
+METHOD SetSymState
+METHOD snapButton
+METHOD symInputUpdate
+METHOD snapInputUpdate
+METHOD onSymMethodChange
+METHOD editorSwitchInput
+METHOD SetupFSM
+METHOD FixedUpdate
+METHOD Update
+  0000 ldarg.0
+  0001 ldfld KerbalFSM fsm
+  0006 callvirt Boolean get_Started()
+  000B dup
+  000C pop
+  000D brfalse 00D5
+  0012 ldc.i4.4
+  0013 switch
+  001C ldc.i4.1
+  001D brtrue.s 0025
+  001F ldtoken Void Update()
+  0024 pop
+  0025 ldarg.0
+  0026 ldfld KerbalFSM fsm
+  002B callvirt Void UpdateFSM()
+  0030 ldsfld KeyBinding PAUSE
+  0035 ldc.i4.1
+  0036 callvirt Boolean GetKeyDown(Boolean)
+  003B dup
+  003C pop
+  003D brfalse.s 00A8
+  003F ldc.i4.4
+  0040 switch
+  0049 ldarg.0
+  004A ldfld CompoundPart selectedCompoundPart
+  004F ldnull
+  0050 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0055 dup
+  0056 pop
+  0057 brfalse.s 00A8
+  0059 ldc.i4.7
+  005A switch
+  0063 ldarg.0
+  0064 ldfld CompoundPart selectedCompoundPart
+  0069 ldfld AttachState attachState
+  006E ldc.i4.1
+  006F bne.un.s 00A8
+  0071 ldc.i4.1
+  0072 switch
+  007B ldarg.0
+  007C ldarg.0
+  007D ldfld CompoundPart selectedCompoundPart
+  0082 stfld Part selectedPart
+  0087 ldarg.0
+  0088 ldfld KerbalFSM fsm
+  008D ldarg.0
+  008E ldfld KFSMEvent on_partPicked
+  0093 callvirt Void RunEvent(KFSMEvent)
+  0098 ldarg.0
+  0099 call Void CreateSelectedPartIcon()
+  009E ldstr CompoundPart_Placement
+  00A3 call Void RemoveControlLock(System.String)
+  00A8 call Boolean get_isEditor()
+  00AD dup
+  00AE pop
+  00AF brfalse.s 00D5
+  00B1 ldc.i4.1
+  00B2 switch
+  00BB ldc.i4.s
+  00BD call Boolean GetKeyDown(UnityEngine.KeyCode)
+  00C2 dup
+  00C3 pop
+  00C4 brfalse.s 00D5
+  00C6 ldc.i4.1
+  00C7 switch
+  00D0 call Void Break()
+  00D5 call Game get_CurrentGame()
+  00DA dup
+  00DB pop
+  00DC brfalse.s 0101
+  00DE ldc.i4.7
+  00DF switch
+  00E8 call Game get_CurrentGame()
+  00ED dup
+  00EE pop
+  00EF ldfld Modes Mode
+  00F4 ldc.i4.5
+  00F5 beq.s 011A
+  00F7 ldc.i4.6
+  00F8 switch
+  0101 call Game get_CurrentGame()
+  0106 dup
+  0107 pop
+  0108 ldfld Modes Mode
+  010D ldc.i4.6
+  010E bne.un.s 0121
+  0110 ldc.i4.6
+  0111 switch
+  011A ldarg.0
+  011B ldc.i4.0
+  011C call Void editorSwitchInput(Boolean)
+  0121 ldarg.0
+  0122 ldfld PopupDialog steamCommsDialog
+  0127 ldnull
+  0128 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  012D dup
+  012E pop
+  012F brfalse.s 0171
+  0131 ldc.i4.4
+  0132 switch
+  013B call Single get_time()
+  0140 dup
+  0141 pop
+  0142 conv.r8
+  0143 ldarg.0
+  0144 ldfld Double timeSteamCommsStarted
+  0149 sub
+  014A ldc.r8 60
+  0153 ble.un.s 0171
+  0155 ldc.i4.1
+  0156 switch
+  015F ldarg.0
+  0160 ldfld PopupDialog steamCommsDialog
+  0165 callvirt Void Dismiss()
+  016A ldarg.0
+  016B ldnull
+  016C stfld PopupDialog steamCommsDialog
+  0171 ldarg.0
+  0172 ldfld UnityEngine.Camera editorCargoCamera
+  0177 ldnull
+  0178 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  017D dup
+  017E pop
+  017F brfalse.s 01E8
+  0181 ldc.i4.6
+  0182 switch
+  018B ldarg.0
+  018C ldfld UnityEngine.Camera editorCargoCamera
+  0191 callvirt UnityEngine.GameObject get_gameObject()
+  0196 dup
+  0197 pop
+  0198 ldarg.0
+  0199 ldfld Part selectedPart
+  019E ldnull
+  019F call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  01A4 dup
+  01A5 pop
+  01A6 brfalse.s 01E2
+  01A8 ldc.i4.4
+  01A9 switch
+  01B2 ldarg.0
+  01B3 ldfld Part selectedPart
+  01B8 callvirt Boolean isCargoPart()
+  01BD dup
+  01BE pop
+  01BF brfalse.s 01E2
+  01C1 ldc.i4.4
+  01C2 switch
+  01CB ldarg.0
+  01CC ldfld Part selectedPart
+  01D1 ldfld AttachRules attachRules
+  01D6 callvirt Boolean get_StackOrSurfaceAttachable()
+  01DB dup
+  01DC pop
+  01DD ldc.i4.0
+  01DE ceq
+  01E0 br.s 01E3
+  01E2 ldc.i4.0
+  01E3 callvirt Void SetActive(Boolean)
+  01E8 ret
+METHOD LateUpdate
+METHOD OnPartPurchased
+METHOD onConstructionModeChanged
+METHOD onRotateGizmoUpdate
+METHOD onRotateGizmoUpdated
+METHOD partRotationResetUpdate
+METHOD getPivotOffset
+METHOD onOffsetGizmoUpdate
+METHOD onOffsetGizmoUpdated
+METHOD onOffsetGizmoBoundsUpdate
+METHOD partOffsetInputUpdate
+METHOD OnNewRootSelect
+METHOD pickPart
+METHOD CenterDragPlane
+METHOD dragOverPlane
+METHOD SetBackup
+METHOD ResetBackup
+METHOD UndoRedoInputUpdate
+METHOD RestoreState
+METHOD OnSubassemblyDialogDismiss
+METHOD OnPartListIconTap
+  0000 ldarg.0
+  0001 ldfld KerbalFSM fsm
+  0006 callvirt KFSMState get_CurrentState()
+  000B dup
+  000C pop
+  000D ldarg.0
+  000E ldfld KFSMState st_place
+  0013 bne.un.s 002F
+  0015 ldc.i4.4
+  0016 switch
+  001F ldc.i4.1
+  0020 brtrue.s 0028
+  0022 ldtoken Void OnPartListIconTap(AvailablePart)
+  0027 pop
+  0028 ldarg.0
+  0029 call Void OnPartListBackgroundTap()
+  002E ret
+  002F ldarg.0
+  0030 ldarg.1
+  0031 call Void SpawnPart(AvailablePart)
+  0036 ret
+METHOD OnPartListIconTap
+  0000 ldarg.0
+  0001 ldfld KerbalFSM fsm
+  0006 callvirt KFSMState get_CurrentState()
+  000B dup
+  000C pop
+  000D ldarg.0
+  000E ldfld KFSMState st_place
+  0013 bne.un.s 002F
+  0015 ldc.i4.3
+  0016 switch
+  001F ldc.i4.1
+  0020 brtrue.s 0028
+  0022 ldtoken Void OnPartListIconTap(ShipTemplate)
+  0027 pop
+  0028 ldarg.0
+  0029 call Void OnPartListBackgroundTap()
+  002E ret
+  002F ldarg.0
+  0030 ldarg.1
+  0031 call Void SpawnTemplate(ShipTemplate)
+  0036 ret
+METHOD OnPartListBackgroundTap
+METHOD OnPodSpawn
+METHOD SpawnPart
+METHOD SetIconAsPart
+  0000 ldarg.1
+  0001 callvirt UnityEngine.Transform get_transform()
+  0006 dup
+  0007 pop
+  0008 ldnull
+  0009 callvirt Void SetParent(UnityEngine.Transform)
+  000E ldarg.1
+  000F callvirt UnityEngine.GameObject get_gameObject()
+  0014 dup
+  0015 pop
+  0016 call UnityEngine.SceneManagement.Scene GetActiveScene()
+  001B dup
+  001C pop
+  001D call Void MoveGameObjectToScene(UnityEngine.GameObject, UnityEngine.SceneManagement.Scene)
+  0022 ldarg.0
+  0023 ldarg.1
+  0024 stfld Part selectedPart
+  0029 ldarg.0
+  002A call UnityEngine.Vector3 get_zero()
+  002F dup
+  0030 pop
+  0031 stfld UnityEngine.Vector3 selPartGrabOffset
+  0036 ldarg.0
+  0037 call UnityEngine.Vector3 get_zero()
+  003C dup
+  003D pop
+  003E stfld UnityEngine.Vector3 dragPlaneCenter
+  0043 ldarg.0
+  0044 ldfld Part selectedPart
+  0049 callvirt UnityEngine.Transform get_transform()
+  004E dup
+  004F pop
+  0050 ldarg.0
+  0051 ldfld Part rootPart
+  0056 call Boolean op_Implicit(UnityEngine.Object)
+  005B dup
+  005C pop
+  005D brtrue.s 007F
+  005F ldc.i4.6
+  0060 switch
+  0069 ldc.i4.1
+  006A brtrue.s 0072
+  006C ldtoken Void SetIconAsPart(Part)
+  0071 pop
+  0072 ldarg.0
+  0073 ldfld Part selectedPart
+  0078 ldfld UnityEngine.Quaternion initRotation
+  007D br.s 0093
+  007F ldarg.0
+  0080 ldfld Part rootPart
+  0085 callvirt UnityEngine.Transform get_transform()
+  008A dup
+  008B pop
+  008C callvirt UnityEngine.Quaternion get_rotation()
+  0091 dup
+  0092 pop
+  0093 callvirt Void set_rotation(UnityEngine.Quaternion)
+  0098 ldarg.0
+  0099 ldfld Part selectedPart
+  009E callvirt UnityEngine.Transform get_transform()
+  00A3 dup
+  00A4 pop
+  00A5 call UnityEngine.Vector3 get_one()
+  00AA dup
+  00AB pop
+  00AC callvirt Void set_localScale(UnityEngine.Vector3)
+  00B1 ldarg.0
+  00B2 ldfld Part selectedPart
+  00B7 call UnityEngine.Quaternion get_identity()
+  00BC dup
+  00BD pop
+  00BE stfld UnityEngine.Quaternion attRotation
+  00C3 ldarg.0
+  00C4 ldfld Part selectedPart
+  00C9 ldarg.0
+  00CA ldfld Part selectedPart
+  00CF callvirt UnityEngine.Transform get_transform()
+  00D4 dup
+  00D5 pop
+  00D6 callvirt UnityEngine.Quaternion get_localRotation()
+  00DB dup
+  00DC pop
+  00DD stfld UnityEngine.Quaternion attRotation0
+  00E2 ldarg.0
+  00E3 ldfld Part selectedPart
+  00E8 ldarg.0
+  00E9 ldfld Part selectedPart
+  00EE callvirt UnityEngine.Transform get_transform()
+  00F3 dup
+  00F4 pop
+  00F5 callvirt UnityEngine.Vector3 get_localPosition()
+  00FA dup
+  00FB pop
+  00FC stfld UnityEngine.Vector3 attPos0
+  0101 ldarg.0
+  0102 ldfld Part selectedPart
+  0107 callvirt UnityEngine.GameObject get_gameObject()
+  010C dup
+  010D pop
+  010E ldc.i4.1
+  010F ldc.i4.1
+  0110 ldc.i4 2097152
+  0115 call Void SetLayerRecursive(UnityEngine.GameObject, Int32, Boolean, Int32)
+  011A ldarg.1
+  011B callvirt Highlighting.Highlighter get_highlighter()
+  0120 dup
+  0121 pop
+  0122 callvirt Void ReinitMaterials()
+  0127 ldarg.1
+  0128 ldc.i4.1
+  0129 ldc.i4.1
+  012A callvirt Void SetHighlight(Boolean, Boolean)
+  012F ldarg.0
+  0130 ldfld KerbalFSM fsm
+  0135 callvirt Boolean get_Started()
+  013A dup
+  013B pop
+  013C brfalse.s 0159
+  013E ldc.i4.3
+  013F switch
+  0148 ldarg.0
+  0149 ldfld KerbalFSM fsm
+  014E ldarg.0
+  014F ldfld KFSMEvent on_partPicked
+  0154 callvirt Void RunEvent(KFSMEvent)
+  0159 ret
+METHOD CreatePartForInventoryUse
+METHOD ReleasePartToIcon
+  0000 ldarg.0
+  0001 ldfld KerbalFSM fsm
+  0006 callvirt Boolean get_Started()
+  000B dup
+  000C pop
+  000D brfalse.s 0033
+  000F ldc.i4.4
+  0010 switch
+  0019 ldc.i4.1
+  001A brtrue.s 0022
+  001C ldtoken Void ReleasePartToIcon()
+  0021 pop
+  0022 ldarg.0
+  0023 ldfld KerbalFSM fsm
+  0028 ldarg.0
+  0029 ldfld KFSMEvent on_partOverInventoryPAW
+  002E callvirt Void RunEvent(KFSMEvent)
+  0033 ret
+METHOD SpawnTemplate
+METHOD SpawnConstruct
+METHOD DuplicatePart
+METHOD DeletePart
+METHOD deletePart
+METHOD DestroySelectedPart
+METHOD deleteInputUpdate
+METHOD RestoreSymmetryState
+METHOD RestoreSymmetryModeBeforeNodeAttachment
+  0000 ldarg.0
+  0001 ldarg.0
+  0002 ldfld Int32 symmetryModeBeforeNodeAttachment
+  0007 stfld Int32 symmetryMode
+  000C ldarg.0
+  000D call Void SetSymState()
+  0012 ldarg.0
+  0013 ldc.i4.m1
+  0014 stfld Int32 symmetryModeBeforeNodeAttachment
+  0019 ret
+METHOD createSymmetry
+METHOD UpdatePartAndChildren
+METHOD UpdateSymmetry
+METHOD UpdateChildMirrorSymmetry
+METHOD cleanSymmetry
+METHOD CheckCopiedSymmetryPersistentId
+METHOD wipeSymmetry
+METHOD deleteSymmetryParts
+METHOD deletePartAndSymmetryParts
+METHOD FirstNonSymmetricalParentFrom
+METHOD checkAttach
+  0000 newobj Void .ctor()
+  0005 stloc.0
+  0006 ldloc.0
+  0007 ldarg.1
+  0008 stfld Part caller
+  000D ldloc.0
+  000E ldarg.1
+  000F callvirt UnityEngine.Transform get_transform()
+  0014 dup
+  0015 pop
+  0016 callvirt UnityEngine.Vector3 get_position()
+  001B dup
+  001C pop
+  001D stfld UnityEngine.Vector3 position
+  0022 ldloc.0
+  0023 ldarg.0
+  0024 ldfld UnityEngine.Quaternion vesselRotation
+  0029 stfld UnityEngine.Quaternion rotation
+  002E ldloc.0
+  002F ldnull
+  0030 stfld Part potentialParent
+  0035 ldc.i4.0
+  0036 stloc.1
+  0037 ldc.i4.0
+  0038 stloc.2
+  0039 ldarg.1
+  003A ldfld AttachRules attachRules
+  003F ldfld Boolean stack
+  0044 brfalse 04EA
+  0049 ldc.i4.1
+  004A switch
+  0053 ldc.i4.1
+  0054 brtrue.s 005C
+  0056 ldtoken Attachment checkAttach(Part)
+  005B pop
+  005C ldarg.0
+  005D ldfld Boolean allowNodeAttachment
+  0062 brfalse 04EA
+  0067 ldc.i4.3
+  0068 switch
+  0071 ldnull
+  0072 stloc.3
+  0073 ldc.i4.0
+  0074 stloc.s
+  0076 ldarg.0
+  0077 ldfld ShipConstruct ship
+  007C callvirt Int32 get_Count()
+  0081 dup
+  0082 pop
+  0083 stloc.s
+  0085 br 04D7
+  008A ldarg.0
+  008B ldfld ShipConstruct ship
+  0090 ldloc.s
+  0092 callvirt Part get_Item(Int32)
+  0097 dup
+  0098 pop
+  0099 stloc.3
+  009A ldloc.3
+  009B ldarg.1
+  009C call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  00A1 dup
+  00A2 pop
+  00A3 brtrue 04D1
+  00A8 ldc.i4.6
+  00A9 switch
+  00B2 ldarg.0
+  00B3 ldarg.1
+  00B4 ldloc.3
+  00B5 call Boolean PartInHierarchy(Part, Part)
+  00BA dup
+  00BB pop
+  00BC brtrue 04D1
+  00C1 ldc.i4.3
+  00C2 switch
+  00CB ldloc.3
+  00CC ldfld AttachRules attachRules
+  00D1 ldfld Boolean allowStack
+  00D6 brtrue.s 00FC
+  00D8 ldc.i4.1
+  00D9 switch
+  00E2 ldloc.3
+  00E3 ldfld AttachRules attachRules
+  00E8 ldfld Boolean allowDock
+  00ED brfalse 04D1
+  00F2 ldc.i4.3
+  00F3 switch
+  00FC ldnull
+  00FD stloc.s
+  00FF ldnull
+  0100 stloc.s
+  0102 ldnull
+  0103 stloc.s
+  0105 ldc.i4.0
+  0106 stloc.s
+  0108 ldarg.1
+  0109 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  010E callvirt Int32 get_Count()
+  0113 dup
+  0114 pop
+  0115 stloc.s
+  0117 br 0489
+  011C ldarg.1
+  011D ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0122 ldloc.s
+  0124 callvirt AttachNode get_Item(Int32)
+  0129 dup
+  012A pop
+  012B stloc.s
+  012D ldloc.s
+  012F ldfld Part attachedPart
+  0134 ldnull
+  0135 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  013A dup
+  013B pop
+  013C brtrue 0483
+  0141 ldc.i4.5
+  0142 switch
+  014B ldloc.s
+  014D ldfld UnityEngine.GameObject icon
+  0152 ldnull
+  0153 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0158 dup
+  0159 pop
+  015A brtrue 0483
+  015F ldc.i4.5
+  0160 switch
+  0169 ldarg.1
+  016A callvirt UnityEngine.Transform get_transform()
+  016F dup
+  0170 pop
+  0171 ldloc.s
+  0173 ldfld UnityEngine.Vector3 orientation
+  0178 callvirt UnityEngine.Vector3 TransformDirection(UnityEngine.Vector3)
+  017D dup
+  017E pop
+  017F stloc.s
+  0181 ldloca.s
+  0183 call UnityEngine.Vector3 get_normalized()
+  0188 dup
+  0189 pop
+  018A stloc.s
+  018C ldnull
+  018D stloc.s
+  018F ldc.i4.0
+  0190 stloc.s
+  0192 ldloc.3
+  0193 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0198 callvirt Int32 get_Count()
+  019D dup
+  019E pop
+  019F stloc.s
+  01A1 br 0470
+  01A6 ldloc.3
+  01A7 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  01AC ldloc.s
+  01AE callvirt AttachNode get_Item(Int32)
+  01B3 dup
+  01B4 pop
+  01B5 stloc.s
+  01B7 ldloc.s
+  01B9 ldfld UnityEngine.GameObject icon
+  01BE ldnull
+  01BF call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  01C4 dup
+  01C5 pop
+  01C6 brtrue.s 01ED
+  01C8 ldc.i4.4
+  01C9 switch
+  01D2 ldloc.s
+  01D4 ldfld Part attachedPart
+  01D9 ldnull
+  01DA call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  01DF dup
+  01E0 pop
+  01E1 brfalse.s 0201
+  01E3 ldc.i4.6
+  01E4 switch
+  01ED ldsfld Boolean AllowPartClipping
+  01F2 brfalse 046A
+  01F7 ldc.i4.2
+  01F8 switch
+  0201 ldloc.s
+  0203 ldfld NodeType nodeType
+  0208 ldloc.s
+  020A ldfld NodeType nodeType
+  020F bne.un 046A
+  0214 ldc.i4.5
+  0215 switch
+  021E ldloc.s
+  0220 ldfld UnityEngine.GameObject icon
+  0225 callvirt UnityEngine.Renderer GetComponent[Renderer]()
+  022A dup
+  022B pop
+  022C callvirt UnityEngine.Bounds get_bounds()
+  0231 dup
+  0232 pop
+  0233 stloc.s
+  0235 ldloca.s
+  0237 ldarg.0
+  0238 ldfld UnityEngine.Camera editorCamera
+  023D ldarg.0
+  023E ldfld UnityEngine.Camera editorCamera
+  0243 ldarg.1
+  0244 callvirt UnityEngine.Transform get_transform()
+  0249 dup
+  024A pop
+  024B ldloc.s
+  024D ldfld UnityEngine.Vector3 position
+  0252 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  0257 dup
+  0258 pop
+  0259 callvirt UnityEngine.Vector3 WorldToScreenPoint(UnityEngine.Vector3)
+  025E dup
+  025F pop
+  0260 callvirt UnityEngine.Ray ScreenPointToRay(UnityEngine.Vector3)
+  0265 dup
+  0266 pop
+  0267 call Boolean IntersectRay(UnityEngine.Ray)
+  026C dup
+  026D pop
+  026E brtrue.s 02BF
+  0270 ldc.i4.3
+  0271 switch
+  027A ldloc.s
+  027C ldfld UnityEngine.GameObject icon
+  0281 callvirt UnityEngine.Renderer GetComponent[Renderer]()
+  0286 dup
+  0287 pop
+  0288 callvirt UnityEngine.Bounds get_bounds()
+  028D dup
+  028E pop
+  028F stloc.s
+  0291 ldloca.s
+  0293 ldarg.1
+  0294 callvirt UnityEngine.Transform get_transform()
+  0299 dup
+  029A pop
+  029B ldloc.s
+  029D ldfld UnityEngine.Vector3 position
+  02A2 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  02A7 dup
+  02A8 pop
+  02A9 call Boolean Contains(UnityEngine.Vector3)
+  02AE dup
+  02AF pop
+  02B0 brfalse 046A
+  02B5 ldc.i4.4
+  02B6 switch
+  02BF ldloc.3
+  02C0 callvirt UnityEngine.Transform get_transform()
+  02C5 dup
+  02C6 pop
+  02C7 ldloc.s
+  02C9 ldfld UnityEngine.Vector3 orientation
+  02CE callvirt UnityEngine.Vector3 TransformDirection(UnityEngine.Vector3)
+  02D3 dup
+  02D4 pop
+  02D5 stloc.s
+  02D7 ldloca.s
+  02D9 call UnityEngine.Vector3 get_normalized()
+  02DE dup
+  02DF pop
+  02E0 stloc.s
+  02E2 ldloc.s
+  02E4 ldloc.s
+  02E6 call Single Dot(UnityEngine.Vector3, UnityEngine.Vector3)
+  02EB dup
+  02EC pop
+  02ED stloc.s
+  02EF ldsfld Boolean NonStrictAttachmentOrientation
+  02F4 brtrue 03B0
+  02F9 ldc.i4.1
+  02FA switch
+  0303 ldloc.s
+  0305 ldc.r4 -0.7
+  030A bge.un 046A
+  030F ldc.i4.5
+  0310 switch
+  0319 ldloc.s
+  031B stloc.s
+  031D ldloc.s
+  031F stloc.s
+  0321 ldloc.0
+  0322 ldloc.3
+  0323 stfld Part potentialParent
+  0328 ldarg.0
+  0329 ldloc.s
+  032B ldloc.s
+  032D call UnityEngine.Vector3 op_UnaryNegation(UnityEngine.Vector3)
+  0332 dup
+  0333 pop
+  0334 call UnityEngine.Quaternion FromToRotation(UnityEngine.Vector3, UnityEngine.Vector3)
+  0339 dup
+  033A pop
+  033B stfld UnityEngine.Quaternion stackRotation
+  0340 ldloc.0
+  0341 ldarg.0
+  0342 ldfld UnityEngine.Quaternion stackRotation
+  0347 ldarg.0
+  0348 ldfld UnityEngine.Quaternion vesselRotation
+  034D call UnityEngine.Quaternion op_Multiply(UnityEngine.Quaternion, UnityEngine.Quaternion)
+  0352 dup
+  0353 pop
+  0354 stfld UnityEngine.Quaternion rotation
+  0359 ldloc.0
+  035A ldloc.3
+  035B callvirt UnityEngine.Transform get_transform()
+  0360 dup
+  0361 pop
+  0362 ldloc.s
+  0364 ldfld UnityEngine.Vector3 position
+  0369 ldloc.s
+  036B ldfld UnityEngine.Vector3 offset
+  0370 call UnityEngine.Vector3 op_Addition(UnityEngine.Vector3, UnityEngine.Vector3)
+  0375 dup
+  0376 pop
+  0377 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  037C dup
+  037D pop
+  037E ldloc.0
+  037F ldfld UnityEngine.Quaternion rotation
+  0384 ldarg.1
+  0385 ldfld UnityEngine.Quaternion attRotation
+  038A call UnityEngine.Quaternion op_Multiply(UnityEngine.Quaternion, UnityEngine.Quaternion)
+  038F dup
+  0390 pop
+  0391 ldloc.s
+  0393 ldfld UnityEngine.Vector3 position
+  0398 call UnityEngine.Vector3 op_Multiply(UnityEngine.Quaternion, UnityEngine.Vector3)
+  039D dup
+  039E pop
+  039F call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  03A4 dup
+  03A5 pop
+  03A6 stfld UnityEngine.Vector3 position
+  03AB br 0483
+  03B0 ldloc.s
+  03B2 call Single Abs(Single)
+  03B7 dup
+  03B8 pop
+  03B9 ldc.r4 0.7
+  03BE ble.un 046A
+  03C3 ldc.i4.4
+  03C4 switch
+  03CD ldloc.s
+  03CF stloc.s
+  03D1 ldloc.s
+  03D3 stloc.s
+  03D5 ldloc.0
+  03D6 ldloc.3
+  03D7 stfld Part potentialParent
+  03DC ldarg.0
+  03DD ldloc.s
+  03DF ldloc.s
+  03E1 call Single Sign(Single)
+  03E6 dup
+  03E7 pop
+  03E8 call UnityEngine.Vector3 op_Multiply(UnityEngine.Vector3, Single)
+  03ED dup
+  03EE pop
+  03EF ldloc.s
+  03F1 call UnityEngine.Quaternion FromToRotation(UnityEngine.Vector3, UnityEngine.Vector3)
+  03F6 dup
+  03F7 pop
+  03F8 stfld UnityEngine.Quaternion stackRotation
+  03FD ldloc.0
+  03FE ldarg.0
+  03FF ldfld UnityEngine.Quaternion stackRotation
+  0404 ldarg.0
+  0405 ldfld UnityEngine.Quaternion vesselRotation
+  040A call UnityEngine.Quaternion op_Multiply(UnityEngine.Quaternion, UnityEngine.Quaternion)
+  040F dup
+  0410 pop
+  0411 stfld UnityEngine.Quaternion rotation
+  0416 ldloc.0
+  0417 ldloc.3
+  0418 callvirt UnityEngine.Transform get_transform()
+  041D dup
+  041E pop
+  041F ldloc.s
+  0421 ldfld UnityEngine.Vector3 position
+  0426 ldloc.s
+  0428 ldfld UnityEngine.Vector3 offset
+  042D call UnityEngine.Vector3 op_Addition(UnityEngine.Vector3, UnityEngine.Vector3)
+  0432 dup
+  0433 pop
+  0434 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  0439 dup
+  043A pop
+  043B ldloc.0
+  043C ldfld UnityEngine.Quaternion rotation
+  0441 ldarg.1
+  0442 ldfld UnityEngine.Quaternion attRotation
+  0447 call UnityEngine.Quaternion op_Multiply(UnityEngine.Quaternion, UnityEngine.Quaternion)
+  044C dup
+  044D pop
+  044E ldloc.s
+  0450 ldfld UnityEngine.Vector3 position
+  0455 call UnityEngine.Vector3 op_Multiply(UnityEngine.Quaternion, UnityEngine.Vector3)
+  045A dup
+  045B pop
+  045C call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  0461 dup
+  0462 pop
+  0463 stfld UnityEngine.Vector3 position
+  0468 br.s 0483
+  046A ldloc.s
+  046C ldc.i4.1
+  046D add
+  046E stloc.s
+  0470 ldloc.s
+  0472 ldloc.s
+  0474 blt 01A6
+  0479 ldc.i4.6
+  047A switch
+  0483 ldloc.s
+  0485 ldc.i4.1
+  0486 add
+  0487 stloc.s
+  0489 ldloc.s
+  048B ldloc.s
+  048D blt 011C
+  0492 ldc.i4.5
+  0493 switch
+  049C ldloc.s
+  049E brfalse.s 04D1
+  04A0 ldc.i4.5
+  04A1 switch
+  04AA ldloc.s
+  04AC brfalse.s 04D1
+  04AE ldc.i4.3
+  04AF switch
+  04B8 ldc.i4.1
+  04B9 stloc.1
+  04BA ldloc.0
+  04BB ldloc.s
+  04BD stfld AttachNode callerPartNode
+  04C2 ldloc.0
+  04C3 ldloc.s
+  04C5 stfld AttachNode otherPartNode
+  04CA ldarg.1
+  04CB ldc.i4.0
+  04CC stfld AttachModes attachMode
+  04D1 ldloc.s
+  04D3 ldc.i4.1
+  04D4 add
+  04D5 stloc.s
+  04D7 ldloc.s
+  04D9 ldloc.s
+  04DB blt 008A
+  04E0 ldc.i4.4
+  04E1 switch
+  04EA ldarg.1
+  04EB ldfld AttachRules attachRules
+  04F0 ldfld Boolean srfAttach
+  04F5 brfalse.s 052C
+  04F7 ldc.i4.1
+  04F8 switch
+  0501 ldarg.0
+  0502 ldfld Boolean allowSrfAttachment
+  0507 brfalse.s 052C
+  0509 ldc.i4.6
+  050A switch
+  0513 ldsfld KeyBinding MODIFIER_KEY
+  0518 ldc.i4.0
+  0519 callvirt Boolean GetKey(Boolean)
+  051E dup
+  051F pop
+  0520 brfalse.s 055D
+  0522 ldc.i4.5
+  0523 switch
+  052C ldsfld KeyBinding MODIFIER_KEY
+  0531 ldc.i4.0
+  0532 callvirt Boolean GetKey(Boolean)
+  0537 dup
+  0538 pop
+  0539 brfalse 0AAE
+  053E ldc.i4.2
+  053F switch
+  0548 ldarg.0
+  0549 ldfld Boolean isCurrentPartFlag
+  054E brfalse 0AAE
+  0553 ldc.i4.3
+  0554 switch
+  055D ldarg.0
+  055E ldarg.0
+  055F ldfld UnityEngine.Camera editorCamera
+  0564 call UnityEngine.Vector3 get_mousePosition()
+  0569 dup
+  056A pop
+  056B ldarg.0
+  056C ldfld UnityEngine.Vector3 srfAttachCursorOffset
+  0571 call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  0576 dup
+  0577 pop
+  0578 callvirt UnityEngine.Ray ScreenPointToRay(UnityEngine.Vector3)
+  057D dup
+  057E pop
+  057F stfld UnityEngine.Ray ray
+  0584 ldarg.0
+  0585 ldfld UnityEngine.Ray ray
+  058A ldarg.0
+  058B ldflda UnityEngine.RaycastHit hit
+  0590 ldc.r4 1000
+  0595 ldsfld Int32 DefaultEquivalent
+  059A call Boolean Raycast(UnityEngine.Ray, UnityEngine.RaycastHit ByRef, Single, Int32)
+  059F dup
+  05A0 pop
+  05A1 brfalse 0AAE
+  05A6 ldc.i4.2
+  05A7 switch
+  05B0 ldarg.0
+  05B1 ldflda UnityEngine.RaycastHit hit
+  05B6 call UnityEngine.Collider get_collider()
+  05BB dup
+  05BC pop
+  05BD callvirt UnityEngine.GameObject get_gameObject()
+  05C2 dup
+  05C3 pop
+  05C4 call Part GetPartUpwardsCached(UnityEngine.GameObject)
+  05C9 dup
+  05CA pop
+  05CB stloc.s
+  05CD ldarg.0
+  05CE ldfld Boolean isCurrentPartFlag
+  05D3 brfalse.s 05F7
+  05D5 ldc.i4.3
+  05D6 switch
+  05DF ldarg.0
+  05E0 ldarg.0
+  05E1 ldflda UnityEngine.RaycastHit hit
+  05E6 call UnityEngine.Collider get_collider()
+  05EB dup
+  05EC pop
+  05ED stfld UnityEngine.Collider FairingHitCollider
+  05F2 br 06BA
+  05F7 ldarg.0
+  05F8 ldnull
+  05F9 stfld UnityEngine.Collider FairingHitCollider
+  05FE ldnull
+  05FF stloc.s
+  0601 ldloc.s
+  0603 ldnull
+  0604 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0609 dup
+  060A pop
+  060B brfalse 06BA
+  0610 ldc.i4.5
+  0611 switch
+  061A ldloc.s
+  061C callvirt ModuleProceduralFairing FindModuleImplementing[ModuleProceduralFairing]()
+  0621 dup
+  0622 pop
+  0623 stloc.s
+  0625 ldloc.s
+  0627 ldnull
+  0628 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  062D dup
+  062E pop
+  062F brfalse 06BA
+  0634 ldc.i4.4
+  0635 switch
+  063E ldc.i4.0
+  063F stloc.s
+  0641 br.s 069E
+  0643 ldarg.0
+  0644 ldflda UnityEngine.RaycastHit hit
+  0649 call UnityEngine.Collider get_collider()
+  064E dup
+  064F pop
+  0650 callvirt UnityEngine.Transform get_transform()
+  0655 dup
+  0656 pop
+  0657 ldloc.s
+  0659 ldfld System.Collections.Generic.List`1[ProceduralFairings.FairingPanel] Panels
+  065E ldloc.s
+  0660 callvirt ProceduralFairings.FairingPanel get_Item(Int32)
+  0665 dup
+  0666 pop
+  0667 ldfld UnityEngine.GameObject ColliderContainer
+  066C callvirt System.String get_name()
+  0671 dup
+  0672 pop
+  0673 ldc.i4.0
+  0674 call UnityEngine.Transform FindParent(UnityEngine.Transform, System.String, Boolean)
+  0679 dup
+  067A pop
+  067B ldnull
+  067C call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0681 dup
+  0682 pop
+  0683 brfalse.s 0698
+  0685 ldc.i4.3
+  0686 switch
+  068F ldloc.0
+  0690 ldc.i4.0
+  0691 stfld Boolean possible
+  0696 ldloc.0
+  0697 ret
+  0698 ldloc.s
+  069A ldc.i4.1
+  069B add
+  069C stloc.s
+  069E ldloc.s
+  06A0 ldloc.s
+  06A2 ldfld System.Collections.Generic.List`1[ProceduralFairings.FairingPanel] Panels
+  06A7 callvirt Int32 get_Count()
+  06AC dup
+  06AD pop
+  06AE blt.s 0643
+  06B0 ldc.i4.2
+  06B1 switch
+  06BA ldloc.s
+  06BC ldnull
+  06BD call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  06C2 dup
+  06C3 pop
+  06C4 brfalse 0AAE
+  06C9 ldc.i4.6
+  06CA switch
+  06D3 ldarg.0
+  06D4 ldfld ShipConstruct ship
+  06D9 ldloc.s
+  06DB callvirt Boolean Contains(Part)
+  06E0 dup
+  06E1 pop
+  06E2 brtrue.s 06F1
+  06E4 ldc.i4.4
+  06E5 switch
+  06EE ldnull
+  06EF stloc.s
+  06F1 ldarg.0
+  06F2 ldflda UnityEngine.RaycastHit hit
+  06F7 call UnityEngine.Collider get_collider()
+  06FC dup
+  06FD pop
+  06FE ldstr NoAttach
+  0703 callvirt Boolean CompareTag(System.String)
+  0708 dup
+  0709 pop
+  070A brfalse.s 0719
+  070C ldc.i4.7
+  070D switch
+  0716 ldnull
+  0717 stloc.s
+  0719 ldloc.s
+  071B call Boolean op_Implicit(UnityEngine.Object)
+  0720 dup
+  0721 pop
+  0722 brfalse 0AAE
+  0727 ldc.i4.6
+  0728 switch
+  0731 ldloc.s
+  0733 ldfld AttachRules attachRules
+  0738 ldfld Boolean allowSrfAttach
+  073D brfalse 0AAE
+  0742 ldc.i4.4
+  0743 switch
+  074C ldloc.0
+  074D ldarg.1
+  074E ldfld AttachNode srfAttachNode
+  0753 stfld AttachNode callerPartNode
+  0758 ldloc.0
+  0759 ldnull
+  075A stfld AttachNode otherPartNode
+  075F ldarg.1
+  0760 ldc.i4.1
+  0761 stfld AttachModes attachMode
+  0766 ldarg.1
+  0767 ldfld AttachNode srfAttachNode
+  076C ldarg.0
+  076D ldflda UnityEngine.RaycastHit hit
+  0772 call UnityEngine.Collider get_collider()
+  0777 dup
+  0778 pop
+  0779 callvirt System.String get_name()
+  077E dup
+  077F pop
+  0780 stfld System.String srfAttachMeshName
+  0785 ldloc.0
+  0786 ldloc.s
+  0788 stfld Part potentialParent
+  078D ldc.i4.1
+  078E stloc.2
+  078F ldloc.0
+  0790 ldarg.0
+  0791 ldflda UnityEngine.RaycastHit hit
+  0796 call UnityEngine.Vector3 get_normal()
+  079B dup
+  079C pop
+  079D ldloc.s
+  079F callvirt UnityEngine.Transform get_transform()
+  07A4 dup
+  07A5 pop
+  07A6 callvirt UnityEngine.Quaternion get_rotation()
+  07AB dup
+  07AC pop
+  07AD call UnityEngine.Vector3 get_up()
+  07B2 dup
+  07B3 pop
+  07B4 call UnityEngine.Vector3 op_Multiply(UnityEngine.Quaternion, UnityEngine.Vector3)
+  07B9 dup
+  07BA pop
+  07BB call UnityEngine.Quaternion LookRotation(UnityEngine.Vector3, UnityEngine.Vector3)
+  07C0 dup
+  07C1 pop
+  07C2 ldarg.1
+  07C3 ldfld AttachNode srfAttachNode
+  07C8 ldfld UnityEngine.Vector3 orientation
+  07CD call UnityEngine.Vector3 get_up()
+  07D2 dup
+  07D3 pop
+  07D4 call UnityEngine.Quaternion LookRotation(UnityEngine.Vector3, UnityEngine.Vector3)
+  07D9 dup
+  07DA pop
+  07DB call UnityEngine.Quaternion op_Multiply(UnityEngine.Quaternion, UnityEngine.Quaternion)
+  07E0 dup
+  07E1 pop
+  07E2 stfld UnityEngine.Quaternion rotation
+  07E7 ldloc.0
+  07E8 ldarg.0
+  07E9 ldflda UnityEngine.RaycastHit hit
+  07EE call UnityEngine.Vector3 get_point()
+  07F3 dup
+  07F4 pop
+  07F5 ldloc.0
+  07F6 ldfld UnityEngine.Quaternion rotation
+  07FB ldarg.1
+  07FC ldfld UnityEngine.Quaternion attRotation
+  0801 call UnityEngine.Quaternion op_Multiply(UnityEngine.Quaternion, UnityEngine.Quaternion)
+  0806 dup
+  0807 pop
+  0808 ldarg.1
+  0809 ldfld AttachNode srfAttachNode
+  080E ldfld UnityEngine.Vector3 position
+  0813 call UnityEngine.Vector3 op_Multiply(UnityEngine.Quaternion, UnityEngine.Vector3)
+  0818 dup
+  0819 pop
+  081A call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  081F dup
+  0820 pop
+  0821 stfld UnityEngine.Vector3 position
+  0826 ldsfld Boolean VAB_USE_ANGLE_SNAP
+  082B brfalse 0AAE
+  0830 ldc.i4.3
+  0831 switch
+  083A ldarg.0
+  083B ldflda UnityEngine.RaycastHit hit
+  0840 call UnityEngine.Vector3 get_point()
+  0845 dup
+  0846 pop
+  0847 ldloc.s
+  0849 callvirt UnityEngine.Transform get_transform()
+  084E dup
+  084F pop
+  0850 callvirt UnityEngine.Vector3 get_position()
+  0855 dup
+  0856 pop
+  0857 call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  085C dup
+  085D pop
+  085E stloc.s
+  0860 ldloca.s
+  0862 ldloc.s
+  0864 callvirt UnityEngine.Transform get_transform()
+  0869 dup
+  086A pop
+  086B callvirt UnityEngine.Vector3 get_position()
+  0870 dup
+  0871 pop
+  0872 ldloc.s
+  0874 callvirt UnityEngine.Transform get_transform()
+  0879 dup
+  087A pop
+  087B callvirt UnityEngine.Vector3 get_up()
+  0880 dup
+  0881 pop
+  0882 call Void .ctor(UnityEngine.Vector3, UnityEngine.Vector3)
+  0887 ldloc.s
+  0889 ldloca.s
+  088B call UnityEngine.Vector3 get_direction()
+  0890 dup
+  0891 pop
+  0892 call UnityEngine.Vector3 ProjectOnPlane(UnityEngine.Vector3, UnityEngine.Vector3)
+  0897 dup
+  0898 pop
+  0899 stloc.s
+  089B ldloc.s
+  089D callvirt UnityEngine.Transform get_transform()
+  08A2 dup
+  08A3 pop
+  08A4 callvirt UnityEngine.Vector3 get_forward()
+  08A9 dup
+  08AA pop
+  08AB stloc.s
+  08AD ldloc.s
+  08AF ldloca.s
+  08B1 call UnityEngine.Vector3 get_direction()
+  08B6 dup
+  08B7 pop
+  08B8 call Single Dot(UnityEngine.Vector3, UnityEngine.Vector3)
+  08BD dup
+  08BE pop
+  08BF stloc.s
+  08C1 ldloc.s
+  08C3 ldloca.s
+  08C5 call UnityEngine.Vector3 get_normalized()
+  08CA dup
+  08CB pop
+  08CC ldloca.s
+  08CE call UnityEngine.Vector3 get_direction()
+  08D3 dup
+  08D4 pop
+  08D5 call Single BearingDegrees(UnityEngine.Vector3, UnityEngine.Vector3, UnityEngine.Vector3)
+  08DA dup
+  08DB pop
+  08DC stloc.s
+  08DE ldsfld KeyBinding Editor_fineTweak
+  08E3 ldc.i4.0
+  08E4 callvirt Boolean GetKey(Boolean)
+  08E9 dup
+  08EA pop
+  08EB brtrue.s 08FF
+  08ED ldc.i4.4
+  08EE switch
+  08F7 ldarg.0
+  08F8 ldfld Single srfAttachAngleSnap
+  08FD br.s 0905
+  08FF ldarg.0
+  0900 ldfld Single srfAttachAngleSnapFine
+  0905 stloc.s
+  0907 ldloc.s
+  0909 ldloc.s
+  090B div
+  090C ldloc.s
+  090E ldloc.s
+  0910 div
+  0911 call Single Floor(Single)
+  0916 dup
+  0917 pop
+  0918 sub
+  0919 ldc.r4 0.5
+  091E ble.un.s 093E
+  0920 ldc.i4.3
+  0921 switch
+  092A ldloc.s
+  092C ldloc.s
+  092E div
+  092F call Int32 CeilToInt(Single)
+  0934 dup
+  0935 pop
+  0936 conv.r4
+  0937 ldloc.s
+  0939 mul
+  093A stloc.s
+  093C br.s 0950
+  093E ldloc.s
+  0940 ldloc.s
+  0942 div
+  0943 call Int32 FloorToInt(Single)
+  0948 dup
+  0949 pop
+  094A conv.r4
+  094B ldloc.s
+  094D mul
+  094E stloc.s
+  0950 ldloc.s
+  0952 ldloca.s
+  0954 call UnityEngine.Vector3 get_direction()
+  0959 dup
+  095A pop
+  095B call UnityEngine.Quaternion AngleAxis(Single, UnityEngine.Vector3)
+  0960 dup
+  0961 pop
+  0962 ldloc.s
+  0964 call UnityEngine.Vector3 op_Multiply(UnityEngine.Quaternion, UnityEngine.Vector3)
+  0969 dup
+  096A pop
+  096B stloc.s
+  096D ldloca.s
+  096F call UnityEngine.Vector3 get_origin()
+  0974 dup
+  0975 pop
+  0976 ldloca.s
+  0978 call UnityEngine.Vector3 get_direction()
+  097D dup
+  097E pop
+  097F ldloc.s
+  0981 call UnityEngine.Vector3 op_Multiply(UnityEngine.Vector3, Single)
+  0986 dup
+  0987 pop
+  0988 call UnityEngine.Vector3 op_Addition(UnityEngine.Vector3, UnityEngine.Vector3)
+  098D dup
+  098E pop
+  098F stloc.s
+  0991 ldloca.s
+  0993 call Void Normalize()
+  0998 ldloc.s
+  099A ldloc.s
+  099C ldarg.0
+  099D ldloc.s
+  099F ldloca.s
+  09A1 call UnityEngine.Vector3 get_origin()
+  09A6 dup
+  09A7 pop
+  09A8 ldloca.s
+  09AA call UnityEngine.Vector3 get_direction()
+  09AF dup
+  09B0 pop
+  09B1 ldloc.s
+  09B3 ldarg.0
+  09B4 ldfld UnityEngine.RaycastHit hit
+  09B9 ldloca.s
+  09BB call Single FindPartSurface(Part, UnityEngine.Vector3, UnityEngine.Vector3, UnityEngine.Vector3, UnityEngine.RaycastHit, UnityEngine.Vector3 ByRef)
+  09C0 dup
+  09C1 pop
+  09C2 call UnityEngine.Vector3 op_Multiply(UnityEngine.Vector3, Single)
+  09C7 dup
+  09C8 pop
+  09C9 call UnityEngine.Vector3 op_Addition(UnityEngine.Vector3, UnityEngine.Vector3)
+  09CE dup
+  09CF pop
+  09D0 stloc.s
+  09D2 ldloc.s
+  09D4 ldloca.s
+  09D6 call UnityEngine.Vector3 get_direction()
+  09DB dup
+  09DC pop
+  09DD call Single Dot(UnityEngine.Vector3, UnityEngine.Vector3)
+  09E2 dup
+  09E3 pop
+  09E4 call Single Abs(Single)
+  09E9 dup
+  09EA pop
+  09EB ldc.r4 1
+  09F0 bge.un.s 0A2D
+  09F2 ldc.i4.6
+  09F3 switch
+  09FC ldloc.s
+  09FE ldloca.s
+  0A00 call UnityEngine.Vector3 get_direction()
+  0A05 dup
+  0A06 pop
+  0A07 call UnityEngine.Vector3 ProjectOnPlane(UnityEngine.Vector3, UnityEngine.Vector3)
+  0A0C dup
+  0A0D pop
+  0A0E stloc.s
+  0A10 ldloca.s
+  0A12 call UnityEngine.Vector3 get_normalized()
+  0A17 dup
+  0A18 pop
+  0A19 ldloc.s
+  0A1B call UnityEngine.Quaternion FromToRotation(UnityEngine.Vector3, UnityEngine.Vector3)
+  0A20 dup
+  0A21 pop
+  0A22 ldloc.s
+  0A24 call UnityEngine.Vector3 op_Multiply(UnityEngine.Quaternion, UnityEngine.Vector3)
+  0A29 dup
+  0A2A pop
+  0A2B stloc.s
+  0A2D ldloc.0
+  0A2E ldloc.s
+  0A30 ldloc.s
+  0A32 callvirt UnityEngine.Transform get_transform()
+  0A37 dup
+  0A38 pop
+  0A39 callvirt UnityEngine.Quaternion get_rotation()
+  0A3E dup
+  0A3F pop
+  0A40 call UnityEngine.Vector3 get_up()
+  0A45 dup
+  0A46 pop
+  0A47 call UnityEngine.Vector3 op_Multiply(UnityEngine.Quaternion, UnityEngine.Vector3)
+  0A4C dup
+  0A4D pop
+  0A4E call UnityEngine.Quaternion LookRotation(UnityEngine.Vector3, UnityEngine.Vector3)
+  0A53 dup
+  0A54 pop
+  0A55 ldarg.1
+  0A56 ldfld AttachNode srfAttachNode
+  0A5B ldfld UnityEngine.Vector3 orientation
+  0A60 call UnityEngine.Vector3 get_up()
+  0A65 dup
+  0A66 pop
+  0A67 call UnityEngine.Quaternion LookRotation(UnityEngine.Vector3, UnityEngine.Vector3)
+  0A6C dup
+  0A6D pop
+  0A6E call UnityEngine.Quaternion op_Multiply(UnityEngine.Quaternion, UnityEngine.Quaternion)
+  0A73 dup
+  0A74 pop
+  0A75 stfld UnityEngine.Quaternion rotation
+  0A7A ldloc.0
+  0A7B ldloc.s
+  0A7D ldloc.0
+  0A7E ldfld UnityEngine.Quaternion rotation
+  0A83 ldarg.1
+  0A84 ldfld UnityEngine.Quaternion attRotation
+  0A89 call UnityEngine.Quaternion op_Multiply(UnityEngine.Quaternion, UnityEngine.Quaternion)
+  0A8E dup
+  0A8F pop
+  0A90 ldarg.1
+  0A91 ldfld AttachNode srfAttachNode
+  0A96 ldfld UnityEngine.Vector3 position
+  0A9B call UnityEngine.Vector3 op_Multiply(UnityEngine.Quaternion, UnityEngine.Vector3)
+  0AA0 dup
+  0AA1 pop
+  0AA2 call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  0AA7 dup
+  0AA8 pop
+  0AA9 stfld UnityEngine.Vector3 position
+  0AAE ldloc.0
+  0AAF ldarg.1
+  0AB0 ldfld AttachModes attachMode
+  0AB5 stfld AttachModes mode
+  0ABA ldloc.0
+  0ABB ldc.i4.0
+  0ABC stfld Boolean collision
+  0AC1 ldloc.0
+  0AC2 ldloc.2
+  0AC3 ldloc.1
+  0AC4 or
+  0AC5 brfalse.s 0ADC
+  0AC7 ldc.i4.4
+  0AC8 switch
+  0AD1 ldloc.0
+  0AD2 ldfld Boolean collision
+  0AD7 ldc.i4.0
+  0AD8 ceq
+  0ADA br.s 0ADD
+  0ADC ldc.i4.0
+  0ADD stfld Boolean possible
+  0AE2 ldloc.0
+  0AE3 ret
+METHOD checkEditorCollision
+METHOD CheckSymPartsAttach
+  0000 ldarg.0
+  0001 ldfld Part selectedPart
+  0006 ldfld System.Collections.Generic.List`1[Part] symmetryCounterparts
+  000B callvirt Int32 get_Count()
+  0010 dup
+  0011 pop
+  0012 newarr Attachment
+  0017 stloc.0
+  0018 ldc.i4.0
+  0019 stloc.1
+  001A ldarg.0
+  001B ldfld Part selectedPart
+  0020 ldfld System.Collections.Generic.List`1[Part] symmetryCounterparts
+  0025 callvirt Int32 get_Count()
+  002A dup
+  002B pop
+  002C stloc.2
+  002D br 043A
+  0032 ldarg.0
+  0033 ldfld Part selectedPart
+  0038 ldfld System.Collections.Generic.List`1[Part] symmetryCounterparts
+  003D ldloc.1
+  003E callvirt Part get_Item(Int32)
+  0043 dup
+  0044 pop
+  0045 stloc.3
+  0046 newobj Void .ctor()
+  004B stloc.s
+  004D ldarg.1
+  004E ldfld AttachModes mode
+  0053 stloc.s
+  0055 ldloc.s
+  0057 brfalse.s 0083
+  0059 ldc.i4.4
+  005A switch
+  0063 ldc.i4.1
+  0064 brtrue.s 006C
+  0066 ldtoken Attachment[] CheckSymPartsAttach(Attachment)
+  006B pop
+  006C ldloc.s
+  006E ldc.i4.1
+  006F beq 03C4
+  0074 ldc.i4.1
+  0075 switch
+  007E br 0436
+  0083 ldloc.s
+  0085 ldloc.3
+  0086 stfld Part caller
+  008B ldloc.s
+  008D ldc.i4.0
+  008E stfld Boolean collision
+  0093 ldarg.1
+  0094 ldfld AttachNode callerPartNode
+  0099 brfalse.s 00C1
+  009B ldc.i4.6
+  009C switch
+  00A5 ldloc.s
+  00A7 ldloc.3
+  00A8 ldarg.1
+  00A9 ldfld AttachNode callerPartNode
+  00AE ldfld System.String id
+  00B3 callvirt AttachNode FindAttachNode(System.String)
+  00B8 dup
+  00B9 pop
+  00BA stfld AttachNode callerPartNode
+  00BF br.s 010F
+  00C1 ldloc.s
+  00C3 ldnull
+  00C4 stfld AttachNode callerPartNode
+  00C9 ldloc.s
+  00CB ldc.i4.0
+  00CC stfld Boolean possible
+  00D1 ldloc.s
+  00D3 ldloc.3
+  00D4 callvirt UnityEngine.Transform get_transform()
+  00D9 dup
+  00DA pop
+  00DB callvirt UnityEngine.Vector3 get_position()
+  00E0 dup
+  00E1 pop
+  00E2 stfld UnityEngine.Vector3 position
+  00E7 ldloc.s
+  00E9 ldloc.3
+  00EA callvirt UnityEngine.Transform get_transform()
+  00EF dup
+  00F0 pop
+  00F1 callvirt UnityEngine.Quaternion get_rotation()
+  00F6 dup
+  00F7 pop
+  00F8 stfld UnityEngine.Quaternion rotation
+  00FD ldloc.s
+  00FF ldnull
+  0100 stfld Part potentialParent
+  0105 ldloc.0
+  0106 ldloc.1
+  0107 ldloc.s
+  0109 stelem.ref
+  010A br 0436
+  010F ldnull
+  0110 stloc.s
+  0112 ldc.r4 3.4028235E+38
+  0117 stloc.s
+  0119 ldnull
+  011A stloc.s
+  011C ldnull
+  011D stloc.s
+  011F ldarg.0
+  0120 ldfld ShipConstruct ship
+  0125 callvirt Int32 get_Count()
+  012A dup
+  012B pop
+  012C stloc.s
+  012E ldc.i4.0
+  012F stloc.s
+  0131 br 0234
+  0136 ldarg.0
+  0137 ldfld ShipConstruct ship
+  013C ldloc.s
+  013E callvirt Part get_Item(Int32)
+  0143 dup
+  0144 pop
+  0145 stloc.s
+  0147 ldarg.1
+  0148 ldfld Part potentialParent
+  014D ldloc.s
+  014F call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0154 dup
+  0155 pop
+  0156 brtrue.s 0185
+  0158 ldc.i4.1
+  0159 switch
+  0162 ldarg.1
+  0163 ldfld Part potentialParent
+  0168 ldfld System.Collections.Generic.List`1[Part] symmetryCounterparts
+  016D ldloc.s
+  016F callvirt Boolean Contains(Part)
+  0174 dup
+  0175 pop
+  0176 brfalse 022E
+  017B ldc.i4.1
+  017C switch
+  0185 ldc.i4.0
+  0186 stloc.s
+  0188 ldloc.s
+  018A ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  018F callvirt Int32 get_Count()
+  0194 dup
+  0195 pop
+  0196 stloc.s
+  0198 br 021B
+  019D ldloc.s
+  019F ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  01A4 ldloc.s
+  01A6 callvirt AttachNode get_Item(Int32)
+  01AB dup
+  01AC pop
+  01AD stloc.s
+  01AF ldloc.3
+  01B0 callvirt UnityEngine.Transform get_transform()
+  01B5 dup
+  01B6 pop
+  01B7 ldarg.1
+  01B8 ldfld AttachNode callerPartNode
+  01BD ldfld UnityEngine.Vector3 position
+  01C2 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  01C7 dup
+  01C8 pop
+  01C9 ldloc.s
+  01CB callvirt UnityEngine.Transform get_transform()
+  01D0 dup
+  01D1 pop
+  01D2 ldloc.s
+  01D4 ldfld UnityEngine.Vector3 position
+  01D9 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  01DE dup
+  01DF pop
+  01E0 call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  01E5 dup
+  01E6 pop
+  01E7 stloc.s
+  01E9 ldloca.s
+  01EB call Single get_sqrMagnitude()
+  01F0 dup
+  01F1 pop
+  01F2 stloc.s
+  01F4 ldloc.s
+  01F6 ldloc.s
+  01F8 bge.un.s 0215
+  01FA ldc.i4.3
+  01FB switch
+  0204 ldloc.s
+  0206 stloc.s
+  0208 ldloc.s
+  020A stloc.s
+  020C ldloc.s
+  020E ldloc.s
+  0210 stfld Part potentialParent
+  0215 ldloc.s
+  0217 ldc.i4.1
+  0218 add
+  0219 stloc.s
+  021B ldloc.s
+  021D ldloc.s
+  021F blt 019D
+  0224 ldc.i4.5
+  0225 switch
+  022E ldloc.s
+  0230 ldc.i4.1
+  0231 add
+  0232 stloc.s
+  0234 ldloc.s
+  0236 ldloc.s
+  0238 blt 0136
+  023D ldc.i4.4
+  023E switch
+  0247 ldloc.s
+  0249 ldfld AttachNode callerPartNode
+  024E stloc.s
+  0250 ldc.r4 3.4028235E+38
+  0255 stloc.s
+  0257 ldc.i4.0
+  0258 stloc.s
+  025A ldloc.3
+  025B ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0260 callvirt Int32 get_Count()
+  0265 dup
+  0266 pop
+  0267 stloc.s
+  0269 br.s 02E0
+  026B ldloc.3
+  026C ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0271 ldloc.s
+  0273 callvirt AttachNode get_Item(Int32)
+  0278 dup
+  0279 pop
+  027A stloc.s
+  027C ldloc.s
+  027E ldfld Part potentialParent
+  0283 callvirt UnityEngine.Transform get_transform()
+  0288 dup
+  0289 pop
+  028A ldloc.s
+  028C ldfld UnityEngine.Vector3 position
+  0291 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  0296 dup
+  0297 pop
+  0298 ldloc.3
+  0299 callvirt UnityEngine.Transform get_transform()
+  029E dup
+  029F pop
+  02A0 ldloc.s
+  02A2 ldfld UnityEngine.Vector3 position
+  02A7 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  02AC dup
+  02AD pop
+  02AE call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  02B3 dup
+  02B4 pop
+  02B5 stloc.s
+  02B7 ldloca.s
+  02B9 call Single get_sqrMagnitude()
+  02BE dup
+  02BF pop
+  02C0 stloc.s
+  02C2 ldloc.s
+  02C4 ldloc.s
+  02C6 bge.un.s 02DA
+  02C8 ldc.i4.4
+  02C9 switch
+  02D2 ldloc.s
+  02D4 stloc.s
+  02D6 ldloc.s
+  02D8 stloc.s
+  02DA ldloc.s
+  02DC ldc.i4.1
+  02DD add
+  02DE stloc.s
+  02E0 ldloc.s
+  02E2 ldloc.s
+  02E4 blt.s 026B
+  02E6 ldc.i4.4
+  02E7 switch
+  02F0 ldloc.s
+  02F2 ldloc.s
+  02F4 stfld AttachNode callerPartNode
+  02F9 ldloc.s
+  02FB brfalse.s 0357
+  02FD ldc.i4.5
+  02FE switch
+  0307 ldloc.s
+  0309 ldloc.s
+  030B stfld AttachNode otherPartNode
+  0310 ldloc.s
+  0312 ldloc.s
+  0314 ldfld Part potentialParent
+  0319 callvirt UnityEngine.Transform get_transform()
+  031E dup
+  031F pop
+  0320 ldloc.s
+  0322 ldfld UnityEngine.Vector3 position
+  0327 callvirt UnityEngine.Vector3 TransformPoint(UnityEngine.Vector3)
+  032C dup
+  032D pop
+  032E ldloc.3
+  032F callvirt UnityEngine.Transform get_transform()
+  0334 dup
+  0335 pop
+  0336 callvirt UnityEngine.Quaternion get_rotation()
+  033B dup
+  033C pop
+  033D ldloc.s
+  033F ldfld UnityEngine.Vector3 position
+  0344 call UnityEngine.Vector3 op_Multiply(UnityEngine.Quaternion, UnityEngine.Vector3)
+  0349 dup
+  034A pop
+  034B call UnityEngine.Vector3 op_Subtraction(UnityEngine.Vector3, UnityEngine.Vector3)
+  0350 dup
+  0351 pop
+  0352 stfld UnityEngine.Vector3 position
+  0357 ldloc.s
+  0359 ldloc.s
+  035B brfalse.s 0381
+  035D ldc.i4.3
+  035E switch
+  0367 ldloc.s
+  0369 ldfld Boolean collision
+  036E brtrue.s 0381
+  0370 ldc.i4.5
+  0371 switch
+  037A ldloc.s
+  037C ldnull
+  037D cgt.un
+  037F br.s 0382
+  0381 ldc.i4.0
+  0382 stfld Boolean possible
+  0387 ldarg.0
+  0388 ldloc.s
+  038A ldfld Boolean possible
+  038F ldloc.3
+  0390 ldc.i4.0
+  0391 call Void highlightSelected(Boolean, Part, Boolean)
+  0396 ldloc.s
+  0398 ldfld Boolean possible
+  039D brfalse.s 03BD
+  039F ldc.i4.5
+  03A0 switch
+  03A9 ldloc.3
+  03AA callvirt UnityEngine.Transform get_transform()
+  03AF dup
+  03B0 pop
+  03B1 ldloc.s
+  03B3 ldfld UnityEngine.Vector3 position
+  03B8 callvirt Void set_position(UnityEngine.Vector3)
+  03BD ldloc.0
+  03BE ldloc.1
+  03BF ldloc.s
+  03C1 stelem.ref
+  03C2 br.s 0436
+  03C4 ldloc.s
+  03C6 ldloc.3
+  03C7 stfld Part caller
+  03CC ldloc.s
+  03CE ldloc.3
+  03CF callvirt UnityEngine.Transform get_transform()
+  03D4 dup
+  03D5 pop
+  03D6 callvirt UnityEngine.Vector3 get_position()
+  03DB dup
+  03DC pop
+  03DD stfld UnityEngine.Vector3 position
+  03E2 ldloc.s
+  03E4 ldloc.3
+  03E5 callvirt UnityEngine.Transform get_transform()
+  03EA dup
+  03EB pop
+  03EC callvirt UnityEngine.Quaternion get_rotation()
+  03F1 dup
+  03F2 pop
+  03F3 stfld UnityEngine.Quaternion rotation
+  03F8 ldloc.s
+  03FA ldloc.3
+  03FB ldfld AttachNode srfAttachNode
+  0400 stfld AttachNode callerPartNode
+  0405 ldloc.s
+  0407 ldloc.3
+  0408 ldfld Part potentialParent
+  040D stfld Part potentialParent
+  0412 ldloc.s
+  0414 ldc.i4.0
+  0415 stfld Boolean collision
+  041A ldloc.s
+  041C ldc.i4.1
+  041D stfld Boolean possible
+  0422 ldarg.0
+  0423 ldloc.s
+  0425 ldfld Boolean possible
+  042A ldloc.3
+  042B ldc.i4.0
+  042C call Void highlightSelected(Boolean, Part, Boolean)
+  0431 ldloc.0
+  0432 ldloc.1
+  0433 ldloc.s
+  0435 stelem.ref
+  0436 ldloc.1
+  0437 ldc.i4.1
+  0438 add
+  0439 stloc.1
+  043A ldloc.1
+  043B ldloc.2
+  043C blt 0032
+  0441 ldc.i4.1
+  0442 switch
+  044B ldarg.1
+  044C ldfld AttachModes mode
+  0451 brtrue 055D
+  0456 ldc.i4.1
+  0457 switch
+  0460 ldnull
+  0461 stloc.s
+  0463 ldnull
+  0464 stloc.s
+  0466 ldc.i4.0
+  0467 stloc.s
+  0469 ldloc.0
+  046A ldlen
+  046B conv.i4
+  046C stloc.s
+  046E br 054A
+  0473 ldloc.0
+  0474 ldloc.s
+  0476 ldelem.ref
+  0477 stloc.s
+  0479 ldc.i4.0
+  047A stloc.s
+  047C ldloc.0
+  047D ldlen
+  047E conv.i4
+  047F stloc.s
+  0481 br.s 04F3
+  0483 ldloc.0
+  0484 ldloc.s
+  0486 ldelem.ref
+  0487 stloc.s
+  0489 ldloc.s
+  048B ldfld Part caller
+  0490 ldloc.s
+  0492 ldfld Part caller
+  0497 call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  049C dup
+  049D pop
+  049E brtrue.s 04ED
+  04A0 ldc.i4.2
+  04A1 switch
+  04AA ldloc.s
+  04AC ldfld Part potentialParent
+  04B1 ldloc.s
+  04B3 ldfld Part potentialParent
+  04B8 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  04BD dup
+  04BE pop
+  04BF brtrue.s 04ED
+  04C1 ldc.i4.1
+  04C2 switch
+  04CB ldloc.s
+  04CD ldfld AttachNode otherPartNode
+  04D2 ldloc.s
+  04D4 ldfld AttachNode otherPartNode
+  04D9 bne.un.s 04ED
+  04DB ldc.i4.1
+  04DC switch
+  04E5 ldloc.s
+  04E7 ldc.i4.0
+  04E8 stfld Boolean possible
+  04ED ldloc.s
+  04EF ldc.i4.1
+  04F0 add
+  04F1 stloc.s
+  04F3 ldloc.s
+  04F5 ldloc.s
+  04F7 blt.s 0483
+  04F9 ldc.i4.2
+  04FA switch
+  0503 ldloc.s
+  0505 ldfld Part potentialParent
+  050A ldarg.1
+  050B ldfld Part potentialParent
+  0510 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  0515 dup
+  0516 pop
+  0517 brtrue.s 0544
+  0519 ldc.i4.5
+  051A switch
+  0523 ldloc.s
+  0525 ldfld AttachNode otherPartNode
+  052A ldarg.1
+  052B ldfld AttachNode otherPartNode
+  0530 bne.un.s 0544
+  0532 ldc.i4.2
+  0533 switch
+  053C ldloc.s
+  053E ldc.i4.0
+  053F stfld Boolean possible
+  0544 ldloc.s
+  0546 ldc.i4.1
+  0547 add
+  0548 stloc.s
+  054A ldloc.s
+  054C ldloc.s
+  054E blt 0473
+  0553 ldc.i4.5
+  0554 switch
+  055D ldloc.0
+  055E ret
+METHOD attachPart
+METHOD detachPart
+METHOD CopyActionGroups
+METHOD attachSymParts
+METHOD addToShip
+METHOD removeFromShip
+METHOD highlightSelected
+METHOD SetLastSanitizedSaveName
+METHOD NewShip
+METHOD OnNewShipConfirm
+METHOD OnNewShipDialogDismiss
+METHOD onShipNameFieldSubmit
+METHOD onShipNameFieldValueChanged
+METHOD steamExport
+METHOD onSteamExportConfirm
+METHOD onSteamExportAfterSave
+METHOD onQuerySteamComplete
+METHOD onNewItemCreated
+METHOD preupdateSteamItem
+METHOD onGetAppDependency
+METHOD onAppDependencyRemoved
+METHOD updateSteamItem
+METHOD onItemUpdated
+METHOD saveShip
+METHOD saveShip
+METHOD MissionCraftIsCreators
+METHOD MissionCraftInOtherFolder
+METHOD onSaveConfirm
+METHOD onSaveConfirmDismiss
+METHOD exitEditor
+METHOD onExitContinue
+METHOD onExitConfirm
+METHOD onExitConfirmDismiss
+METHOD loadShip
+METHOD changeCoordSpace
+METHOD changeRadialSymmetrySpace
+METHOD onLoadConfirm
+METHOD onLoadConfirmDismiss
+METHOD LoadShipFromFile
+METHOD ShipToLoadSelected
+METHOD ShipToLoadSelected
+METHOD CraftBrowseCancelled
+METHOD OnPartVesselNamingChanged
+METHOD OnVesselNamingShipModified
+METHOD launchVessel
+METHOD launchVessel
+METHOD MissionCheckLaunchClamps
+METHOD GetStockPreFlightCheck
+METHOD GetMissionPreFlightCheck
+METHOD processMissionAppChecks
+METHOD proceedWithMissionLaunch
+METHOD proceedWithVesselLaunch
+METHOD onMissionDialogUp
+METHOD onMissionDialogDismiss
+METHOD goForLaunch
+METHOD abortLaunch
+METHOD DelayedAbort
+METHOD ResetCrewAssignment
+METHOD RefreshCrewAssignment
+METHOD RefreshCrewDialog
+METHOD SpawningAC
+METHOD partIsAttached
+  0000 ldarg.0
+  0001 ldfld ShipConstruct ship
+  0006 ldfld System.Collections.Generic.List`1[Part] parts
+  000B callvirt Int32 get_Count()
+  0010 dup
+  0011 pop
+  0012 stloc.0
+  0013 br.s 004C
+  0015 ldarg.0
+  0016 ldfld ShipConstruct ship
+  001B ldfld System.Collections.Generic.List`1[Part] parts
+  0020 ldloc.0
+  0021 callvirt Part get_Item(Int32)
+  0026 dup
+  0027 pop
+  0028 ldfld UInt32 craftID
+  002D ldarg.1
+  002E callvirt UInt32 get_PartID()
+  0033 dup
+  0034 pop
+  0035 bne.un.s 004C
+  0037 ldc.i4.4
+  0038 switch
+  0041 ldc.i4.1
+  0042 brtrue.s 004A
+  0044 ldtoken Boolean partIsAttached(PartCrewManifest)
+  0049 pop
+  004A ldc.i4.1
+  004B ret
+  004C ldloc.0
+  004D dup
+  004E ldc.i4.1
+  004F sub
+  0050 stloc.0
+  0051 ldc.i4.0
+  0052 bgt.s 0015
+  0054 ldc.i4.4
+  0055 switch
+  005E ldc.i4.0
+  005F ret
+METHOD GetPartExistsFilter
+METHOD partExists
+METHOD UpdateCrewAssignment
+METHOD UpdateCrewManifest
+METHOD DelayedUnlock
+METHOD OnInputLocksModified
+METHOD UpdateUI
+METHOD Lock
+METHOD Unlock
+METHOD NameOrDescriptionFocused
+METHOD AnyTextFieldHasFocus
+METHOD mouseOverModalArea
+METHOD WipeTooltips
+METHOD partSearchUpdate
+METHOD get_SortedShipList
+METHOD getSortedShipList
+METHOD recurseShipList
+METHOD OnDrawGizmosSelected
+METHOD AreAllPartsConnected
+METHOD CountAllSceneParts
+METHOD ShipIsValid
+METHOD HeldPartIsStacked
+METHOD InitAnalytics
+METHOD FinalizeAnalytics
+METHOD OnEditorScreenChange
+METHOD OnModeChange
+METHOD <FlagSetup>b__135_0
+METHOD <FlagSetup>b__135_1
+METHOD <SelectPanelCargo>b__138_0
+METHOD <SelectPanelParts>b__139_0
+METHOD <SelectPanelActions>b__140_0
+METHOD <SelectPanelCrew>b__142_0
+METHOD <SetupFSM>b__189_0
+METHOD <SetupFSM>b__189_1
+METHOD <SetupFSM>b__189_5
+METHOD <SetupFSM>b__189_51
+METHOD <SetupFSM>b__189_6
+METHOD <SetupFSM>b__189_7
+METHOD <SetupFSM>b__189_52
+METHOD <SetupFSM>b__189_8
+METHOD <SetupFSM>b__189_9
+METHOD <SetupFSM>b__189_53
+METHOD <SetupFSM>b__189_10
+METHOD <SetupFSM>b__189_11
+METHOD <SetupFSM>b__189_14
+METHOD <SetupFSM>b__189_15
+METHOD <SetupFSM>b__189_16
+METHOD <SetupFSM>b__189_17
+METHOD <SetupFSM>b__189_18
+METHOD <SetupFSM>b__189_19
+METHOD <SetupFSM>b__189_20
+METHOD <SetupFSM>b__189_21
+METHOD <SetupFSM>b__189_22
+METHOD <SetupFSM>b__189_23
+METHOD <SetupFSM>b__189_24
+METHOD <SetupFSM>b__189_25
+METHOD <SetupFSM>b__189_26
+METHOD <SetupFSM>b__189_27
+METHOD <SetupFSM>b__189_28
+METHOD <SetupFSM>b__189_29
+METHOD <SetupFSM>b__189_30
+METHOD <SetupFSM>b__189_31
+METHOD <SetupFSM>b__189_32
+METHOD <SetupFSM>b__189_33
+METHOD <SetupFSM>b__189_34
+METHOD <SetupFSM>b__189_35
+METHOD <SetupFSM>b__189_36
+METHOD <SetupFSM>b__189_37
+METHOD <SetupFSM>b__189_38
+METHOD <SetupFSM>b__189_39
+METHOD <SetupFSM>b__189_40
+METHOD <SetupFSM>b__189_41
+METHOD <SetupFSM>b__189_42
+METHOD <SetupFSM>b__189_43
+METHOD <SetupFSM>b__189_44
+METHOD <SetupFSM>b__189_45
+METHOD <SetupFSM>b__189_46
+METHOD <SetupFSM>b__189_47
+METHOD <SetupFSM>b__189_48
+METHOD <SetupFSM>b__189_49
+METHOD <SetupFSM>b__189_50
+METHOD <RestoreState>b__222_0
+METHOD <SpawnTemplate>b__232_0
+METHOD <NewShip>b__265_0
+METHOD <steamExport>b__270_0
+METHOD <saveShip>b__280_0
+METHOD <onExitContinue>b__287_0
+METHOD <loadShip>b__290_0
+METHOD <goForLaunch>b__313_0

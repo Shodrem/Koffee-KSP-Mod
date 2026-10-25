@@ -1,0 +1,38 @@
+{
+  "result": "PASS",
+  "date_local": "2026-10-15",
+  "ksp_version": "1.12.5.3190 WindowsPlayer x64",
+  "language": "en-us",
+  "save_game": "TP25SelectorQA20261015",
+  "craft_name": "TP25 Selector QA",
+  "craft_sha256": "a3f36a3424529b22c91d2c4119e35f507c0f9c124b84c67889d4f32fa6cca436",
+  "method": "Observed UI via computer-use; separate sandbox, no flight",
+  "paw_selector_visible": true,
+  "displayed_variants": [
+    "Surface",
+    "Six side nodes"
+  ],
+  "side_marker_show_hide_observed": true,
+  "axial_top_bottom_attachment_test": true,
+  "axial_attachment_survives_variant_change": true,
+  "craft_saved_and_reloaded_in_vab": true,
+  "face_nodes_variant_restored_after_load": true,
+  "displayed_resources_per_part": {
+    "ElectricCharge": "200.0/200.0",
+    "MonoPropellant": "20.0/20.0"
+  },
+  "displayed_cost_one_part_funds": 800,
+  "displayed_cost_two_parts_funds": 1600,
+  "pending": [
+    "Equipment attached to every side node",
+    "Surface attachment on every face",
+    "Symmetry",
+    "Spanish runtime localization",
+    "Flight and resource consumption",
+    "Aerodynamic shielding"
+  ],
+  "new_or_recompiled_dll": false,
+  "installed_cfg_sha256": "ac3f4147f351fbb085a48ea065df3a0a69708ccc757ed248cb7864988fb4e284",
+  "mu_sha256": "f125f72f0dff919c4c7b49004cd90ba64404559a12da5bb377fb83a4eab56444",
+  "existing_installed_koffee_dll_sha256": "cddb292021101557a08a8c7a63dc71589d74fe97cfa09d270019fc84ff4d5fa8"
+}

@@ -1,0 +1,11 @@
+TYPE ModuleDynamicNodes ASSEMBLY D:\Juegos\KSP\KSP_x64_Data\Managed\Assembly-CSharp.dll
+FIELD SetList
+FIELD setIndex
+[UI_Cycle(scene = 1, controlEnabled = True, affectSymCounterparts = 1)]
+[KSPField(isPersistant = True, guiActiveEditor = True, guiName = "#autoLOC_8005422")]
+FIELD autostrut
+[KSPField()]
+FIELD MenuName
+[KSPField()]
+FIELD NodeSetIdx
+[KSPField(isPersistant = True)]

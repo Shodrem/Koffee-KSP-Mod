@@ -1,0 +1,518 @@
+TYPE DynamicNodeSet
+FIELD System.String DisplayText
+FIELD System.String MeshTransform
+FIELD System.String NodePrefix
+FIELD System.Int32 SetCount
+FIELD System.Int32 Symmetry
+METHOD Load
+  0000 ldarg.0
+  0001 ldstr
+  0006 stfld System.String DisplayText
+  000B ldarg.1
+  000C ldstr DisplayText
+  0011 ldarg.0
+  0012 ldflda System.String DisplayText
+  0017 callvirt Boolean TryGetValue(System.String, System.String ByRef)
+  001C dup
+  001D pop
+  001E pop
+  001F ldarg.0
+  0020 ldstr
+  0025 stfld System.String MeshTransform
+  002A ldarg.1
+  002B ldstr MeshTransform
+  0030 ldarg.0
+  0031 ldflda System.String MeshTransform
+  0036 callvirt Boolean TryGetValue(System.String, System.String ByRef)
+  003B dup
+  003C pop
+  003D pop
+  003E ldarg.0
+  003F ldstr
+  0044 stfld System.String NodePrefix
+  0049 ldarg.1
+  004A ldstr NodePrefix
+  004F ldarg.0
+  0050 ldflda System.String NodePrefix
+  0055 callvirt Boolean TryGetValue(System.String, System.String ByRef)
+  005A dup
+  005B pop
+  005C pop
+  005D ldarg.0
+  005E ldc.i4.0
+  005F stfld Int32 SetCount
+  0064 ldarg.1
+  0065 ldstr SetCount
+  006A ldarg.0
+  006B ldflda Int32 SetCount
+  0070 callvirt Boolean TryGetValue(System.String, Int32 ByRef)
+  0075 dup
+  0076 pop
+  0077 pop
+  0078 ldarg.0
+  0079 ldc.i4.0
+  007A stfld Int32 Symmetry
+  007F ldarg.1
+  0080 ldstr Symmetry
+  0085 ldarg.0
+  0086 ldflda Int32 Symmetry
+  008B callvirt Boolean TryGetValue(System.String, Int32 ByRef)
+  0090 dup
+  0091 pop
+  0092 pop
+  0093 ret
+TYPE ModuleDynamicNodes
+FIELD System.Collections.Generic.List`1[DynamicNodeSet] SetList
+FIELD System.Int32 setIndex
+FIELD System.Boolean autostrut
+FIELD System.String MenuName
+FIELD System.Int32 NodeSetIdx
+FIELD System.Single NODE_RADIUS_ENABLED
+FIELD System.Single NODE_RADIUS_DISABLED
+METHOD ChangeNodeSet
+  0000 ldarg.0
+  0001 ldarg.0
+  0002 ldfld Int32 NodeSetIdx
+  0007 ldc.i4.0
+  0008 call Void ToggleNodeSet(Int32, Boolean)
+  000D ldarg.0
+  000E ldarg.1
+  000F stfld Int32 NodeSetIdx
+  0014 ldarg.0
+  0015 ldarg.0
+  0016 ldfld Int32 NodeSetIdx
+  001B ldc.i4.1
+  001C call Void ToggleNodeSet(Int32, Boolean)
+  0021 ldarg.0
+  0022 ldfld System.Collections.Generic.List`1[DynamicNodeSet] SetList
+  0027 ldarg.0
+  0028 ldfld Int32 NodeSetIdx
+  002D callvirt DynamicNodeSet get_Item(Int32)
+  0032 dup
+  0033 pop
+  0034 stloc.0
+  0035 ldarg.0
+  0036 call Part get_part()
+  003B dup
+  003C pop
+  003D ldloc.0
+  003E ldfld Int32 Symmetry
+  0043 stfld Int32 stackSymmetry
+  0048 ldarg.0
+  0049 call Part get_part()
+  004E dup
+  004F pop
+  0050 call Void RefreshPartContextWindow(Part)
+  0055 ret
+METHOD ToggleNodeSet
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[DynamicNodeSet] SetList
+  0006 ldarg.1
+  0007 callvirt DynamicNodeSet get_Item(Int32)
+  000C dup
+  000D pop
+  000E stloc.0
+  000F ldarg.0
+  0010 call Part get_part()
+  0015 dup
+  0016 pop
+  0017 ldloc.0
+  0018 ldfld System.String MeshTransform
+  001D callvirt UnityEngine.Transform FindModelTransform(System.String)
+  0022 dup
+  0023 pop
+  0024 stloc.1
+  0025 ldloc.1
+  0026 ldnull
+  0027 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  002C dup
+  002D pop
+  002E brfalse.s 0051
+  0030 ldc.i4.4
+  0031 switch
+  003A ldc.i4.1
+  003B brtrue.s 0043
+  003D ldtoken Void ToggleNodeSet(Int32, Boolean)
+  0042 pop
+  0043 ldloc.1
+  0044 callvirt UnityEngine.GameObject get_gameObject()
+  0049 dup
+  004A pop
+  004B ldarg.2
+  004C callvirt Void SetActive(Boolean)
+  0051 ldc.i4.0
+  0052 stloc.2
+  0053 br.s 00C4
+  0055 ldloc.0
+  0056 ldfld System.String NodePrefix
+  005B ldloc.2
+  005C box System.Int32
+  0061 call System.String Concat(System.Object, System.Object)
+  0066 dup
+  0067 pop
+  0068 stloc.3
+  0069 ldarg.0
+  006A call Part get_part()
+  006F dup
+  0070 pop
+  0071 ldloc.3
+  0072 callvirt AttachNode FindAttachNode(System.String)
+  0077 dup
+  0078 pop
+  0079 stloc.s
+  007B ldloc.s
+  007D brfalse.s 00C0
+  007F ldc.i4.2
+  0080 switch
+  0089 ldarg.2
+  008A brfalse.s 00AC
+  008C ldc.i4.7
+  008D switch
+  0096 ldloc.s
+  0098 ldc.i4.0
+  0099 stfld NodeType nodeType
+  009E ldloc.s
+  00A0 ldc.r4 0.4
+  00A5 stfld Single radius
+  00AA br.s 00C0
+  00AC ldloc.s
+  00AE ldc.i4.2
+  00AF stfld NodeType nodeType
+  00B4 ldloc.s
+  00B6 ldc.r4 0.0001
+  00BB stfld Single radius
+  00C0 ldloc.2
+  00C1 ldc.i4.1
+  00C2 add
+  00C3 stloc.2
+  00C4 ldloc.2
+  00C5 ldloc.0
+  00C6 ldfld Int32 SetCount
+  00CB ldc.i4.1
+  00CC add
+  00CD blt.s 0055
+  00CF ldc.i4.2
+  00D0 switch
+  00D9 ret
+METHOD OnStart
+  0000 ldarg.0
+  0001 call Void InitializeNodeSets()
+  0006 ldarg.0
+  0007 ldarg.0
+  0008 ldfld Int32 NodeSetIdx
+  000D call Void ChangeNodeSet(Int32)
+  0012 ldsfld EventData`1[ShipConstruct] onEditorShipModified
+  0017 ldarg.0
+  0018 ldftn Void OnShipModified(ShipConstruct)
+  001E newobj Void .ctor(System.Object, IntPtr)
+  0023 callvirt Void Add(OnEvent)
+  0028 ret
+METHOD OnStartFinished
+  0000 ldarg.0
+  0001 ldfld Boolean autostrut
+  0006 brfalse.s 0021
+  0008 ldc.i4.2
+  0009 switch
+  0012 ldc.i4.1
+  0013 brtrue.s 001B
+  0015 ldtoken Void OnStartFinished(StartState)
+  001A pop
+  001B ldarg.0
+  001C call Void SetupAutoStrut()
+  0021 ret
+METHOD OnShipModified
+  0000 ldarg.0
+  0001 call Void SetupAutoStrut()
+  0006 ret
+METHOD SetupAutoStrut
+  0000 ldarg.0
+  0001 call Part get_part()
+  0006 dup
+  0007 pop
+  0008 ldfld Part parent
+  000D ldnull
+  000E call Boolean op_Equality(UnityEngine.Object, UnityEngine.Object)
+  0013 dup
+  0014 pop
+  0015 brfalse.s 002B
+  0017 ldc.i4.2
+  0018 switch
+  0021 ldc.i4.1
+  0022 brtrue.s 002A
+  0024 ldtoken Void SetupAutoStrut()
+  0029 pop
+  002A ret
+  002B ldarg.0
+  002C call Part get_part()
+  0031 dup
+  0032 pop
+  0033 ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0038 callvirt Int32 get_Count()
+  003D dup
+  003E pop
+  003F stloc.0
+  0040 ldc.i4.0
+  0041 stloc.1
+  0042 br 0113
+  0047 ldarg.0
+  0048 call Part get_part()
+  004D dup
+  004E pop
+  004F ldfld System.Collections.Generic.List`1[AttachNode] attachNodes
+  0054 ldloc.1
+  0055 callvirt AttachNode get_Item(Int32)
+  005A dup
+  005B pop
+  005C stloc.2
+  005D ldloc.2
+  005E ldfld NodeType nodeType
+  0063 brtrue 010F
+  0068 ldc.i4.7
+  0069 switch
+  0072 ldloc.2
+  0073 ldfld Part attachedPart
+  0078 ldnull
+  0079 call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  007E dup
+  007F pop
+  0080 brfalse 010F
+  0085 ldc.i4.3
+  0086 switch
+  008F ldloc.2
+  0090 ldfld Part attachedPart
+  0095 ldarg.0
+  0096 call Part get_part()
+  009B dup
+  009C pop
+  009D call Boolean op_Inequality(UnityEngine.Object, UnityEngine.Object)
+  00A2 dup
+  00A3 pop
+  00A4 brfalse.s 010F
+  00A6 ldc.i4.3
+  00A7 switch
+  00B0 ldloc.2
+  00B1 ldfld Part attachedPart
+  00B6 ldfld UInt32 persistentId
+  00BB ldarg.0
+  00BC call Part get_part()
+  00C1 dup
+  00C2 pop
+  00C3 ldfld Part parent
+  00C8 ldfld UInt32 persistentId
+  00CD beq.s 010F
+  00CF ldc.i4.1
+  00D0 switch
+  00D9 ldarg.0
+  00DA call Part get_part()
+  00DF dup
+  00E0 pop
+  00E1 ldloca.s
+  00E3 callvirt Boolean isRobotic(Expansions.Serenity.IRoboticServo ByRef)
+  00E8 dup
+  00E9 pop
+  00EA pop
+  00EB ldloc.2
+  00EC ldfld Part attachedPart
+  00F1 stloc.s
+  00F3 ldloc.3
+  00F4 brtrue.s 010F
+  00F6 ldc.i4.6
+  00F7 switch
+  0100 ldloc.s
+  0102 ldc.i4.6
+  0103 stfld AutoStrutMode autoStrutMode
+  0108 ldloc.s
+  010A callvirt Void UpdateAutoStrut()
+  010F ldloc.1
+  0110 ldc.i4.1
+  0111 add
+  0112 stloc.1
+  0113 ldloc.1
+  0114 ldloc.0
+  0115 blt 0047
+  011A ldc.i4.6
+  011B switch
+  0124 ret
+METHOD InitializeNodeSets
+  0000 ldarg.0
+  0001 call BaseFieldList get_Fields()
+  0006 dup
+  0007 pop
+  0008 ldstr setIndex
+  000D callvirt BaseField get_Item(System.String)
+  0012 dup
+  0013 pop
+  0014 callvirt UI_Control get_uiControlEditor()
+  0019 dup
+  001A pop
+  001B isinst UI_Cycle
+  0020 stloc.0
+  0021 ldarg.0
+  0022 ldfld System.Collections.Generic.List`1[DynamicNodeSet] SetList
+  0027 callvirt Int32 get_Count()
+  002C dup
+  002D pop
+  002E stloc.1
+  002F ldloc.0
+  0030 ldloc.1
+  0031 newarr System.String
+  0036 stfld System.String[] stateNames
+  003B ldc.i4.0
+  003C stloc.2
+  003D br.s 008C
+  003F ldloc.0
+  0040 ldfld System.String[] stateNames
+  0045 ldloc.2
+  0046 ldarg.0
+  0047 ldfld System.Collections.Generic.List`1[DynamicNodeSet] SetList
+  004C ldloc.2
+  004D callvirt DynamicNodeSet get_Item(Int32)
+  0052 dup
+  0053 pop
+  0054 ldfld System.String DisplayText
+  0059 stelem.ref
+  005A ldloc.2
+  005B ldarg.0
+  005C ldfld Int32 NodeSetIdx
+  0061 bne.un.s 0080
+  0063 ldc.i4.1
+  0064 switch
+  006D ldc.i4.1
+  006E brtrue.s 0076
+  0070 ldtoken Void InitializeNodeSets()
+  0075 pop
+  0076 ldarg.0
+  0077 ldloc.2
+  0078 ldc.i4.1
+  0079 call Void ToggleNodeSet(Int32, Boolean)
+  007E br.s 0088
+  0080 ldarg.0
+  0081 ldloc.2
+  0082 ldc.i4.0
+  0083 call Void ToggleNodeSet(Int32, Boolean)
+  0088 ldloc.2
+  0089 ldc.i4.1
+  008A add
+  008B stloc.2
+  008C ldloc.2
+  008D ldloc.1
+  008E blt.s 003F
+  0090 ldc.i4.4
+  0091 switch
+  009A ldarg.0
+  009B call Part get_part()
+  00A0 dup
+  00A1 pop
+  00A2 call Void RefreshPartContextWindow(Part)
+  00A7 ret
+METHOD OnAwake
+  0000 ldarg.0
+  0001 ldfld System.Collections.Generic.List`1[DynamicNodeSet] SetList
+  0006 brtrue.s 0026
+  0008 ldc.i4.1
+  0009 switch
+  0012 ldc.i4.1
+  0013 brtrue.s 001B
+  0015 ldtoken Void OnAwake()
+  001A pop
+  001B ldarg.0
+  001C newobj Void .ctor()
+  0021 stfld System.Collections.Generic.List`1[DynamicNodeSet] SetList
+  0026 ret
+METHOD OnLoad
+  0000 ldarg.1
+  0001 ldstr NODE_SET
+  0006 callvirt Boolean HasNode(System.String)
+  000B dup
+  000C pop
+  000D brfalse.s 002D
+  000F ldc.i4.7
+  0010 switch
+  0019 ldc.i4.1
+  001A brtrue.s 0022
+  001C ldtoken Void OnLoad(ConfigNode)
+  0021 pop
+  0022 ldarg.0
+  0023 ldfld System.Collections.Generic.List`1[DynamicNodeSet] SetList
+  0028 callvirt Void Clear()
+  002D ldarg.1
+  002E ldstr NodeSetIdx
+  0033 callvirt Boolean HasValue(System.String)
+  0038 dup
+  0039 pop
+  003A brfalse.s 005A
+  003C ldc.i4.1
+  003D switch
+  0046 ldarg.1
+  0047 ldstr NodeSetIdx
+  004C ldarg.0
+  004D ldflda Int32 setIndex
+  0052 callvirt Boolean TryGetValue(System.String, Int32 ByRef)
+  0057 dup
+  0058 pop
+  0059 pop
+  005A ldarg.1
+  005B ldstr NODE_SET
+  0060 callvirt ConfigNode[] GetNodes(System.String)
+  0065 dup
+  0066 pop
+  0067 stloc.0
+  0068 ldloc.0
+  0069 ldlen
+  006A conv.i4
+  006B stloc.1
+  006C ldc.i4.0
+  006D stloc.2
+  006E br.s 0095
+  0070 ldloc.0
+  0071 ldloc.2
+  0072 ldelem.ref
+  0073 stloc.3
+  0074 ldloca.s
+  0076 initobj DynamicNodeSet
+  007C ldloca.s
+  007E ldloc.3
+  007F call Void Load(ConfigNode)
+  0084 ldarg.0
+  0085 ldfld System.Collections.Generic.List`1[DynamicNodeSet] SetList
+  008A ldloc.s
+  008C callvirt Void Add(DynamicNodeSet)
+  0091 ldloc.2
+  0092 ldc.i4.1
+  0093 add
+  0094 stloc.2
+  0095 ldloc.2
+  0096 ldloc.1
+  0097 blt.s 0070
+  0099 ldc.i4.4
+  009A switch
+  00A3 ret
+METHOD FixedUpdate
+  0000 ldsfld Boolean LoadedSceneIsEditor
+  0005 brtrue.s 001B
+  0007 ldc.i4.1
+  0008 switch
+  0011 ldc.i4.1
+  0012 brtrue.s 001A
+  0014 ldtoken Void FixedUpdate()
+  0019 pop
+  001A ret
+  001B ldarg.0
+  001C ldfld Int32 setIndex
+  0021 ldarg.0
+  0022 ldfld Int32 NodeSetIdx
+  0027 beq.s 003F
+  0029 ldc.i4.1
+  002A switch
+  0033 ldarg.0
+  0034 ldarg.0
+  0035 ldfld Int32 setIndex
+  003A call Void ChangeNodeSet(Int32)
+  003F ret
+METHOD OnDestroy
+  0000 ldsfld EventData`1[ShipConstruct] onEditorShipModified
+  0005 ldarg.0
+  0006 ldftn Void OnShipModified(ShipConstruct)
+  000C newobj Void .ctor(System.Object, IntPtr)
+  0011 callvirt Void Remove(OnEvent)
+  0016 ret

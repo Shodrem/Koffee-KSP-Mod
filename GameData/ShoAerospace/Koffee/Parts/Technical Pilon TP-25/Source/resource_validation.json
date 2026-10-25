@@ -1,0 +1,36 @@
+{
+  "result": "PASS",
+  "scope": "Static CFG and stock resource arithmetic only; KSP not executed",
+  "dry_mass_kg": "120.00",
+  "full_mass_kg": "200.000",
+  "initial_resource_mass_kg": "80.000",
+  "initial_resource_value_funds": "24.0",
+  "initial_price_funds": "800",
+  "entry_cost_funds": "1800",
+  "capacities": {
+    "ElectricCharge": "200",
+    "MonoPropellant": "20"
+  },
+  "monopropellant_fill_examples": [
+    {
+      "monopropellant_units": "0",
+      "mass_kg": "120.000",
+      "price_funds": "776.0"
+    },
+    {
+      "monopropellant_units": "10.0",
+      "mass_kg": "160.0000",
+      "price_funds": "788.00"
+    },
+    {
+      "monopropellant_units": "20",
+      "mass_kg": "200.000",
+      "price_funds": "800.0"
+    }
+  ],
+  "stock_resource_cfg": "D:\\Juegos\\KSP\\GameData\\Squad\\Resources\\ResourcesGeneric.cfg",
+  "stock_resource_cfg_sha256": "95d4c9112df7054ac73430690ffdbc69a38e4b8cecba7c2119c6cc894ffa9af4",
+  "ksp_editor_price_mass_test": false,
+  "ksp_external_battery_rcs_test": false,
+  "ksp_save_load_test": false
+}

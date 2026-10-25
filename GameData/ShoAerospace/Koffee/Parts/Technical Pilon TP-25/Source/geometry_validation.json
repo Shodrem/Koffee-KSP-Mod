@@ -1,0 +1,630 @@
+{
+  "components": [
+    {
+      "name": "TP25_ShellFace_1",
+      "triangles": 12,
+      "volume_m3": 0.015020114041152069,
+      "collider": false
+    },
+    {
+      "name": "TP25_MountPanel_1",
+      "triangles": 44,
+      "volume_m3": 0.0071071956859393316,
+      "collider": false
+    },
+    {
+      "name": "TP25_ShellFace_2",
+      "triangles": 12,
+      "volume_m3": 0.01502013615583385,
+      "collider": false
+    },
+    {
+      "name": "TP25_MountPanel_2",
+      "triangles": 44,
+      "volume_m3": 0.0071071956859393316,
+      "collider": false
+    },
+    {
+      "name": "TP25_ShellFace_3",
+      "triangles": 12,
+      "volume_m3": 0.015020136155833875,
+      "collider": false
+    },
+    {
+      "name": "TP25_MountPanel_3",
+      "triangles": 44,
+      "volume_m3": 0.0071071956859393316,
+      "collider": false
+    },
+    {
+      "name": "TP25_ShellFace_4",
+      "triangles": 12,
+      "volume_m3": 0.015020114041152069,
+      "collider": false
+    },
+    {
+      "name": "TP25_MountPanel_4",
+      "triangles": 44,
+      "volume_m3": 0.0071071956859393316,
+      "collider": false
+    },
+    {
+      "name": "TP25_ShellFace_5",
+      "triangles": 12,
+      "volume_m3": 0.015020136155833877,
+      "collider": false
+    },
+    {
+      "name": "TP25_MountPanel_5",
+      "triangles": 44,
+      "volume_m3": 0.0071071956859393316,
+      "collider": false
+    },
+    {
+      "name": "TP25_ShellFace_6",
+      "triangles": 12,
+      "volume_m3": 0.015020136155833835,
+      "collider": false
+    },
+    {
+      "name": "TP25_MountPanel_6",
+      "triangles": 44,
+      "volume_m3": 0.0071071956859393316,
+      "collider": false
+    },
+    {
+      "name": "TP25_BottomEdge",
+      "triangles": 20,
+      "volume_m3": 0.03679136075723144,
+      "collider": false
+    },
+    {
+      "name": "TP25_TopDeck",
+      "triangles": 20,
+      "volume_m3": 0.02452754947219987,
+      "collider": false
+    },
+    {
+      "name": "TP25_LowerRail_0",
+      "triangles": 12,
+      "volume_m3": 0.0006300000136345619,
+      "collider": false
+    },
+    {
+      "name": "TP25_LowerRail_1",
+      "triangles": 12,
+      "volume_m3": 0.0006300000136345619,
+      "collider": false
+    },
+    {
+      "name": "TP25_LowerRail_2",
+      "triangles": 12,
+      "volume_m3": 0.0006300000136345619,
+      "collider": false
+    },
+    {
+      "name": "TP25_LowerRail_3",
+      "triangles": 12,
+      "volume_m3": 0.0006300000136345619,
+      "collider": false
+    },
+    {
+      "name": "TP25_LowerRail_4",
+      "triangles": 12,
+      "volume_m3": 0.0006300000136345619,
+      "collider": false
+    },
+    {
+      "name": "TP25_LowerRail_5",
+      "triangles": 12,
+      "volume_m3": 0.0006300000136345619,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_0_0",
+      "triangles": 28,
+      "volume_m3": 0.000112260524177182,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_0_1",
+      "triangles": 28,
+      "volume_m3": 0.0001122605241771819,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_0_0",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_0_1",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_0_2",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_0_3",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_0_4",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_1_0",
+      "triangles": 28,
+      "volume_m3": 0.00011226051641640138,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_1_1",
+      "triangles": 28,
+      "volume_m3": 0.00011226051641640127,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_1_0",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_1_1",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_1_2",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_1_3",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_1_4",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_2_0",
+      "triangles": 28,
+      "volume_m3": 0.00011226052417718217,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_2_1",
+      "triangles": 28,
+      "volume_m3": 0.00011226052417718198,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_2_0",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_2_1",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_2_2",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_2_3",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_2_4",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_3_0",
+      "triangles": 28,
+      "volume_m3": 0.00011226052417718179,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_3_1",
+      "triangles": 28,
+      "volume_m3": 0.00011226052417718211,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_3_0",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_3_1",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_3_2",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_3_3",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_3_4",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_4_0",
+      "triangles": 28,
+      "volume_m3": 0.00011226051641640106,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_4_1",
+      "triangles": 28,
+      "volume_m3": 0.00011226051641640149,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_4_0",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_4_1",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_4_2",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_4_3",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_4_4",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_5_0",
+      "triangles": 28,
+      "volume_m3": 0.00011226052417718179,
+      "collider": false
+    },
+    {
+      "name": "TP25_RedCable_5_1",
+      "triangles": 28,
+      "volume_m3": 0.00011226052417718198,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_5_0",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_5_1",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_5_2",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_5_3",
+      "triangles": 44,
+      "volume_m3": 2.0633332780500232e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_CableClamp_5_4",
+      "triangles": 44,
+      "volume_m3": 4.457333263923718e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_ScreenBezel",
+      "triangles": 44,
+      "volume_m3": 0.00010482667363961564,
+      "collider": false
+    },
+    {
+      "name": "TP25_Screen",
+      "triangles": 44,
+      "volume_m3": 7.345301949115544e-06,
+      "collider": false
+    },
+    {
+      "name": "TP25_ScreenDivider",
+      "triangles": 12,
+      "volume_m3": 4.650000185286624e-08,
+      "collider": false
+    },
+    {
+      "name": "TP25_StatusBezel",
+      "triangles": 128,
+      "volume_m3": 9.79669534299645e-07,
+      "collider": false
+    },
+    {
+      "name": "TP25_StatusLamp",
+      "triangles": 60,
+      "volume_m3": 1.7220754724617983e-07,
+      "collider": false
+    },
+    {
+      "name": "TP25_TopAccessory",
+      "triangles": 384,
+      "volume_m3": 0.0008470629867898638,
+      "collider": false
+    },
+    {
+      "name": "TP25_TopSocketRecess",
+      "triangles": 124,
+      "volume_m3": 1.8991193465079404e-05,
+      "collider": false
+    },
+    {
+      "name": "TP25_TopFastener_0",
+      "triangles": 20,
+      "volume_m3": 6.235423604073952e-08,
+      "collider": false
+    },
+    {
+      "name": "TP25_TopFastener_1",
+      "triangles": 20,
+      "volume_m3": 6.235425699565117e-08,
+      "collider": false
+    },
+    {
+      "name": "TP25_TopFastener_2",
+      "triangles": 20,
+      "volume_m3": 6.235425699565399e-08,
+      "collider": false
+    },
+    {
+      "name": "TP25_TopFastener_3",
+      "triangles": 20,
+      "volume_m3": 6.235423604074772e-08,
+      "collider": false
+    },
+    {
+      "name": "TP25_TopFastener_4",
+      "triangles": 20,
+      "volume_m3": 6.235425699564443e-08,
+      "collider": false
+    },
+    {
+      "name": "TP25_TopFastener_5",
+      "triangles": 20,
+      "volume_m3": 6.235425699564216e-08,
+      "collider": false
+    },
+    {
+      "name": "TP25_ShellCollider_1",
+      "triangles": 12,
+      "volume_m3": 0.015020114041152069,
+      "collider": true
+    },
+    {
+      "name": "TP25_PanelCollider_1",
+      "triangles": 12,
+      "volume_m3": 0.007740000263303513,
+      "collider": true
+    },
+    {
+      "name": "TP25_ShellCollider_2",
+      "triangles": 12,
+      "volume_m3": 0.01502013615583385,
+      "collider": true
+    },
+    {
+      "name": "TP25_PanelCollider_2",
+      "triangles": 12,
+      "volume_m3": 0.007740000263303513,
+      "collider": true
+    },
+    {
+      "name": "TP25_ShellCollider_3",
+      "triangles": 12,
+      "volume_m3": 0.015020136155833875,
+      "collider": true
+    },
+    {
+      "name": "TP25_PanelCollider_3",
+      "triangles": 12,
+      "volume_m3": 0.007740000263303513,
+      "collider": true
+    },
+    {
+      "name": "TP25_ShellCollider_4",
+      "triangles": 12,
+      "volume_m3": 0.015020114041152069,
+      "collider": true
+    },
+    {
+      "name": "TP25_PanelCollider_4",
+      "triangles": 12,
+      "volume_m3": 0.007740000263303513,
+      "collider": true
+    },
+    {
+      "name": "TP25_ShellCollider_5",
+      "triangles": 12,
+      "volume_m3": 0.015020136155833877,
+      "collider": true
+    },
+    {
+      "name": "TP25_PanelCollider_5",
+      "triangles": 12,
+      "volume_m3": 0.007740000263303513,
+      "collider": true
+    },
+    {
+      "name": "TP25_ShellCollider_6",
+      "triangles": 12,
+      "volume_m3": 0.015020136155833835,
+      "collider": true
+    },
+    {
+      "name": "TP25_PanelCollider_6",
+      "triangles": 12,
+      "volume_m3": 0.007740000263303513,
+      "collider": true
+    },
+    {
+      "name": "TP25_BottomEdgeCollider",
+      "triangles": 20,
+      "volume_m3": 0.03679136075723144,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopDeckCollider",
+      "triangles": 20,
+      "volume_m3": 0.02452754947219987,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_0",
+      "triangles": 12,
+      "volume_m3": 6.760000994493937e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_1",
+      "triangles": 12,
+      "volume_m3": 6.760001352915492e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_2",
+      "triangles": 12,
+      "volume_m3": 6.760000994493951e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_3",
+      "triangles": 12,
+      "volume_m3": 6.76000099449395e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_4",
+      "triangles": 12,
+      "volume_m3": 6.760001352915492e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_5",
+      "triangles": 12,
+      "volume_m3": 6.76000099449394e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_6",
+      "triangles": 12,
+      "volume_m3": 6.760000994493946e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_7",
+      "triangles": 12,
+      "volume_m3": 6.760001352915492e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_8",
+      "triangles": 12,
+      "volume_m3": 6.760000994493951e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_9",
+      "triangles": 12,
+      "volume_m3": 6.760000994493945e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_10",
+      "triangles": 12,
+      "volume_m3": 6.760001352915492e-05,
+      "collider": true
+    },
+    {
+      "name": "TP25_TopRimCollider_11",
+      "triangles": 12,
+      "volume_m3": 6.76000099449394e-05,
+      "collider": true
+    }
+  ],
+  "bounds_blender_xyz_m": [
+    [
+      -0.6870468258857727,
+      0.6870468258857727
+    ],
+    [
+      -0.5950000286102295,
+      0.5950000286102295
+    ],
+    [
+      -0.5,
+      0.5
+    ]
+  ],
+  "mounting_faces": 6,
+  "panel_width_m": 0.6,
+  "panel_height_m": 0.79,
+  "mount_apothem_m": 0.59,
+  "render_triangles": 3020,
+  "colliders": 26
+}

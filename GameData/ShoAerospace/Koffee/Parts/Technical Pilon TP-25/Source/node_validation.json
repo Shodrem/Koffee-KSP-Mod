@@ -1,0 +1,126 @@
+{
+  "result": "PASS",
+  "nodes": {
+    "top": {
+      "transform": "attach_North",
+      "position_ksp_m": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "direction_ksp": [
+        0.0,
+        0.9999999999999998,
+        2.220446049250313e-16
+      ]
+    },
+    "bottom": {
+      "transform": "attach_South",
+      "position_ksp_m": [
+        0.0,
+        -0.5,
+        0.0
+      ],
+      "direction_ksp": [
+        0.0,
+        -0.9999999999999998,
+        2.220446049250313e-16
+      ]
+    },
+    "face_1": {
+      "transform": "attach_Face01",
+      "position_ksp_m": [
+        0.0,
+        -0.004999999888241291,
+        -0.5899999737739563
+      ],
+      "direction_ksp": [
+        8.74227765734757e-08,
+        0.0,
+        -0.9999999999999964
+      ]
+    },
+    "face_2": {
+      "transform": "attach_Face02",
+      "position_ksp_m": [
+        0.5109549760818481,
+        -0.004999999888241291,
+        -0.29499998688697815
+      ],
+      "direction_ksp": [
+        0.8660254631753803,
+        0.0,
+        -0.49999989713185755
+      ]
+    },
+    "face_3": {
+      "transform": "attach_Face03",
+      "position_ksp_m": [
+        0.5109549760818481,
+        -0.004999999888241291,
+        0.29499998688697815
+      ],
+      "direction_ksp": [
+        0.8660254631753803,
+        0.0,
+        0.49999989713185733
+      ]
+    },
+    "face_4": {
+      "transform": "attach_Face04",
+      "position_ksp_m": [
+        7.225416033205796e-17,
+        -0.004999999888241291,
+        0.5899999737739563
+      ],
+      "direction_ksp": [
+        -1.748455531469504e-07,
+        0.0,
+        0.9999999999999847
+      ]
+    },
+    "face_5": {
+      "transform": "attach_Face05",
+      "position_ksp_m": [
+        -0.5109549760818481,
+        -0.004999999888241291,
+        0.29499998688697815
+      ],
+      "direction_ksp": [
+        -0.8660253857466815,
+        0.0,
+        0.5000000312423105
+      ]
+    },
+    "face_6": {
+      "transform": "attach_Face06",
+      "position_ksp_m": [
+        -0.5109549760818481,
+        -0.004999999888241291,
+        -0.29499998688697815
+      ],
+      "direction_ksp": [
+        -0.8660253043252057,
+        0.0,
+        -0.5000001722684047
+      ]
+    }
+  },
+  "sets": [
+    {
+      "variant": "Surface",
+      "localization": "#LOC_Koffee_TP25_Mount_Surface",
+      "active_nodes": 2
+    },
+    {
+      "variant": "FaceNodes",
+      "localization": "#LOC_Koffee_TP25_Mount_FaceNodes",
+      "active_nodes": 8
+    }
+  ],
+  "selector": "ModulePartVariants",
+  "node_controller": "Existing ModuleKoffeeDockingVisibility, six node-only instances",
+  "configuration_simulation": "PASS, Surface -> FaceNodes -> Surface -> FaceNodes -> Surface",
+  "ksp_tests_performed_by_this_script": false,
+  "separate_runtime_evidence": "paw_selector_validation.json"
+}

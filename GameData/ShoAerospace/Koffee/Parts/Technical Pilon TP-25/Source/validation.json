@@ -1,0 +1,177 @@
+{
+  "result": "PASS",
+  "scope": "Offline geometry and configuration only; no KSP execution",
+  "node_configurations": {
+    "result": "PASS",
+    "nodes": {
+      "top": {
+        "transform": "attach_North",
+        "position_ksp_m": [
+          0.0,
+          0.5,
+          0.0
+        ],
+        "direction_ksp": [
+          0.0,
+          0.9999999999999998,
+          2.220446049250313e-16
+        ]
+      },
+      "bottom": {
+        "transform": "attach_South",
+        "position_ksp_m": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "direction_ksp": [
+          0.0,
+          -0.9999999999999998,
+          2.220446049250313e-16
+        ]
+      },
+      "face_1": {
+        "transform": "attach_Face01",
+        "position_ksp_m": [
+          0.0,
+          -0.004999999888241291,
+          -0.5899999737739563
+        ],
+        "direction_ksp": [
+          8.74227765734757e-08,
+          0.0,
+          -0.9999999999999964
+        ]
+      },
+      "face_2": {
+        "transform": "attach_Face02",
+        "position_ksp_m": [
+          0.5109549760818481,
+          -0.004999999888241291,
+          -0.29499998688697815
+        ],
+        "direction_ksp": [
+          0.8660254631753803,
+          0.0,
+          -0.49999989713185755
+        ]
+      },
+      "face_3": {
+        "transform": "attach_Face03",
+        "position_ksp_m": [
+          0.5109549760818481,
+          -0.004999999888241291,
+          0.29499998688697815
+        ],
+        "direction_ksp": [
+          0.8660254631753803,
+          0.0,
+          0.49999989713185733
+        ]
+      },
+      "face_4": {
+        "transform": "attach_Face04",
+        "position_ksp_m": [
+          7.225416033205796e-17,
+          -0.004999999888241291,
+          0.5899999737739563
+        ],
+        "direction_ksp": [
+          -1.748455531469504e-07,
+          0.0,
+          0.9999999999999847
+        ]
+      },
+      "face_5": {
+        "transform": "attach_Face05",
+        "position_ksp_m": [
+          -0.5109549760818481,
+          -0.004999999888241291,
+          0.29499998688697815
+        ],
+        "direction_ksp": [
+          -0.8660253857466815,
+          0.0,
+          0.5000000312423105
+        ]
+      },
+      "face_6": {
+        "transform": "attach_Face06",
+        "position_ksp_m": [
+          -0.5109549760818481,
+          -0.004999999888241291,
+          -0.29499998688697815
+        ],
+        "direction_ksp": [
+          -0.8660253043252057,
+          0.0,
+          -0.5000001722684047
+        ]
+      }
+    },
+    "sets": [
+      {
+        "index": 0,
+        "localization": "#LOC_Koffee_TP25_Mount_Surface",
+        "active_nodes": 2
+      },
+      {
+        "index": 1,
+        "localization": "#LOC_Koffee_TP25_Mount_FaceNodes",
+        "active_nodes": 8
+      }
+    ],
+    "stock_algorithm_simulation": "PASS, initialization and Surface -> Six -> Surface -> Six -> Surface",
+    "ksp_paw_editor_save_load_test": false
+  },
+  "runtime_bounds_ksp_xyz_m": [
+    [
+      -0.6870468258857727,
+      -0.5,
+      -0.5950000286102295
+    ],
+    [
+      0.6870468258857727,
+      0.5,
+      0.5950000286102295
+    ]
+  ],
+  "render_triangles": 3020,
+  "convex_nontrigger_colliders": 26,
+  "ed01_runtime_dimensions_m": [
+    0.5363662549749719,
+    0.5989312602262278,
+    0.2804325175624696
+  ],
+  "ed01_pair_min_separating_axis_gap_m": 0.11713583715437353,
+  "ed01_rack_min_separating_axis_gap_m": 0.005399832200880583,
+  "bay_door_sweep": [
+    {
+      "rack_y_offset_m": -0.05,
+      "sample_count": 241,
+      "minimum_separating_axis_gap_m": 0.007152986526489213,
+      "limiting_pair": [
+        0.0,
+        "COL_BOT",
+        0
+      ],
+      "minimum_wall_door_separating_axis_gap_m": 0.24459717089498034
+    },
+    {
+      "rack_y_offset_m": 0.05,
+      "sample_count": 241,
+      "minimum_separating_axis_gap_m": 0.007152986526489213,
+      "limiting_pair": [
+        0.0,
+        "COL_TOP",
+        14
+      ],
+      "minimum_wall_door_separating_axis_gap_m": 0.24459717089498034
+    }
+  ],
+  "sweep_interpolation": "241 cubic Hermite curve samples, normalized quaternions; finite sampling, not continuous proof",
+  "clearance_method": "SAT, exact convex stock colliders and rack colliders, conservative current ED renderer OBBs and rack enclosing hex prism; reported gap is a conservative projected separation, not exact surface distance",
+  "ksp_editor_test": false,
+  "ksp_flight_test": false,
+  "aerodynamic_shielding_test": false
+}
