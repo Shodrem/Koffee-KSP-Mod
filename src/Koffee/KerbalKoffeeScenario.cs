@@ -9,10 +9,18 @@ namespace ShoAerospace.Koffee
     public sealed class KerbalKoffeeScenario : ScenarioModule
     {
         internal static readonly KerbalKoffeeLedger Store = new KerbalKoffeeLedger();
+        private Game? owner;
+        private bool subscribed;
 
         public override void OnAwake()
         {
             base.OnAwake();
+            owner = HighLogic.CurrentGame;
+            if (!subscribed)
+            {
+                GameEvents.onVesselRecovered.Add(OnVesselRecovered);
+                subscribed = true;
+            }
             EngineeringRenewalCoordinator.Clear();
             Store.Clear();
         }
@@ -20,6 +28,7 @@ namespace ShoAerospace.Koffee
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
+            owner = HighLogic.CurrentGame;
             EngineeringRenewalCoordinator.Clear();
             var records = new List<KoffeeStateRecord>();
             foreach (ConfigNode kerbal in node.GetNodes(KoffeeIdentifiers.SavedKerbalNode))
@@ -36,6 +45,25 @@ namespace ShoAerospace.Koffee
             }
             Store.Load(records);
             Debug.Log("[Koffee] Loaded " + records.Count + " saved Kaffeinated state(s).");
+        }
+
+        private void OnVesselRecovered(ProtoVessel vessel, bool quick)
+        {
+            if (vessel == null || owner == null || !ReferenceEquals(owner, HighLogic.CurrentGame)) return;
+            // Use the same proto crew list as stock recovery, including unloaded vessels and EVA.
+            foreach (ProtoCrewMember crew in vessel.GetVesselCrew())
+            {
+                if (crew == null || !Store.TryGetStart(crew.name, out _)) continue;
+                Store.RestoreStart(crew.name, null);
+                Debug.Log("[Koffee] " + crew.name + " Kaffeinated cleared on vessel recovery.");
+            }
+        }
+
+        internal void OnDestroy()
+        {
+            if (!subscribed) return;
+            GameEvents.onVesselRecovered.Remove(OnVesselRecovered);
+            subscribed = false;
         }
 
         public override void OnSave(ConfigNode node)
