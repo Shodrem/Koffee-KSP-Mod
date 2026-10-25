@@ -56,3 +56,6 @@ __pycache__/
 *.tga
 *.xcf
 *.ksp
+
+# Optional Spanish guide is published outside GameData.
+!/KSPediaSpanish/kspedia_koffee.ksp
