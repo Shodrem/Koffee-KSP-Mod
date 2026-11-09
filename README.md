@@ -2,6 +2,8 @@
 
 Un proyecto de shodrem (SHO Aerospace), creado por afición, para aprender y aportar a la comunidad de KSP.
 
+[Quick guide (English): installation, Koffee, research, Komfort and Deadly Mode](https://github.com/Shodrem/Koffee-KSP-Mod/wiki).
+
 ## Licencias
 
 - **Código, scripts y configuraciones originales: MIT.** Se permite su uso, modificación y redistribución, incluido el uso comercial, conservando el aviso de autoría y la licencia.
