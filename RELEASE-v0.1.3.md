@@ -1,5 +1,7 @@
 # Koffee v0.1.3
 
+Update 2026-11-09: the catalogue now contains 31 experiments. Adds nine orbital/container studies, per-biome orbital science, the progression-based STS-25 survey contract, 28 studies in recurring orbital contracts, and completion names for all 31 experiments in optional Lonapse. All three own DLLs are rebuilt from this source snapshot. Re-download the v0.1.3 installable ZIP to receive this update.
+
 Instantánea de producción preparada el 09/11/2026 desde el desarrollo local: código C#, proyectos, solución, CFG y diálogos de integración Lonapse, copiados sin conversión de texto. Incluye el estado actual de mantenimiento y mejoras de los servicios Komfort.
 
 Los binarios propios se compilan desde este repositorio. Los recursos necesarios para KSP (modelos MU, texturas, iconos y bundle KSPedia) se distribuyen únicamente en el ZIP instalable, con las DLL y sus licencias. No se publican Blender, FBX, pruebas, herramientas, documentación interna, respaldos ni temporales de desarrollo.

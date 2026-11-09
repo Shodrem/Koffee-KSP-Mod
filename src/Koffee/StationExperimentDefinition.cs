@@ -7,7 +7,7 @@ using System.Linq;
 namespace ShoAerospace.Koffee
 {
     internal enum StationExperimentBodyMode { Listed, Any }
-    internal enum StationResultReading { None, RequiredPartTemperature, RequiredPartPressure, SurfaceBiomeObservation, SurfaceTerrainAltitude, TelescopeImage, TelescopePairImage, SolarIrradiance, SolarRadiationPressure }
+    internal enum StationResultReading { None, RequiredPartTemperature, RequiredPartPressure, SurfaceBiomeObservation, SurfaceTerrainAltitude, TelescopeImage, TelescopePairImage, SolarIrradiance, SolarRadiationPressure, OrbitalBiomeObservation }
 
     internal enum StationExperimentExecutionModel
     {

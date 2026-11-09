@@ -41,6 +41,25 @@ namespace ShoAerospace.Koffee
                     capture = new StationSurfaceCapture(definition.ResultReading, body.bodyName, body.bodyDisplayName,
                         instrument.partInfo.name, instrument.persistentId, now, SelectBiomes(zones, random));
                 }
+                else if (definition.ResultReading == StationResultReading.OrbitalBiomeObservation)
+                {
+                    reason = "Biome";
+                    double latitude = vessel.latitude, longitude = vessel.longitude;
+                    if (!ExperimentContainerState.Finite(latitude) || latitude < -90 || latitude > 90 ||
+                        !ExperimentContainerState.Finite(longitude)) return Fail(reason, out error);
+                    longitude = ((longitude + 180) % 360 + 360) % 360 - 180;
+                    if (!StationExperimentEnvironment.TryBiome(body, latitude, longitude, out string biome, out bool hasBiome))
+                        return Fail(reason, out error);
+                    var zones = Array.Empty<StationObservedBiome>();
+                    if (hasBiome)
+                    {
+                        var attribute = body.BiomeMap.Attributes.First(a => a != null && a.name == biome);
+                        zones = new[] { new StationObservedBiome(biome, attribute.localizationTag,
+                            ScienceUtil.GetBiomedisplayName(body, biome)) };
+                    }
+                    capture = new StationSurfaceCapture(definition.ResultReading, body.bodyName, body.bodyDisplayName,
+                        instrument.partInfo.name, instrument.persistentId, now, zones, latitude, longitude);
+                }
                 else
                 {
                     reason = "Terrain";
@@ -85,6 +104,10 @@ namespace ShoAerospace.Koffee
 
         internal static string ResultText(StationSurfaceCapture capture)
         {
+            if (capture.Mode == StationResultReading.OrbitalBiomeObservation)
+                return capture.Biomes.Count == 0 ? Localizer.Format("#Koffee_OrbitalBiome_NoMap",
+                    capture.BodyDisplayName.LocalizeRemoveGender()) : Localizer.Format("#Koffee_OrbitalBiome_Initial",
+                    BiomeName(capture.Biomes[0]), capture.BodyDisplayName.LocalizeRemoveGender());
             if (capture.Mode == StationResultReading.SurfaceBiomeObservation)
             {
                 var names = capture.Biomes.Select(BiomeName).ToArray();
@@ -98,7 +121,7 @@ namespace ShoAerospace.Koffee
                 capture.Longitude!.Value.ToString("F5", CultureInfo.CurrentCulture));
         }
 
-        private static string BiomeName(StationObservedBiome biome)
+        internal static string BiomeName(StationObservedBiome biome)
         {
             string localized = string.IsNullOrWhiteSpace(biome.LocalizationTag) ? "" : Localizer.Format(biome.LocalizationTag);
             return (string.IsNullOrWhiteSpace(localized) || localized.StartsWith("#", StringComparison.Ordinal) ?

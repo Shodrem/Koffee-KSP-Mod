@@ -36,7 +36,8 @@ namespace ShoAerospace.Koffee
         internal const string TerrainSource = "PQS";
 
         internal static bool Required(StationResultReading mode) =>
-            mode == StationResultReading.SurfaceBiomeObservation || mode == StationResultReading.SurfaceTerrainAltitude;
+            mode == StationResultReading.SurfaceBiomeObservation || mode == StationResultReading.SurfaceTerrainAltitude ||
+            mode == StationResultReading.OrbitalBiomeObservation;
 
         internal StationSurfaceCapture(StationResultReading mode, string body, string bodyDisplayName,
             string partName, uint partId, double ut, IEnumerable<StationObservedBiome> biomes,
@@ -53,6 +54,13 @@ namespace ShoAerospace.Koffee
                     !Valid(longitude) || longitude < -180 || longitude > 180 || !Valid(height) ||
                     !Valid(referenceRadius) || referenceRadius <= 0 || !Valid(referenceRadius + height) || referenceRadius + height <= 0)
                     throw new ArgumentException("Invalid initial PQS terrain sample.");
+            }
+            else if (mode == StationResultReading.OrbitalBiomeObservation)
+            {
+                // Zero BIOME nodes explicitly means the initial body had no map.
+                if (zones.Length > 1 || !Valid(latitude) || latitude < -90 || latitude > 90 ||
+                    !Valid(longitude) || longitude < -180 || longitude >= 180 || height.HasValue || referenceRadius.HasValue)
+                    throw new ArgumentException("Invalid initial orbital biome sample.");
             }
             else if (latitude.HasValue || longitude.HasValue || height.HasValue || referenceRadius.HasValue)
                 throw new ArgumentException("Narrative regions have no measured coordinates.");

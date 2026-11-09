@@ -35,6 +35,13 @@ namespace ShoAerospace.Koffee
                         !Number(node, "height", out double h) || !Number(node, "referenceRadius", out double r)) return false;
                     lat = a; lon = o; height = h; radius = r;
                 }
+                else if (mode == StationResultReading.OrbitalBiomeObservation)
+                {
+                    if (new[] { "latitude", "longitude" }.Any(k => node.GetValues(k).Length != 1) ||
+                        new[] { "height", "referenceRadius", "source" }.Any(node.HasValue) ||
+                        !Number(node, "latitude", out double a) || !Number(node, "longitude", out double o)) return false;
+                    lat = a; lon = o;
+                }
                 else if (Terrain.Any(node.HasValue)) return false;
                 capture = new StationSurfaceCapture(mode, node.GetValue("body"), node.GetValue("bodyDisplayName"),
                     node.GetValue("part"), partId, ut, zones, lat, lon, height, radius);
@@ -56,6 +63,11 @@ namespace ShoAerospace.Koffee
             {
                 var biome = node.AddNode("BIOME"); biome.AddValue("name", zone.Name);
                 biome.AddValue("localizationTag", zone.LocalizationTag); biome.AddValue("displayName", zone.DisplayName);
+            }
+            if (capture.Mode == StationResultReading.OrbitalBiomeObservation)
+            {
+                node.AddValue("latitude", capture.Latitude!.Value.ToString("R", CultureInfo.InvariantCulture));
+                node.AddValue("longitude", capture.Longitude!.Value.ToString("R", CultureInfo.InvariantCulture));
             }
             if (capture.Mode != StationResultReading.SurfaceTerrainAltitude) return;
             node.AddValue("source", StationSurfaceCapture.TerrainSource);

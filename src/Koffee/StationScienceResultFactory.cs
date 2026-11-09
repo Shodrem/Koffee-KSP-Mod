@@ -59,6 +59,9 @@ namespace ShoAerospace.Koffee
                 if (body == null || !Enum.TryParse(running.SolarCapture.Situation, out situation))
                     throw new InvalidOperationException("Initial solar science context is unavailable.");
             }
+            if (definition.ResultReading == StationResultReading.OrbitalBiomeObservation &&
+                (situation != ExperimentSituations.InSpaceLow || !experiment.BiomeIsRelevantWhile(situation)))
+                throw new InvalidOperationException("Orbital biome science requires its initial low-space biome context.");
             string biome = "";
             string biomeDisplay = "";
             if (running.HasSurfaceBinding && (running.CheckpointBody != running.SurfaceBody ||
@@ -66,7 +69,15 @@ namespace ShoAerospace.Koffee
                 throw new InvalidOperationException("Completed surface checkpoint does not match its initial binding.");
             if (experiment.BiomeIsRelevantWhile(situation))
             {
-                if (running.HasSurfaceBinding)
+                if (definition.ResultReading == StationResultReading.OrbitalBiomeObservation)
+                {
+                    // Both loaded and background callers pass final coordinates. Never use
+                    // them for this mode: the initial, certified map identity owns the subject.
+                    var capture = running.SurfaceCapture!;
+                    biome = capture.Biomes.Count == 0 ? "" : capture.Biomes[0].Name;
+                    biomeDisplay = capture.Biomes.Count == 0 ? "" : StationSurfaceAcquisition.BiomeName(capture.Biomes[0]);
+                }
+                else if (running.HasSurfaceBinding)
                 {
                     biome = running.SurfaceBiome;
                     if (running.SurfaceHasBiome && (body.BiomeMap?.Attributes == null ||
@@ -74,7 +85,8 @@ namespace ShoAerospace.Koffee
                         throw new InvalidOperationException("Certified surface biome is unavailable.");
                 }
                 else biome = ScienceUtil.GetExperimentBiome(body, latitude, longitude);
-                biomeDisplay = ScienceUtil.GetBiomedisplayName(body, biome);
+                if (definition.ResultReading != StationResultReading.OrbitalBiomeObservation)
+                    biomeDisplay = ScienceUtil.GetBiomedisplayName(body, biome);
             }
             ScienceSubject subject = ResearchAndDevelopment.GetExperimentSubject(experiment,
                 situation, body, biome, biomeDisplay);
