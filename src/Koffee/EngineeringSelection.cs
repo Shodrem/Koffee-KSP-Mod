@@ -7,14 +7,14 @@ namespace ShoAerospace.Koffee
     internal readonly struct EngineeringCandidate<T>
     {
         internal readonly T Worker;
-        internal readonly int Level;
+        internal readonly int Score;
         internal readonly uint PersistentId;
         internal readonly string Name;
 
-        internal EngineeringCandidate(T worker, int level, uint persistentId, string? name)
+        internal EngineeringCandidate(T worker, int score, uint persistentId, string? name)
         {
             Worker = worker;
-            Level = level;
+            Score = score;
             PersistentId = persistentId;
             Name = name ?? "";
         }
@@ -24,20 +24,10 @@ namespace ShoAerospace.Koffee
     {
         internal static IReadOnlyList<EngineeringCandidate<T>> Order<T>(
             IEnumerable<EngineeringCandidate<T>> candidates) => candidates
-            .OrderByDescending(candidate => candidate.Level)
+            .OrderByDescending(candidate => candidate.Score)
             .ThenBy(candidate => candidate.PersistentId == 0 ? uint.MaxValue : candidate.PersistentId)
             .ThenBy(candidate => candidate.Name, StringComparer.Ordinal)
             .ToArray();
 
-        internal static EngineeringCandidate<T>? Select<T>(
-            IReadOnlyList<EngineeringCandidate<T>> ordered, EngineerSelection policy,
-            Func<T, bool> isKaffeinated)
-        {
-            if (ordered.Count == 0) return null;
-            if (policy == EngineerSelection.AnyKaffeinated)
-                for (int i = 0; i < ordered.Count; i++)
-                    if (isKaffeinated(ordered[i].Worker)) return ordered[i];
-            return ordered[0];
-        }
     }
 }

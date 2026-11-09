@@ -75,7 +75,8 @@ namespace ShoAerospace.Koffee
             => TryBeginKaffeination(kerbal, consumer, Planetarium.GetUniversalTime(), logDetails);
 
         internal static KaffeinationAttempt? TryBeginKaffeination(ProtoCrewMember kerbal,
-            Part? consumer, double activationUT, bool logDetails)
+            Part? consumer, double activationUT, bool logDetails,
+            System.Collections.Generic.List<IResourceAccount>? sources = null)
         {
             if (kerbal == null || string.IsNullOrEmpty(kerbal.name)) return null;
             if (IsKaffeinatedAt(kerbal, activationUT))
@@ -92,7 +93,7 @@ namespace ShoAerospace.Koffee
             if (TryGetKaffeinatedWindow(kerbal, out KaffeinatedWindow previousWindow))
                 EngineeringRenewalCoordinator.RememberCommitted(kerbal, previousWindow);
             ResourcePayment? payment = ResourcePayment.TryTake(
-                KoffeeSettingsLoader.Current.ActivationCost, KoffeeSources.Find(consumer));
+                KoffeeSettingsLoader.Current.ActivationCost, sources ?? KoffeeSources.Find(consumer));
             if (payment == null) return null;
 
             double? previousStartUT = KerbalKoffeeScenario.Store.TryGetStart(

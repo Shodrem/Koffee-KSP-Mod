@@ -26,6 +26,7 @@ namespace ShoAerospace.Koffee
             if (converter == null || !Enabled(converter)) return;
             if (!ReferenceEquals(game, HighLogic.CurrentGame)) { Clear(); game = HighLogic.CurrentGame; }
             double now = Planetarium.GetUniversalTime();
+            KomfortRuntime.Observe(converter.vessel, now);
             bool applies = StationPowerPolicy.Applies(converter.vessel);
             observations.TryGetValue(converter, out var previous);
             bool interval = applies && previous != null && previous.Applies && now >= previous.UT &&

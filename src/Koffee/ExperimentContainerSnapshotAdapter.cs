@@ -37,7 +37,7 @@ namespace ShoAerospace.Koffee
             => WriteState(part, state, null, false, out error);
 
         private static bool WriteState(ProtoPartSnapshot part, ExperimentContainerState state,
-            ConfigNode? scienceData, bool replaceScienceData, out string error)
+            ConfigNode? scienceData, bool replaceScienceData, out string error, ExperimentManagerContext? responsible = null)
         {
             error = "";
             ProtoPartModuleSnapshot[] modules = Modules(part);
@@ -65,6 +65,11 @@ namespace ShoAerospace.Koffee
                 if (replaceScienceData || state.Status != ExperimentContainerStatus.Finalized)
                     candidate.RemoveNodes("ScienceData");
                 if (replaceScienceData && scienceData != null) candidate.AddNode(scienceData.CreateCopy());
+                if (responsible != null)
+                {
+                    candidate.SetValue("responsibleManagerId", responsible.Id.ToString(System.Globalization.CultureInfo.InvariantCulture), true);
+                    candidate.SetValue("responsibleEngineer", responsible.EngineerName, true);
+                }
                 modules[0].moduleValues = candidate;
                 return true;
             }
@@ -99,8 +104,8 @@ namespace ShoAerospace.Koffee
         }
 
         internal static bool Write(ProtoPartSnapshot part, ExperimentContainerState state,
-            ConfigNode? scienceData, out string error)
-            => WriteState(part, state, scienceData, true, out error);
+            ConfigNode? scienceData, out string error, ExperimentManagerContext? responsible = null)
+            => WriteState(part, state, scienceData, true, out error, responsible);
 
         internal static ProtoPartModuleSnapshot[] Modules(ProtoPartSnapshot part)
         {

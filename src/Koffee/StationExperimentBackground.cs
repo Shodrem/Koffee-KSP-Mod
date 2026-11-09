@@ -15,13 +15,13 @@ namespace ShoAerospace.Koffee
         internal static void TickAll(double now)
         {
             if (!ExperimentContainerState.Finite(now)) return;
-            foreach (Vessel vessel in FlightGlobals.Vessels)
+            foreach (Vessel vessel in FlightGlobals.Vessels.ToArray())
                 if (vessel != null && !vessel.loaded) Tick(vessel, now);
         }
 
         internal static void Tick(Vessel vessel, double now)
         {
-            if (vessel == null || vessel.loaded || !ExperimentContainerState.Finite(now)) return;
+            if (vessel == null || vessel.loaded || !ExperimentContainerState.Finite(now) || StationVesselScope.IsNaturalObject(vessel)) return;
             if (StationBackgroundElectricity.Provider != null)
             {
                 StationBackgroundElectricity.Provider.Ensure(vessel, now);
@@ -42,7 +42,10 @@ namespace ShoAerospace.Koffee
             Func<Guid, double, double, double>? authorize = null)
         {
             if (vessel == null || (vessel.loaded && authorize == null) ||
-                !ExperimentContainerState.Finite(now)) return;
+                !ExperimentContainerState.Finite(now) || StationVesselScope.IsNaturalObject(vessel)) return;
+            // BRP publishes service authorization before its research callback.
+            if (authorize == null) KomfortRuntime.Observe(vessel, now, maintenanceAccounts: KoffeeAccounts(vessel.protoVessel?.protoPartSnapshots ?? new List<ProtoPartSnapshot>()));
+            if (vessel == null || vessel.isEVA && DeadlyScenario.Members(vessel).Length == 0) return;
             StationPowerPolicy.Observe(vessel, now);
             StationStockPower.Forget(vessel);
             ProtoVessel? proto = vessel.protoVessel;
@@ -73,8 +76,15 @@ namespace ShoAerospace.Koffee
             string body = StationExperimentRuntime.CurrentBody(vessel);
             string situation = StationExperimentRuntime.CurrentSituation(vessel);
             var equipment = authorize == null ? StationExperimentEquipment.Capture(vessel) : SnapshotEquipment(parts);
+            double before = experiments.Sum(e => e.State.AccumulatedUT);
             foreach (BackgroundExperiment experiment in experiments)
                 Process(vessel, experiment, labs, slots, koffee, sources, manager, managerReason, body, situation, now, equipment, authorize);
+            if (authorize != null && experiments.Sum(e => e.State.AccumulatedUT) > before && manager != null &&
+                EngineeringContribution.OptionalUseful(vessel, manager.EngineerName, now) &&
+                ResourcePayment.Available(sources) >= (EngineeringContribution.RequiredScientistCups(vessel, now) + 1) * KoffeeSettingsLoader.Current.ActivationCost &&
+                PowerPlan(vessel, now, sources, _ => false).Rate > 0)
+                using (var renewal = koffee.Begin(manager.EngineerName, sources))
+                    if (renewal.Ensure(now)) renewal.Commit();
         }
 
         private static void Process(Vessel vessel, BackgroundExperiment experiment,
@@ -124,7 +134,7 @@ namespace ShoAerospace.Koffee
                 return;
             }
             double start = state.LastCheckpointUT ?? now;
-            bool rebasing = !continuous || !state.CheckpointVerified || manager!.ValidSince > start ||
+            bool rebasing = !KomfortRuntime.Continuous(vessel, start, now) || !continuous || !state.CheckpointVerified || manager!.ValidSince > start ||
                 state.CheckpointBody != body || state.CheckpointSituation != situation;
             KerbalSpecialtyScenario.ObserveScientistLevelAtCheckpoint(scientist!);
             if (!KerbalSpecialtyScenario.TryGetScientistProfile(scientist!.name, out var profile) ||
@@ -138,20 +148,25 @@ namespace ShoAerospace.Koffee
             using (var engineer = koffee.Begin(manager!.EngineerName, sources))
             using (var activations = koffee.Begin(state.AssignedKerbalName, sources))
             {
-                StationResearchCredit credit = rebasing ? default : StationResearchInterval.Process(
+                StationResearchCredit credit = rebasing ? default : StationResearchInterval.ProcessWeighted(
                     state.ResearchPointsRequired, state.AccumulatedResearchPoints, state.ResearchAffinity, segments,
-                    (from, to, remainingSeconds) =>
+                    (from, to, remaining) =>
                     {
-                        if (authorize == null) return engineer.TeamCoverage(activations, from, to, remainingSeconds);
-                        double powered = authorize(state.ContainerId, from, to);
-                        if (!ExperimentContainerState.Finite(powered) || powered < 0 || powered > to - from + 1e-8)
-                            throw new InvalidOperationException("Invalid background power coverage.");
-                        if (!(powered > 0) || !(to > from)) return 0;
-                        double fraction = Math.Min(1, powered / (to - from));
-                        double realLimit = Math.Min(to - from, remainingSeconds / fraction);
-                        return engineer.TeamCoverage(activations, from, to, realLimit,
-                            (a, b) => Math.Min(remainingSeconds, authorize(state.ContainerId, a, b)));
-                    }, KoffeeResearchRates.At, KoffeeResearchRates.NextBoundary);
+                        double fraction = 1;
+                        if (authorize != null)
+                        {
+                            double powered = authorize(state.ContainerId, from, to);
+                            if (!ExperimentContainerState.Finite(powered) || powered < 0 || powered > to - from + 1e-8)
+                                throw new InvalidOperationException("Invalid background power coverage.");
+                            if (!(powered > 0)) return default;
+                            fraction = Math.Min(1, powered / (to - from));
+                        }
+                        double work = 0;
+                        double weighted = engineer.TeamCoverage(activations, from, to, remaining,
+                            weightedSeconds: (a, b) => fraction * KoffeeResearchRates.At(a) * KomfortRuntime.Integral(vessel, a, b),
+                            actualCoverage: (a, b) => work += fraction * (b - a));
+                        return new StationResearchCoverage(weighted, work);
+                    }, ut => KomfortRuntime.NextBoundary(vessel, ut));
                 bool verified = authorize != null || credit.Complete || ((rebasing || credit.FullyCovered) && engineer.EnsureTeam(activations, now));
                 ExperimentContainerState updated = state.CheckpointResearch(now, credit.Points, credit.CoveredSeconds,
                     verified, body, situation, scientist.experienceLevel);
@@ -159,8 +174,8 @@ namespace ShoAerospace.Koffee
                 bool powerBlocked = authorize != null && !rebasing && credit.CoveredSeconds == 0 && !credit.Complete;
                 bool teamReady = !powerBlocked || engineer.EnsureTeam(activations, now);
                 bool written = updated.WorkComplete()
-                    ? Finalize(vessel, experiment, updated, now, activations, engineer)
-                    : Write(experiment, updated, null);
+                    ? Finalize(vessel, experiment, updated, now, activations, engineer, credit.Points > 0 ? manager : null)
+                    : Write(experiment, updated, null, credit.Points > 0 ? manager : null);
                 if (!written) return;
                 if (credit.CoveredSeconds > 0 || (verified && authorize == null)) { activations.Commit(); engineer.Commit(); }
                 if (verified || updated.WorkComplete()) ForgetWarning(state);
@@ -174,7 +189,8 @@ namespace ShoAerospace.Koffee
 
         private static bool Finalize(Vessel vessel, BackgroundExperiment experiment,
             ExperimentContainerState state, double now,
-            StationKoffeeSession.Transaction? activations, StationKoffeeSession.Transaction? engineer = null)
+            StationKoffeeSession.Transaction? activations, StationKoffeeSession.Transaction? engineer = null,
+            ExperimentManagerContext? responsible = null)
         {
             try
             {
@@ -184,7 +200,7 @@ namespace ShoAerospace.Koffee
                     experiment.Part.flightID, now);
                 var dataNode = new ConfigNode("ScienceData");
                 result.Data.Save(dataNode);
-                if (!Write(experiment, result.State, dataNode)) return false;
+                if (!Write(experiment, result.State, dataNode, responsible)) return false;
                 StationExperimentNotifications.Observe(result.State, vessel.vesselName, StationExperimentPauseReason.ResultAvailable);
                 activations?.Commit();
                 engineer?.Commit();
@@ -207,10 +223,10 @@ namespace ShoAerospace.Koffee
         }
 
         private static bool Write(BackgroundExperiment experiment,
-            ExperimentContainerState state, ConfigNode? scienceData)
+            ExperimentContainerState state, ConfigNode? scienceData, ExperimentManagerContext? responsible = null)
         {
             if (ExperimentContainerSnapshotAdapter.Write(experiment.Part, state,
-                scienceData, out string error))
+                scienceData, out string error, responsible))
             {
                 StationBackgroundElectricity.Stamp(experiment.Part);
                 experiment.State = state;

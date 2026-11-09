@@ -7,6 +7,8 @@
     <LangVersion>8.0</LangVersion>
     <RootNamespace>ShoAerospace.Koffee</RootNamespace>
     <KSPBT_ModPluginFolder>Plugins</KSPBT_ModPluginFolder>
+    <!-- Builds stay local; deployment requires a separate explicit action. -->
+    <KSPBT_CopyDLLsToPluginFolder>false</KSPBT_CopyDLLsToPluginFolder>
     <!-- Harmony has no KSPAssembly attribute; use its CLR assembly reference. -->
     <KSPBT_GenerateDependencyAttributes>false</KSPBT_GenerateDependencyAttributes>
   </PropertyGroup>

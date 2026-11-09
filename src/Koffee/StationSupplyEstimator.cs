@@ -9,9 +9,9 @@ namespace ShoAerospace.Koffee
     {
         internal readonly string Scientist, Engineer;
         internal readonly double StartUT, EndUT;
-        internal readonly bool RequiresEngineer;
-        internal StationSupplyWork(string scientist, string engineer, double start, double end, bool requiresEngineer = true)
-        { Scientist = scientist; Engineer = engineer; StartUT = start; EndUT = end; RequiresEngineer = requiresEngineer; }
+        internal readonly bool IncludeOptionalEngineer;
+        internal StationSupplyWork(string scientist, string engineer, double start, double end, bool includeOptionalEngineer = false)
+        { Scientist = scientist; Engineer = engineer; StartUT = start; EndUT = end; IncludeOptionalEngineer = includeOptionalEngineer; }
     }
 
     internal sealed class StationSupplyEstimate
@@ -35,11 +35,11 @@ namespace ShoAerospace.Koffee
         {
             estimate = null;
             if (!Finite(duration) || duration <= 0 || work == null || paid == null) return false;
-            if (work.Any(w => string.IsNullOrEmpty(w.Scientist) || (w.RequiresEngineer && string.IsNullOrEmpty(w.Engineer)) ||
+            if (work.Any(w => string.IsNullOrEmpty(w.Scientist) || (w.IncludeOptionalEngineer && string.IsNullOrEmpty(w.Engineer)) ||
                 w.Scientist == w.Engineer || !Finite(w.StartUT) || w.StartUT < 0 ||
                 !Finite(w.EndUT) || w.EndUT < w.StartUT)) return false;
             var scientistNames = new HashSet<string>(work.Select(w => w.Scientist), StringComparer.Ordinal);
-            var engineerNames = new HashSet<string>(work.Where(w => w.RequiresEngineer).Select(w => w.Engineer), StringComparer.Ordinal);
+            var engineerNames = new HashSet<string>(work.Where(w => w.IncludeOptionalEngineer).Select(w => w.Engineer), StringComparer.Ordinal);
             if (scientistNames.Overlaps(engineerNames)) return false;
             var windows = new Dictionary<string, List<KaffeinatedWindow>>(StringComparer.Ordinal);
             var purchases = new Dictionary<string, int>(StringComparer.Ordinal);
@@ -67,10 +67,10 @@ namespace ShoAerospace.Koffee
                     if (interval.StartUT > cursor) { next = Math.Min(next, interval.StartUT); continue; }
                     if (interval.EndUT <= cursor) continue;
                     next = Math.Min(next, interval.EndUT);
-                    double ready = interval.RequiresEngineer ? Math.Max(NextStart(windows[interval.Scientist], cursor),
+                    double ready = interval.IncludeOptionalEngineer ? Math.Max(NextStart(windows[interval.Scientist], cursor),
                         NextStart(windows[interval.Engineer], cursor)) : NextStart(windows[interval.Scientist], cursor);
                     if (ready > cursor) { next = Math.Min(next, ready); continue; }
-                    foreach (string name in interval.RequiresEngineer ? new[] { interval.Scientist, interval.Engineer } : new[] { interval.Scientist })
+                    foreach (string name in interval.IncludeOptionalEngineer ? new[] { interval.Scientist, interval.Engineer } : new[] { interval.Scientist })
                     {
                         KaffeinatedWindow? active = At(windows[name], cursor);
                         if (!active.HasValue)

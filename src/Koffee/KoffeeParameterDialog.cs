@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using HarmonyLib;
 using UnityEngine;
 
@@ -52,7 +53,22 @@ namespace ShoAerospace.Koffee
             var edited = AccessTools.Field(typeof(DifficultyOptionsMenu), "gPars").GetValue(menu) as GameParameters;
             var backup = AccessTools.Field(typeof(DifficultyOptionsMenu), "backupPars").GetValue(menu) as GameParameters;
             if (!ReferenceEquals(edited, HighLogic.CurrentGame.Parameters) || backup == null) return;
-            edited!.CustomParams<KoffeeGameParameters>().Accept(backup.CustomParams<KoffeeGameParameters>(), Planetarium.GetUniversalTime());
+            double now = Planetarium.GetUniversalTime();
+            edited!.CustomParams<KoffeeGameParameters>().Accept(backup.CustomParams<KoffeeGameParameters>(), now);
+            bool komfortChanged = !edited.CustomParams<KomfortGameParameters>().Current.Equals(backup.CustomParams<KomfortGameParameters>().Current);
+            edited.CustomParams<KomfortGameParameters>().Accept(backup.CustomParams<KomfortGameParameters>(), now);
+            bool deadlyChanged = !edited.CustomParams<DeadlyGameParameters>().Current.Equals(backup.CustomParams<DeadlyGameParameters>().Current);
+            edited.CustomParams<DeadlyGameParameters>().Accept(backup.CustomParams<DeadlyGameParameters>(), now);
+            bool linkChanged = edited.Difficulty.EnableCommNet != backup.Difficulty.EnableCommNet;
+            if (!komfortChanged && !deadlyChanged && !linkChanged) return;
+            foreach (Vessel vessel in FlightGlobals.Vessels.ToArray())
+            {
+                if (vessel == null) continue;
+                if (linkChanged) KomfortRuntime.HomeRuleChanged(vessel, now);
+                if (vessel.loaded) StationExperimentRuntime.Tick(vessel, now);
+                else StationExperimentBackground.Tick(vessel, now);
+                if (deadlyChanged || komfortChanged) DeadlyScenario.SettingsChanged(vessel, now);
+            }
         }
     }
 }

@@ -32,6 +32,10 @@ namespace ShoAerospace.Koffee
                 Type state = RequireType(assembly, Namespace + "VesselState");
                 RequireMethod(processor, "UpdateBackgroundState", typeof(void));
                 RequireMethod(processor, "MarkDirty", typeof(void));
+                RequireMethod(RequireType(assembly, Namespace + "Converter.BackgroundGenericConverter"), "GetBehaviour",
+                    RequireType(assembly, Namespace + "Converter.ModuleBehaviour"), typeof(PartModule));
+                RequireProperty(RequireType(assembly, Namespace + "ConverterResources"), "Outputs",
+                    typeof(System.Collections.Generic.List<ResourceRatio>));
                 RequireMethod(behaviour, "GetResources",
                     RequireType(assembly, Namespace + "ConverterResources"), state);
                 RequireField(change, "LastChangepoint", typeof(double));

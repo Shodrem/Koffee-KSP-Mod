@@ -22,7 +22,7 @@ namespace ShoAerospace.Koffee
         public void Update()
         {
             if (part == null) return;
-            dbsEditorDemand = StationElectricalDemand.Editor(part);
+            if (HighLogic.LoadedSceneIsEditor) dbsEditorDemand = StationElectricalDemand.Editor(part);
             if (HighLogic.LoadedSceneIsFlight && vessel?.loaded == true && StationDbsIntegration.Active)
             {
                 // One read-only refresh per vessel/render frame, regardless of
@@ -86,6 +86,7 @@ namespace ShoAerospace.Koffee
         private readonly Vessel vessel;
         private readonly object? proto;
         private readonly Dictionary<Part, List<Range>> paid = new Dictionary<Part, List<Range>>();
+        private readonly Dictionary<Part, List<Range>> servicePaid = new Dictionary<Part, List<Range>>();
         private double lastUT;
         private string topology = "";
         internal StationStockPower(PartModule manager, bool applies)
@@ -103,7 +104,7 @@ namespace ShoAerospace.Koffee
             return value;
         }
 
-        internal static void Clear() { sessions.Clear(); StationPowerDiagnostics.Clear(); }
+        internal static void Clear() { sessions.Clear(); }
         internal static void Forget(Vessel vessel) => sessions.Remove(vessel.id);
         internal static StationStockPower For(PartModule context, bool applies, double now)
         {
@@ -122,7 +123,7 @@ namespace ShoAerospace.Koffee
                 .Select(m => m.State!.LastCheckpointUT ?? now).DefaultIfEmpty(now).Min();
             floor = Math.Min(floor, StationLaboratoryPower.RetentionFloor(vessel, now));
             // A second route may request the same endpoint in this physics tick.
-            foreach (var history in session.paid.Values) history.RemoveAll(r => r.End < floor);
+            foreach (var history in session.paid.Values.Concat(session.servicePaid.Values)) history.RemoveAll(r => r.End < floor);
             return session;
         }
 
@@ -146,10 +147,15 @@ namespace ShoAerospace.Koffee
         internal Transaction BeginLaboratory(Part laboratory, PartModule caller) =>
             new Transaction(this, new Dictionary<Part, double> { [laboratory] = Rate(laboratory, true) }, caller);
 
+        internal Transaction BeginService(Part part, double rate, PartModule caller) =>
+            new Transaction(this, new Dictionary<Part, double> { [part] = rate }, caller, service: true);
+
         internal readonly struct Range
         {
             internal readonly double Start, End, Rate;
-            internal Range(double start, double end, double rate = 0) { Start = start; End = end; Rate = rate; }
+            internal readonly bool Nominal;
+            internal Range(double start, double end, double rate = 0, bool nominal = false)
+            { Start = start; End = end; Rate = rate; Nominal = nominal; }
             internal bool Contains(double ut) => Start <= ut && ut < End;
         }
 
@@ -158,13 +164,24 @@ namespace ShoAerospace.Koffee
             private readonly StationStockPower owner;
             private readonly PartModule context;
             private readonly Dictionary<Part, double> consumers;
+            private readonly Dictionary<Part, List<Range>> payments;
             private readonly List<Range> ranges = new List<Range>();
             private readonly List<KeyValuePair<PartResource, double>> debits = new List<KeyValuePair<PartResource, double>>();
             private bool committed;
+            private readonly string engineer;
+            private readonly double engineerSince;
+            private readonly EngineeringProcessingLease engineering = new EngineeringProcessingLease();
+            private readonly bool service;
+            private readonly List<EngineeringPowerDiagnostics.Sample> samples = new List<EngineeringPowerDiagnostics.Sample>();
             internal bool Blocked { get; private set; }
             internal bool ControlsWork => consumers.Values.Any(rate => rate > 0);
-            internal Transaction(StationStockPower owner, Dictionary<Part, double> consumers, PartModule context)
-            { this.owner = owner; this.consumers = consumers; this.context = context; }
+            internal Transaction(StationStockPower owner, Dictionary<Part, double> consumers, PartModule context, bool service = false)
+            {
+                this.owner = owner; this.consumers = consumers; this.context = context; this.service = service;
+                payments = service ? owner.servicePaid : owner.paid;
+                var manager = service ? null : ExperimentManagerService.Select(owner.vessel, Planetarium.GetUniversalTime(), false, out _, true);
+                engineer = manager?.EngineerName ?? ""; engineerSince = manager?.ValidSince ?? double.PositiveInfinity;
+            }
 
             internal double Authorize(double from, double to)
             {
@@ -180,21 +197,38 @@ namespace ShoAerospace.Koffee
                 double cursor = from;
                 while (cursor < to)
                 {
-                    double end = to, rate = 0;
+                    double factor = 1;
+                    if (!string.IsNullOrEmpty(engineer) && cursor >= engineerSince && KomfortRuntime.Continuous(owner.vessel, cursor, to))
+                    {
+                        factor = EngineeringContribution.ManagementFactor(owner.vessel, engineer, cursor);
+                        var worker = owner.vessel.GetVesselCrew().FirstOrDefault(c => c.name == engineer);
+                        if (worker != null && consumers.Values.Any(rate => rate > 0) && KerbalSpecialtyScenario.TryGetEngineerProfile(engineer, out var profile) &&
+                            EngineeringSettingsLoader.Current.Contribution(profile.Score(EngineeringAffinity.Systems), true, KomfortRuntime.At(owner.vessel, cursor)) >
+                            EngineeringSettingsLoader.Current.Contribution(profile.Score(EngineeringAffinity.Systems), false, KomfortRuntime.At(owner.vessel, cursor)))
+                            foreach (var window in EngineeringRenewalCoordinator.CaptureWindows(worker).Where(w => w.Contains(cursor)))
+                                EngineeringRenewalCoordinator.Observe(worker, window, engineering);
+                    }
+                    // Service tariffs have no engineer discount. Their wear and
+                    // repair boundaries are already split by KomfortRuntime.
+                    double end = service ? to : Math.Min(to, EngineeringContribution.NextBoundary(owner.vessel, engineer, cursor));
+                    double rate = 0;
+                    if (engineerSince > cursor) end = Math.Min(end, engineerSince);
                     foreach (var consumer in consumers)
                     {
                         double covered = 0;
-                        if (owner.paid.TryGetValue(consumer.Key, out var history))
+                        if (payments.TryGetValue(consumer.Key, out var history))
                             foreach (Range range in history)
                             {
-                                if (range.Contains(cursor)) covered = Math.Max(covered, range.Rate);
+                                if (range.Contains(cursor)) covered = Math.Max(covered, range.Nominal ? range.Rate * factor : range.Rate);
                                 if (range.Start > cursor) end = Math.Min(end, range.Start);
                                 if (range.End > cursor) end = Math.Min(end, range.End);
                             }
-                        rate += Math.Max(0, consumer.Value - covered);
+                        rate += Math.Max(0, consumer.Value * factor - covered);
                     }
-                    double seconds = Process(end - cursor, rate);
-                    if (seconds > 0) ranges.Add(new Range(cursor, cursor + seconds));
+                    bool variable = !service && !string.IsNullOrEmpty(engineer) && cursor >= engineerSince &&
+                        KomfortRuntime.Variable(owner.vessel, cursor, end) && factor < 1;
+                    double seconds = Process(end - cursor, variable ? rate / factor : rate, factor, cursor, variable);
+                    if (seconds > 0) ranges.Add(new Range(cursor, cursor + seconds, variable ? 1 : factor, variable));
                     cursor += seconds;
                     if (cursor + 1e-9 < end) { Blocked = true; break; }
                     cursor = end;
@@ -202,7 +236,7 @@ namespace ShoAerospace.Koffee
                 return cursor - from;
             }
 
-            private double Process(double seconds, double rate)
+            private double Process(double seconds, double rate, double factor, double start, bool variable)
             {
                 if (!ExperimentContainerState.Finite(rate) || rate < 0)
                     throw new InvalidOperationException("Invalid total Koffee electrical rate.");
@@ -218,15 +252,32 @@ namespace ShoAerospace.Koffee
                     var recipe = new ConversionRecipe();
                     recipe.Inputs.Add(new ResourceRatio("ElectricCharge", rate, false, definition.resourceFlowMode));
                     var broker = StationDbsIntegration.Active ? new StationDbsResourceBroker() : null;
-                    var converter = broker == null ? new ResourceConverter() : new ResourceConverter(broker);
-                    double authorized = converter.ProcessRecipe(seconds, recipe, context.part, context, 1f).TimeFactor;
-                    if (broker != null)
+                    var weighted = variable ? new KomfortVariablePowerBroker(broker ?? (IResourceBroker)new ResourceBroker(), rate, seconds,
+                        work => rate * work * (1 - EngineeringContribution.AverageSavings(owner.vessel, engineer, EngineeringAffinity.Systems, start, start + work))) : null;
+                    var converter = weighted != null ? new ResourceConverter(weighted) : broker == null ? new ResourceConverter() : new ResourceConverter(broker);
+                    double authorized;
+                    EngineeringPowerDiagnostics.Sample? reading = null;
+                    if (EngineeringPowerDiagnostics.Enabled && !service)
+                    {
+                        var reference = new ConversionRecipe(); reference.Inputs.Add(new ResourceRatio("ElectricCharge", rate / factor, false, definition.resourceFlowMode));
+                        bool coffee = EngineeringContribution.CoffeeAt(owner.vessel, engineer, start);
+                        int score = KerbalSpecialtyScenario.TryGetEngineerProfile(engineer, out var profile) ? profile.Score(EngineeringAffinity.Systems) : 0;
+                        reading = EngineeringPowerDiagnostics.Begin(reference, recipe, context.part, context, start, start + seconds, 1,
+                            "systems-unpaid-shared-group:" + string.Join(",", consumers.Keys.Select(p => p.flightID)), engineer, EngineeringAffinity.Systems, score,
+                            owner.vessel.GetVesselCrew().FirstOrDefault(c => c.name == engineer)?.experienceLevel ?? -1, coffee, KomfortRuntime.At(owner.vessel, start), 1 - factor);
+                    }
+                    using (var sample = reading)
+                    {
+                        if (sample != null) { sample.Deferred = true; samples.Add(sample); }
+                        authorized = converter.ProcessRecipe(seconds, recipe, context.part, context, 1f).TimeFactor;
+                        sample?.Complete(authorized);
+                    }
+                    if (weighted != null) authorized = Math.Min(authorized, weighted.Accepted);
+                    else if (broker != null)
                     {
                         // ProcessRecipe limits on availability but does not use the
                         // debit return value to revise TimeFactor. Credit only paid EC.
                         authorized = Math.Min(authorized, broker.Received / rate);
-                        StationPowerDiagnostics.Report(context, seconds, rate, broker.Requested, broker.Received,
-                            authorized, before.Keys.Sum(r => r.maxAmount));
                     }
                     if (!ExperimentContainerState.Finite(authorized) || authorized < 0 || authorized > seconds + 1e-8)
                         throw new InvalidOperationException("Stock returned invalid electrical seconds.");
@@ -245,16 +296,21 @@ namespace ShoAerospace.Koffee
                 if (committed) return;
                 foreach (var consumer in consumers)
                 {
-                    if (!owner.paid.TryGetValue(consumer.Key, out var history)) owner.paid.Add(consumer.Key, history = new List<Range>());
-                    history.AddRange(ranges.Select(range => new Range(range.Start, range.End, consumer.Value)));
+                    if (!payments.TryGetValue(consumer.Key, out var history)) payments.Add(consumer.Key, history = new List<Range>());
+                    history.AddRange(ranges.Select(range => new Range(range.Start, range.End, consumer.Value * range.Rate, range.Nominal)));
                 }
                 committed = true;
+                if (ranges.Count > 0) engineering.MarkProgress();
+                engineering.Complete(null);
+                foreach (var sample in samples) sample.Report("committed-research-billing-group");
             }
             public void Dispose()
             {
                 if (committed) return;
+                engineering.Cancel();
                 foreach (var debit in debits) debit.Key.amount += debit.Value;
                 debits.Clear();
+                foreach (var sample in samples) sample.Report("rollback-refunded-by-existing-transaction");
             }
         }
     }

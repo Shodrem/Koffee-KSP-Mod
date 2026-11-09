@@ -11,6 +11,7 @@ namespace ShoAerospace.Koffee
         private static KerbalSpecialtyScenario? current;
         private KerbalSpecialtyPersistence persistence = new KerbalSpecialtyPersistence(new ScientistSpecialtyGenerator());
         private ScientistLevelPersistence levels = new ScientistLevelPersistence();
+        private EngineerAffinityPersistence engineering = new EngineerAffinityPersistence(new EngineerAffinityGenerator());
         private Game? owner;
         private bool reconciliationPending;
         private bool subscribed;
@@ -22,6 +23,7 @@ namespace ShoAerospace.Koffee
             owner = HighLogic.CurrentGame;
             persistence = new KerbalSpecialtyPersistence(new ScientistSpecialtyGenerator());
             levels = new ScientistLevelPersistence();
+            engineering = new EngineerAffinityPersistence(new EngineerAffinityGenerator());
             reconciliationPending = true;
             if (!subscribed)
             {
@@ -37,6 +39,7 @@ namespace ShoAerospace.Koffee
             owner = HighLogic.CurrentGame;
             foreach (string diagnostic in persistence.Load(node)) Debug.LogWarning("[Koffee] " + diagnostic);
             foreach (string diagnostic in levels.Load(node)) Debug.LogWarning("[Koffee] " + diagnostic);
+            foreach (string diagnostic in engineering.Load(node)) Debug.LogWarning("[Koffee] " + diagnostic);
             // Seed the previous level as soon as a real loaded roster is available.
             // Use the loaded game's UT: Planetarium may still belong to the old scene.
             // Profile generation remains deferred until reconciliation.
@@ -60,6 +63,7 @@ namespace ShoAerospace.Koffee
                 if (crew != null)
                 {
                     persistence.EnsureScientistProfile(crew.name, crew.trait, out _);
+                    engineering.EnsureEngineerProfile(crew.name, crew.trait, out _);
                     ObserveLevel(crew, false);
                 }
             reconciliationPending = false;
@@ -73,6 +77,7 @@ namespace ShoAerospace.Koffee
             if (owner.CrewRoster.Exists(crew.name) && ReferenceEquals(owner.CrewRoster[crew.name], crew))
             {
                 persistence.EnsureScientistProfile(crew.name, crew.trait, out _);
+                    engineering.EnsureEngineerProfile(crew.name, crew.trait, out _);
                 ObserveLevel(crew, false);
             }
         }
@@ -113,6 +118,7 @@ namespace ShoAerospace.Koffee
             Reconcile();
             persistence.Save(node);
             levels.Save(node);
+            engineering.Save(node);
         }
 
         internal static bool TryGetScientistProfile(string? name, out ScientistSpecialtyProfile profile)
@@ -121,6 +127,14 @@ namespace ShoAerospace.Koffee
             return current != null && current.persistence.IsLoaded && current.owner != null &&
                 ReferenceEquals(current.owner, HighLogic.CurrentGame) &&
                 current.persistence.TryGetScientistProfile(name, out profile);
+        }
+
+        internal static bool TryGetEngineerProfile(string? name, out EngineerAffinityProfile profile)
+        {
+            profile = null!;
+            return current != null && current.engineering.IsLoaded && current.owner != null &&
+                ReferenceEquals(current.owner, HighLogic.CurrentGame) &&
+                current.engineering.TryGetEngineerProfile(name, out profile);
         }
 
         // Shared read-only boundary source for the later live/proto research runtimes.

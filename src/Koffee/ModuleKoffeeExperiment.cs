@@ -62,11 +62,14 @@ namespace ShoAerospace.Koffee
 
         private ExperimentContainerState? state;
         private ConfigNode? incompatibleState;
+        [KSPField(isPersistant = true)] public uint responsibleManagerId;
+        [KSPField(isPersistant = true)] public string responsibleEngineer = "";
+        private double nextReportDelivery;
         private ScienceData? scienceData;
         private ExperimentsResultDialog? resultsDialog;
         private bool diagnosticLogged;
         private bool checkpointRebasePending;
-        // Temporary personnel diagnostics: remove after the intermittent PAW issue is captured.
+        // Temporary personnel trace is excluded unless explicitly enabled at build time.
         private string personnelTraceSnapshot = "";
 
         internal bool ElectricityBlocked;
@@ -212,6 +215,15 @@ namespace ShoAerospace.Koffee
         {
             if (!HighLogic.LoadedSceneIsFlight || vessel == null || !vessel.loaded) return;
             EnsureRegistered();
+            if (scienceData != null && state?.Status == ExperimentContainerStatus.Finalized && !ScienceReportPolicy.Physical(this) &&
+                UnityEngine.Time.realtimeSinceStartup >= nextReportDelivery)
+            {
+                nextReportDelivery = UnityEngine.Time.realtimeSinceStartup + 2;
+                var responsible = ExperimentManagerService.Managers(vessel).FirstOrDefault(m => m.part.persistentId == responsibleManagerId &&
+                    m.assignedEngineer == responsibleEngineer && vessel.GetVesselCrew().Any(c => c.name == responsibleEngineer && ExperimentManagerService.ValidEngineer(c)));
+                var receiver = responsible?.part.FindModuleImplementing<ModuleKoffeeScienceStore>();
+                if (receiver != null) ScienceReportTransfer.Move(new[] { (IScienceDataContainer)this }, receiver, scienceData, false);
+            }
             RefreshReviewEvent();
             // Observe departures every frame, even between research ticks. Returning
             // cannot turn the unobserved interval into research credit.
@@ -228,7 +240,7 @@ namespace ShoAerospace.Koffee
                         manuallyPaused ? StationExperimentPauseReason.ManuallyPaused : environment);
                 }
             }
-            StationExperimentRuntimeSnapshot? current = StationExperimentRuntime.Capture(vessel)
+            StationExperimentRuntimeSnapshot? current = StationExperimentRuntime.Capture(vessel, this)
                 .FirstOrDefault(e => ReferenceEquals(e.Module, this));
             if (current?.State?.Status == ExperimentContainerStatus.Running && !current.WorkComplete &&
                 current.PauseReason != StationExperimentPauseReason.None &&
@@ -332,6 +344,7 @@ namespace ShoAerospace.Koffee
             return true;
         }
 
+        [System.Diagnostics.Conditional("KOFFEE_PERSONNEL_DIAGNOSTICS")]
         private void TracePersonnelSelector(string observedCandidate, StationScientistCandidate[] candidates)
         {
             try
@@ -354,6 +367,7 @@ namespace ShoAerospace.Koffee
             "; lab=" + state?.AssignedLaboratoryPersistentId +
             "; slot=" + state?.AssignedLaboratorySlot + "; paused=" + manuallyPaused;
 
+        [System.Diagnostics.Conditional("KOFFEE_PERSONNEL_DIAGNOSTICS")]
         private void TracePersonnel(string action, string details, bool includePeers)
         {
             try
@@ -547,6 +561,7 @@ namespace ShoAerospace.Koffee
             StationEquipmentContinuity.Observe(state, definition, vessel, part, StationExperimentEquipment.Capture(vessel));
             checkpointRebasePending = false;
             manuallyPaused = false;
+            KoffeeLonapse.ExperimentStarted(this);
             return true;
         }
 
@@ -666,7 +681,7 @@ namespace ShoAerospace.Koffee
 
         public void DumpData(ScienceData data)
         {
-            if (!ReferenceEquals(data, scienceData)) return;
+            if (!ReferenceEquals(data, scienceData) || ScienceReportPolicy.Physical(this)) return;
             MarkExtracted("StockTransfer", Planetarium.GetUniversalTime());
         }
 
@@ -701,6 +716,7 @@ namespace ShoAerospace.Koffee
         private void TransmitResult(ScienceData data)
         {
             if (!ReferenceEquals(data, scienceData) || !CanReview()) return;
+            if (ScienceReportPolicy.Physical(this)) { ScienceReportUI.Message("PhysicalRecovery"); return; }
             IScienceDataTransmitter? transmitter = ScienceUtil.GetBestTransmitter(vessel);
             if (transmitter == null)
             {
@@ -718,30 +734,10 @@ namespace ShoAerospace.Koffee
         private void SendResultToLab(ScienceData data)
         {
             if (!ReferenceEquals(data, scienceData) || !CanReview()) return;
-            if (!(data.labValue > 0f))
-            {
-                resultsDialog = null;
-                RefreshReviewEvent();
-                return;
-            }
-            var search = new ScienceLabSearch(vessel, data);
-            if (!search.NextLabForDataFound)
-            {
-                search.PostErrorToScreen();
-                resultsDialog = null;
-                RefreshReviewEvent();
-                return;
-            }
-            ModuleScienceLab lab = search.NextLabForData;
-            float dataStoredBefore = lab.dataStored;
+            if (ScienceReportPolicy.Physical(this)) { ScienceReportUI.Message("PhysicalRecovery"); return; }
             resultsDialog = null;
+            ScienceReportPatches.SendToLab(this, data);
             RefreshReviewEvent();
-            StartCoroutine(lab.ProcessData(data, accepted =>
-            {
-                if (ReferenceEquals(accepted, data) && ReferenceEquals(data, scienceData) &&
-                    data.labValue > 0f && lab.dataStored > dataStoredBefore)
-                    MarkExtracted("MobileProcessingLab", Planetarium.GetUniversalTime());
-            }));
         }
 
         private void MarkExtracted(string kind, double now)

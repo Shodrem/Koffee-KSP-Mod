@@ -42,7 +42,7 @@ namespace ShoAerospace.Koffee
         internal static void AfterSetTooltip(TooltipController_CrewAC __instance, ProtoCrewMember __0)
         {
             stock.Remove(__instance);
-            if (__0 == null || __0.trait != ScientistSpecialtyProfile.ProfessionId) return;
+            if (__0 == null || (__0.trait != ScientistSpecialtyProfile.ProfessionId && __0.trait != "Engineer")) return;
             var original = new StockTooltip(__0, __instance);
             stock.Add(__instance, original);
             Refresh(__instance, original);
@@ -61,7 +61,7 @@ namespace ShoAerospace.Koffee
                 bool show = original.Show;
                 // A reused UI object must never display another game's profile with the same name.
                 if (original.Game != null && ReferenceEquals(original.Game, HighLogic.CurrentGame) &&
-                    original.Crew.trait == ScientistSpecialtyProfile.ProfessionId)
+                    (original.Crew.trait == ScientistSpecialtyProfile.ProfessionId || original.Crew.trait == "Engineer"))
                 {
                     string lines = KoffeeResearchDisplay.Specialties(null);
                     if (KerbalSpecialtyScenario.TryGetScientistProfile(original.Crew.name, out var profile))
@@ -71,6 +71,7 @@ namespace ShoAerospace.Koffee
                             Localizer.Format("#Koffee_Research_TooltipSecondary",
                             KoffeeResearchDisplay.Category(profile.SecondaryCategory),
                             profile.Score(profile.SecondaryCategory).ToString(CultureInfo.InvariantCulture));
+                    if (original.Crew.trait == "Engineer") lines = EngineeringDisplay.Tooltip(original.Crew.name);
                     description = string.IsNullOrEmpty(description) ? lines : description + "\n\n" + lines;
                     // Affinities also exist in Sandbox / with stock experience disabled.
                     show = true;

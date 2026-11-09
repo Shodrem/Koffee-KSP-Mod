@@ -7,7 +7,7 @@ namespace ShoAerospace.Koffee
 {
     internal static class StationElectricalDemand
     {
-        internal static double Editor(Part part) => Math.Max(StationStockPower.Rate(part), StationStockPower.Rate(part, true));
+        internal static double Editor(Part part) => Math.Max(StationStockPower.Rate(part), StationStockPower.Rate(part, true)) + KomfortRuntime.ServiceRate(part, true);
 
         // Read-only current intent, never received EC or a historical average.
         // The same consumer map is used to charge, including physical-part dedup.
@@ -20,18 +20,25 @@ namespace ShoAerospace.Koffee
             if (manager?.Part != null)
             {
                 var context = manager.Part.Modules.OfType<ModuleKoffeeExperimentManager>().First();
-                foreach (var snapshot in StationExperimentRuntime.Capture(vessel))
+                foreach (var snapshot in StationExperimentRuntime.Capture(vessel, includeCandidates: false))
                 {
                     if (!snapshot.Module.ElectricalWorkReady || snapshot.State?.Status != ExperimentContainerStatus.Running || snapshot.WorkComplete ||
                         snapshot.Definition == null || snapshot.Reservation == null ||
                         (snapshot.PauseReason != StationExperimentPauseReason.None && snapshot.PauseReason != StationExperimentPauseReason.NoElectricity)) continue;
                     foreach (var entry in StationStockPower.Consumers(context, snapshot.Module, snapshot.Definition,
-                        snapshot.Reservation.Value.Laboratory.part)) Add(demand, entry.Key, entry.Value);
+                        snapshot.Reservation.Value.Laboratory.part)) Add(demand, entry.Key, entry.Value * EngineeringContribution.ManagementFactor(vessel, manager.EngineerName, now, true));
                 }
             }
             foreach (Part part in vessel.parts.Where(p => p != null && p.State != PartStates.DEAD))
                 if (part.Modules.OfType<ModuleKoffeeLab>().Any(l => l.NativePowerActive()))
-                    Add(demand, part, StationStockPower.Rate(part, true));
+                    Add(demand, part, StationStockPower.Rate(part, true) * (manager == null ? 1 :
+                        EngineeringContribution.ManagementFactor(vessel, manager.EngineerName, now, true)));
+            bool hasCrew = vessel.GetVesselCrew().Count > 0;
+            foreach (Part part in vessel.parts.Where(p => p != null && p.State != PartStates.DEAD))
+            {
+                double service = KomfortRuntime.ServiceRate(part, hasCrew: hasCrew);
+                if (service > 0) demand[part] = (demand.TryGetValue(part, out double rate) ? rate : 0) + service;
+            }
             return demand;
         }
 
@@ -44,27 +51,10 @@ namespace ShoAerospace.Koffee
             foreach (Part part in vessel.parts.Where(p => p != null))
                 foreach (var marker in part.Modules.OfType<ModuleKoffeePowerConsumer>())
                 {
-                    marker.dbsEditorDemand = Editor(part);
+                    if (HighLogic.LoadedSceneIsEditor) marker.dbsEditorDemand = Editor(part);
                     marker.dbsFlightDemand = demand.TryGetValue(part, out double rate) ? rate : 0;
                 }
         }
     }
 
-    internal static class StationPowerDiagnostics
-    {
-        private static readonly Dictionary<Guid, float> next = new Dictionary<Guid, float>();
-        internal static void Clear() => next.Clear();
-        internal static void Report(PartModule context, double seconds, double rate, double requested,
-            double withdrawn, double authorized, double capacity)
-        {
-            if (!StationPowerPolicy.HighWarp || !StationDbsIntegration.Active) return;
-            float now = Time.realtimeSinceStartup;
-            if (next.TryGetValue(context.vessel.id, out float at) && now < at) return;
-            next[context.vessel.id] = now + 5;
-            Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                "[Koffee][Power] UT={0:R} vessel={1} loaded={2} packed={3} warp={4}/{5} step={6:R}s demand={7:R}EC/s requested={8:R}EC withdrawn={9:R}EC capacityWithBuffer={10:R}EC authorized={11:R}s (provisional until publication)",
-                Planetarium.GetUniversalTime(), context.vessel.id, context.vessel.loaded, context.vessel.packed,
-                TimeWarp.WarpMode, TimeWarp.CurrentRate, seconds, rate, requested, withdrawn, capacity, authorized));
-        }
-    }
 }

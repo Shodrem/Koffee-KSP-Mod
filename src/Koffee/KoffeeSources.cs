@@ -18,6 +18,29 @@ namespace ShoAerospace.Koffee
             return sources;
         }
 
+        // EVA maintenance draws from one real container on the serviced vessel.
+        // Distance takes precedence over stock resource priority for this manual cup.
+        internal static List<IResourceAccount> NearestMaintenanceCup(Part target, UnityEngine.Vector3 position)
+        {
+            var result = new List<IResourceAccount>();
+            var definition = PartResourceLibrary.Instance.GetDefinition(KoffeeIdentifiers.ResourceName);
+            if (definition == null || target?.vessel?.loaded != true) return result;
+            Part? nearest = null;
+            PartResource? selected = null;
+            float distance = float.PositiveInfinity;
+            foreach (Part source in target.vessel.parts)
+            {
+                if (source == null || source.State == PartStates.DEAD) continue;
+                PartResource? resource = Accessible(source, source, definition);
+                if (resource == null || ResourcePayment.WholeCups(resource.amount, true) < KoffeeSettingsLoader.Current.ActivationCost) continue;
+                float candidate = UnityEngine.Vector3.Distance(position, source.transform.position);
+                if (candidate < distance || (candidate == distance && (nearest == null || source.flightID < nearest.flightID)))
+                { nearest = source; selected = resource; distance = candidate; }
+            }
+            if (nearest != null && selected != null) result.Add(new Account(nearest, nearest, selected, definition));
+            return result;
+        }
+
         private static PartResource? Accessible(Part consumer, Part source, PartResourceDefinition definition) =>
             consumer.CanCrossfeed(source, definition.id, definition.resourceFlowMode)
                 ? source.Resources.GetFlowing(definition.id, true) : null;

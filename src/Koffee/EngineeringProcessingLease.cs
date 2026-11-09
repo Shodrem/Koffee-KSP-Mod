@@ -7,10 +7,8 @@ namespace ShoAerospace.Koffee
     {
         private readonly HashSet<EngineeringRenewalCoordinator.PendingRenewal> reservations =
             new HashSet<EngineeringRenewalCoordinator.PendingRenewal>();
-        private EngineeringDiagnosticSample? diagnostic;
         private bool progressed;
         private bool settled;
-        private double timeFactor;
 
         internal bool Attach(EngineeringRenewalCoordinator.PendingRenewal reservation) =>
             reservations.Add(reservation);
@@ -18,11 +16,8 @@ namespace ShoAerospace.Koffee
         internal IEnumerable<EngineeringRenewalCoordinator.PendingRenewal> Reservations() =>
             reservations;
 
-        internal void SetDiagnostic(EngineeringDiagnosticSample sample) => diagnostic = sample;
-
         internal void Observe(double observedTimeFactor)
         {
-            timeFactor = observedTimeFactor;
             if (observedTimeFactor > 1e-9 && EngineeringMath.Finite(observedTimeFactor))
                 progressed = true;
         }
@@ -34,8 +29,6 @@ namespace ShoAerospace.Koffee
             if (settled) return;
             settled = true;
             EngineeringRenewalCoordinator.Release(this, progressed, error != null);
-            if (diagnostic.HasValue)
-                EngineeringDiagnostics.Report(diagnostic.Value, progressed, timeFactor, error);
         }
 
         internal void Cancel()

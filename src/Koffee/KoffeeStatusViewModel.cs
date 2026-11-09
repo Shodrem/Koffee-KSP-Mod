@@ -9,6 +9,11 @@ namespace ShoAerospace.Koffee
         internal readonly string Name;
         internal readonly string Profession;
         internal readonly double RemainingSeconds;
+        internal readonly int Level;
+        internal readonly string RosterState;
+        internal readonly KoffeeScientistStatus? Scientist;
+        internal readonly bool IsEngineer;
+        internal readonly double? HealthFraction;
 
         internal bool IsKaffeinated => RemainingSeconds > 0;
 
@@ -17,11 +22,31 @@ namespace ShoAerospace.Koffee
             Name = name;
             Profession = profession;
             RemainingSeconds = remainingSeconds;
+            Level = 0;
+            RosterState = "";
+            Scientist = null;
+            IsEngineer = false;
+            HealthFraction = null;
+        }
+
+        internal KoffeeCrewStatus(ProtoCrewMember crew, string vesselName, double remainingSeconds = 0,
+            double? healthFraction = null)
+        {
+            HealthFraction = healthFraction;
+            Name = crew.name ?? "";
+            Profession = KoffeeCrewDisplay.Profession(crew);
+            RemainingSeconds = remainingSeconds;
+            Level = crew.experienceLevel;
+            RosterState = crew.rosterStatus.ToString();
+            IsEngineer = crew.trait == "Engineer" && crew.type == ProtoCrewMember.KerbalType.Crew;
+            Scientist = crew.trait == ScientistSpecialtyProfile.ProfessionId && crew.type == ProtoCrewMember.KerbalType.Crew
+                ? new KoffeeScientistStatus(crew, vesselName) : null;
         }
     }
 
     internal sealed class KoffeeStatusSnapshot
     {
+        internal Game? Game { get; }
         internal bool HasActiveVessel { get; }
         internal Guid VesselId { get; }
         internal string VesselName { get; }
@@ -36,6 +61,11 @@ namespace ShoAerospace.Koffee
         internal string EngineerName { get; }
         internal double EngineerCoverage { get; }
         internal double ActivationCost { get; }
+        internal KomfortStatus Komfort { get; }
+        internal double? AirFraction { get; }
+        internal bool AirLastKnown { get; }
+        internal KoffeeEditorKomfort? EditorKomfort { get; }
+        internal IReadOnlyList<KoffeeEditorCrew> EditorCrew { get; }
 
         internal KoffeeStatusSnapshot(bool hasActiveVessel,
             IReadOnlyList<KoffeeCrewStatus> crew, double availableCups,
@@ -44,8 +74,11 @@ namespace ShoAerospace.Koffee
             IReadOnlyList<KoffeeScientistStatus>? scientists = null,
             StationSupplyEstimate? supply = null, string engineerName = "",
             double engineerCoverage = 0, double activationCost = 1,
-            Guid vesselId = default, string vesselName = "", string body = "", string situation = "")
+            Guid vesselId = default, string vesselName = "", string body = "", string situation = "",
+            KomfortStatus komfort = default, KoffeeEditorKomfort? editorKomfort = null, IReadOnlyList<KoffeeEditorCrew>? editorCrew = null,
+            double? airFraction = null, bool airLastKnown = false)
         {
+            Game = HighLogic.CurrentGame;
             HasActiveVessel = hasActiveVessel;
             VesselId = vesselId;
             VesselName = vesselName;
@@ -60,6 +93,11 @@ namespace ShoAerospace.Koffee
             EngineerName = engineerName;
             EngineerCoverage = engineerCoverage;
             ActivationCost = activationCost;
+            Komfort = komfort;
+            AirFraction = airFraction;
+            AirLastKnown = airLastKnown;
+            EditorKomfort = editorKomfort;
+            EditorCrew = editorCrew ?? Array.Empty<KoffeeEditorCrew>();
         }
     }
 
@@ -76,20 +114,22 @@ namespace ShoAerospace.Koffee
                 .Select(c => new KoffeeScientistStatus(c, assignments.TryGetValue(c.name, out string? name) ? name : ""))
                 .ToArray() ?? Array.Empty<KoffeeScientistStatus>();
             var noVessel = new KoffeeStatusSnapshot(false, Array.Empty<KoffeeCrewStatus>(), 0,
-                scientists: scientists);
+                scientists: scientists, editorKomfort: HighLogic.LoadedSceneIsEditor ? KoffeeEditorKomfort.Capture() : null,
+                editorCrew: HighLogic.LoadedSceneIsEditor ? KoffeeEditorCrew.Capture() : null);
             if (!HighLogic.LoadedSceneIsFlight || !FlightGlobals.ready) return noVessel;
             Vessel vessel = FlightGlobals.ActiveVessel;
             if (vessel == null || !vessel.loaded) return noVessel;
 
             double now = Planetarium.GetUniversalTime();
+            if (HighLogic.CurrentGame?.CrewRoster == null) return noVessel;
             KoffeeCrewStatus[] crew = vessel.GetVesselCrew()
                 .Where(kerbal => kerbal != null)
                 .OrderBy(kerbal => kerbal.name, StringComparer.Ordinal)
                 .Select(kerbal => new KoffeeCrewStatus(
-                    kerbal.name ?? "",
-                    Profession(kerbal),
-                    PaidRemaining(kerbal.name ?? "", now)))
+                    kerbal, vessel.vesselName,
+                    PaidRemaining(kerbal.name ?? "", now), DeadlyScenario.HealthFraction(kerbal.name ?? "")))
                 .ToArray();
+            scientists = crew.Where(c => c.Scientist != null).Select(c => c.Scientist!).ToArray();
             KoffeeLabStationStatus[] labs = vessel.parts
                 .SelectMany(part => part.Modules.OfType<ModuleKoffeeLab>())
                 .OrderBy(lab => lab.part.flightID)
@@ -99,7 +139,7 @@ namespace ShoAerospace.Koffee
                 !e.WorkComplete).ToArray();
             // Mirror Manager priority under the displayed assumption of sufficient supplies.
             // Avoid Select/Windows: their live renewal cache is maintained by the runtime.
-            string engineer = ExperimentManagerService.Managers(vessel)
+            string engineer = ExperimentManagerService.Managers(vessel).Where(m => m.managerEnabled)
                 .Select(m => m.assignedEngineer).FirstOrDefault(name => vessel.GetVesselCrew()
                     .Any(c => c.name == name && ExperimentManagerService.ValidEngineer(c))) ?? "";
             StationSupplyEstimate? supply = null;
@@ -114,14 +154,16 @@ namespace ShoAerospace.Koffee
                         EngineeringRenewalCoordinator.CaptureWindows(member);
                 }
                 StationSupplyEstimator.TryEstimate(running.Select(e => new StationSupplyWork(
-                    e.State!.AssignedKerbalName, engineer, now, now + e.Research.RemainingSeconds!.Value)).ToArray(),
+                    e.State!.AssignedKerbalName, engineer, now, now + e.Research.RemainingSeconds!.Value, includeOptionalEngineer: false)).ToArray(),
                     paid, KerbalWorkState.KaffeinatedDuration, out supply);
             }
             double engineerCoverage = PaidRemaining(engineer, now);
+            double? air = DeadlyScenario.AirFraction(vessel.id, out bool lastKnown);
             return new KoffeeStatusSnapshot(true, crew, KoffeeSources.Available(vessel),
                 labs, experiments, scientists, supply, engineer, engineerCoverage,
                 KoffeeSettingsLoader.Current.ActivationCost, vessel.id, vessel.vesselName,
-                StationExperimentRuntime.CurrentBody(vessel), StationExperimentRuntime.CurrentSituation(vessel));
+                StationExperimentRuntime.CurrentBody(vessel), StationExperimentRuntime.CurrentSituation(vessel),
+                KomfortRuntime.ReadStatus(vessel), airFraction: air, airLastKnown: lastKnown);
         }
 
         private static Dictionary<string, string> AssignedVesselNames()

@@ -18,6 +18,7 @@ namespace ShoAerospace.Koffee
         private GUIStyle? label, heading, button;
         private ModuleKoffeeExperiment? scrollToExperiment;
         private bool scrollToSupply;
+        private bool servicesOpen, engineeringOpen, maintenanceOpen, emergencyOpen;
 
         internal void Refresh(KoffeeStatusSnapshot snapshot)
         {
@@ -27,6 +28,7 @@ namespace ShoAerospace.Koffee
                 rosterScroll = Vector2.zero;
                 scrollToExperiment = null;
                 scrollToSupply = false;
+                servicesOpen = engineeringOpen = maintenanceOpen = emergencyOpen = false;
             }
             if (!snapshot.Experiments.Any(e => ReferenceEquals(e.Module, scrollToExperiment))) scrollToExperiment = null;
             experiments = snapshot.Experiments.Select(e => new KoffeeFlightExperiment(e)).ToArray();
@@ -38,13 +40,13 @@ namespace ShoAerospace.Koffee
             GUILayout.BeginHorizontal();
             Tab(KoffeeFlightTab.Summary, "#Koffee_Flight_Summary");
             Tab(KoffeeFlightTab.Experiments, "#Koffee_Flight_Experiments");
-            Tab(KoffeeFlightTab.Scientists, "#Koffee_Flight_Scientists");
+            Tab(KoffeeFlightTab.Crew, "#Koffee_Crew_Tab");
             GUILayout.EndHorizontal();
             // Capture the page: an attention button can change tabs during this GUI event.
             int page = (int)navigation.Tab;
             pageScroll[page] = GUILayout.BeginScrollView(pageScroll[page], false, true,
                 GUILayout.Height(Math.Min(520, Math.Max(100, Screen.height / KoffeeStatusWindow.Scale - 170))));
-            if (page == (int)KoffeeFlightTab.Scientists) DrawScientists(snapshot);
+            if (page == (int)KoffeeFlightTab.Crew) DrawCrew(snapshot);
             else if (!snapshot.HasActiveVessel) Text(Localizer.Format("#Koffee_UI_NoVessel"));
             else if (page == (int)KoffeeFlightTab.Summary) DrawSummary(snapshot);
             else DrawExperiments();
@@ -59,7 +61,10 @@ namespace ShoAerospace.Koffee
 
         private void DrawSummary(KoffeeStatusSnapshot snapshot)
         {
-            Text(snapshot.VesselName, true);
+            Text(snapshot.AirFraction.HasValue ? snapshot.VesselName :
+                snapshot.VesselName + " — " + Localizer.Format("#Koffee_Flight_SurvivalReserve",
+                    KoffeeCrewDisplay.SurvivalReserve(snapshot.Komfort)), true);
+            DrawVesselCondition(snapshot);
             Text(KoffeeFlightExperiment.Body(snapshot.Body) + " / " + KoffeeFlightExperiment.Situation(snapshot.Situation));
             Text(Localizer.Format("#Koffee_UI_Aboard", snapshot.AvailableCups.ToString("0", CultureInfo.InvariantCulture)), true);
             Text(Localizer.Format("#Koffee_Flight_Counts",
@@ -69,6 +74,9 @@ namespace ShoAerospace.Koffee
                 Text(Localizer.Format("#Koffee_Flight_OtherCounts", Count(KoffeeFlightExperimentGroup.Ready),
                     Count(KoffeeFlightExperimentGroup.Unknown)));
             if (experiments.Length == 0) Text(Localizer.Format("#Koffee_Flight_NoExperiments"));
+
+            servicesOpen = Fold(servicesOpen, Localizer.Format("#Koffee_Komfort_VesselServices"));
+            if (servicesOpen) DrawServices(snapshot);
 
             Text(Localizer.Format("#Koffee_Flight_Attention"), true);
             bool attention = false;
@@ -98,10 +106,107 @@ namespace ShoAerospace.Koffee
             {
                 pageScroll[(int)KoffeeFlightTab.Summary].y = Math.Max(0, GUILayoutUtility.GetLastRect().y);
                 scrollToSupply = false;
+                servicesOpen = engineeringOpen = maintenanceOpen = emergencyOpen = false;
             }
             if (navigation.SupplyOpen) DrawSupply(snapshot);
             navigation.PersonnelOpen = Fold(navigation.PersonnelOpen, Localizer.Format("#Koffee_Flight_Personnel"));
             if (navigation.PersonnelOpen) DrawPersonnel(snapshot);
+            engineeringOpen = Fold(engineeringOpen, Localizer.Format("#Koffee_Engineering_Activities"));
+            if (engineeringOpen) DrawEngineering(snapshot);
+            maintenanceOpen = Fold(maintenanceOpen, Localizer.Format("#Koffee_Maintenance_Status"));
+            if (maintenanceOpen) DrawMaintenance(snapshot);
+        }
+
+        private void DrawServices(KoffeeStatusSnapshot snapshot)
+        {
+            Vessel vessel = FlightGlobals.ActiveVessel;
+            if (vessel?.loaded != true || vessel.id != snapshot.VesselId) return;
+            var services = vessel.parts.Where(p => p.State != PartStates.DEAD)
+                .SelectMany(p => p.Modules.OfType<ModuleKomfortService>()).Where(s => s.Valid).ToArray();
+            foreach (string type in new[] { "Climate", "Air", "Hygiene", "Leisure" })
+            {
+                var group = services.Where(s => s.service == type).ToArray();
+                int enabled = group.Count(s => s.serviceEnabled);
+                GUILayout.BeginVertical(GUI.skin.box);
+                Text(Localizer.Format("#Koffee_Komfort_Service" + type) + " — " +
+                    Localizer.Format("#Koffee_Komfort_EnabledCount", enabled.ToString(CultureInfo.InvariantCulture),
+                        group.Length.ToString(CultureInfo.InvariantCulture)));
+                GUILayout.BeginHorizontal();
+                bool previousEnabled = GUI.enabled;
+                GUI.enabled = previousEnabled && group.Any(s => !s.serviceEnabled && s.Maintenance?.InProgress != true);
+                if (GUILayout.Button(Localizer.Format("#Koffee_Komfort_ServiceOn"), button!))
+                    foreach (var service in group.Where(s => !s.serviceEnabled && s.Maintenance?.InProgress != true)) service.ToggleService();
+                GUI.enabled = previousEnabled && group.Any(s => s.serviceEnabled && s.Maintenance?.InProgress != true);
+                if (GUILayout.Button(Localizer.Format("#Koffee_Komfort_ServiceOff"), button!))
+                    foreach (var service in group.Where(s => s.serviceEnabled && s.Maintenance?.InProgress != true)) service.ToggleService();
+                GUI.enabled = previousEnabled;
+                GUILayout.EndHorizontal();
+                if (group.Any(s => s.Maintenance?.InProgress == true)) Text(Localizer.Format("#Koffee_Komfort_ServiceMaintenanceLock"));
+                GUILayout.EndVertical();
+            }
+            DrawEmergencyService(vessel);
+        }
+
+        private void DrawEmergencyService(Vessel vessel)
+        {
+            var devices = EmergencySupport.Capture(vessel);
+            if (devices.Count == 0) return;
+            emergencyOpen = Fold(emergencyOpen, Localizer.Format("#Koffee_Health_Service"));
+            if (!emergencyOpen) return;
+            Text(Localizer.Format("#Koffee_Health_SupportHelp"));
+            bool previous = GUI.enabled;
+            GUI.enabled = previous && DeadlyScenario.OptionsAt(Planetarium.GetUniversalTime()).Enabled && KomfortRuntime.OptionsAt(Planetarium.GetUniversalTime()).Enabled;
+            if (GUILayout.Button(Localizer.Format(DeadlyScenario.Active(vessel) ? "#Koffee_Komfort_ServiceOff" : "#Koffee_Komfort_ServiceOn"), button!))
+                DeadlyScenario.SetEmergency(vessel, !DeadlyScenario.Active(vessel));
+            GUI.enabled = previous;
+        }
+
+        private void DrawEngineering(KoffeeStatusSnapshot snapshot)
+        {
+            Vessel vessel = FlightGlobals.ActiveVessel;
+            if (vessel?.loaded != true || vessel.id != snapshot.VesselId) return;
+            Text(EngineeringDisplay.Management(vessel));
+            if (!StationPowerPolicy.Applies(vessel)) Text(Localizer.Format("#Koffee_Engineering_ElectricalExempt"));
+            Text(Localizer.Format("#Koffee_Engineering_KomfortHelp"));
+            foreach (var converter in vessel.parts.Where(p => p.State != PartStates.DEAD).SelectMany(p => p.Modules.OfType<BaseConverter>()))
+            {
+                if (!EngineeringModuleFilter.Matches(converter.GetType(), converter.part.partInfo?.name ?? "", converter.UseSpecialistBonus, converter.ExperienceEffect)) continue;
+                var candidates = EngineeringWorkAssignment.Relevant(converter);
+                var affinity = converter.GetType() == typeof(ModuleResourceHarvester) ? EngineeringAffinity.Extraction : EngineeringAffinity.Refining;
+                string name = candidates.Count == 0 ? "" : candidates[0].Name;
+                Text(converter.part.partInfo?.title ?? converter.part.partInfo?.name ?? "", true);
+                Text(Localizer.Format(converter.IsActivated ? "#Koffee_Engineering_Active" : "#Koffee_Engineering_Idle"));
+                Text(EngineeringDisplay.Effect(vessel, name, affinity));
+                var field = typeof(BaseConverter).GetField("inputList", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                var inputs = field?.GetValue(converter) as System.Collections.Generic.IEnumerable<ResourceRatio>;
+                if (inputs != null)
+                    Text(EngineeringDisplay.Power(inputs.Where(r => r.ResourceName == "ElectricCharge").Sum(r => r.Ratio),
+                        converter.IsActivated ? 1 - EngineeringContribution.Savings(vessel, name, affinity, Planetarium.GetUniversalTime(), true) : 0));
+                Text(Localizer.Format("#Koffee_Engineering_RecipeHelp"));
+            }
+            Text(Localizer.Format("#Koffee_Engineering_DemandHelp"));
+        }
+        private void DrawMaintenance(KoffeeStatusSnapshot snapshot)
+        {
+            Vessel vessel = FlightGlobals.ActiveVessel;
+            if (vessel?.loaded != true || vessel.id != snapshot.VesselId) return;
+            Text(Localizer.Format("#Koffee_EvaMaintenance_Help"));
+            foreach (var service in vessel.parts.Where(p => p.State != PartStates.DEAD).SelectMany(p => p.Modules.OfType<ModuleKomfortService>()).Where(s => s.Maintainable))
+            {
+                GUILayout.BeginVertical(GUI.skin.box);
+                Text(service.part.partInfo?.title ?? service.service, true);
+                Text(service.autonomyDisplay); Text(service.maintenanceDisplay);
+                var state = service.Maintenance;
+                if (state != null && !string.IsNullOrEmpty(state.GrantEngineer))
+                {
+                    Text(Localizer.Format("#Koffee_EvaMaintenance_HoursRecord", state.RemainingHours.ToString("0.##", CultureInfo.CurrentCulture),
+                        state.GrantedHours.ToString("0.##", CultureInfo.CurrentCulture), state.GrantEngineer));
+                    Text(Localizer.Format("#Koffee_Maintenance_GrantDetails", (state.GrantBonus * 100).ToString("0.##", CultureInfo.CurrentCulture),
+                        (state.GrantKomfort * 100).ToString("0.#", CultureInfo.CurrentCulture), Localizer.Format(state.GrantCaffeinated ? "#Koffee_UI_Kaffeinated" : "#Koffee_UI_NotKaffeinated")));
+                }
+                if (state?.InProgress != true && GUILayout.Button(Localizer.Format("#Koffee_Komfort_Toggle"), button!)) service.ToggleService();
+                GUILayout.EndVertical();
+            }
         }
 
         private string Count(KoffeeFlightExperimentGroup group) =>
@@ -128,6 +233,7 @@ namespace ShoAerospace.Koffee
                     (snapshot.Supply.EngineerPurchases * snapshot.ActivationCost).ToString("0", CultureInfo.InvariantCulture),
                     Duration(snapshot.EngineerCoverage)));
             }
+            Text(Localizer.Format("#Koffee_Engineering_OptionalSupply"));
             Text(Localizer.Format("#Koffee_Flight_ForecastScope"));
             Text(Localizer.Format("#Koffee_Research_SupplyAssumption"));
         }
@@ -184,6 +290,20 @@ namespace ShoAerospace.Koffee
         {
             StationExperimentRuntimeSnapshot runtime = experiment.Runtime;
             ExperimentContainerState? state = runtime.State;
+            Text(EngineeringDisplay.Management(runtime.Module.vessel));
+            var activeManager = ExperimentManagerService.Select(runtime.Module.vessel, Planetarium.GetUniversalTime(), false, out _, true);
+            if (activeManager?.Part != null && runtime.Definition != null)
+            {
+                var consumers = StationStockPower.Consumers(activeManager.Part.Modules.OfType<ModuleKoffeeExperimentManager>().First(),
+                    runtime.Module, runtime.Definition, runtime.AssignedLaboratory?.part);
+                bool electrical = StationPowerPolicy.Applies(runtime.Module.vessel);
+                double factor = electrical ? EngineeringContribution.ManagementFactor(runtime.Module.vessel, activeManager.EngineerName, Planetarium.GetUniversalTime(), true) : 0;
+                if (!electrical) Text(Localizer.Format("#Koffee_Engineering_ElectricalExempt"));
+                Text(EngineeringDisplay.Power(consumers.Values.Sum(), factor));
+                foreach (var consumer in consumers.Where(p => p.Value > 0))
+                    Text((consumer.Key.partInfo?.title ?? consumer.Key.partInfo?.name ?? "") + ": " + EngineeringDisplay.Power(consumer.Value, factor));
+                Text(Localizer.Format("#Koffee_Engineering_DemandHelp"));
+            }
             Text(Localizer.Format("#Koffee_Flight_AssignmentContext"), true);
             if (state?.HasAssignedLaboratory == true)
             {
@@ -264,19 +384,61 @@ namespace ShoAerospace.Koffee
             finally { GUI.color = previousColor; }
         }
 
-        private void DrawScientists(KoffeeStatusSnapshot snapshot)
+        private void DrawVesselCondition(KoffeeStatusSnapshot snapshot)
         {
-            if (snapshot.Scientists.Count == 0) { Text(Localizer.Format("#Koffee_Research_NoScientists")); return; }
+            KoffeeStatusBars.Komfort(snapshot.Komfort, heading!);
+            KoffeeStatusBars.Air(snapshot.AirFraction, snapshot.AirLastKnown, heading!);
+        }
+
+        private void DrawCrew(KoffeeStatusSnapshot snapshot)
+        {
+            if (!snapshot.HasActiveVessel) { Text(Localizer.Format("#Koffee_UI_NoVessel")); return; }
+            DrawVesselCondition(snapshot);
+            Text(Localizer.Format("#Koffee_Crew_KomfortHelp"));
+            if (snapshot.Crew.Count == 0) { Text(Localizer.Format("#Koffee_UI_NoCrew")); return; }
             rosterScroll = GUILayout.BeginScrollView(rosterScroll, false, true, GUILayout.Height(140));
-            foreach (KoffeeScientistStatus scientist in snapshot.Scientists)
-                if (GUILayout.Toggle(scientist.Name == navigation.SelectedScientist,
-                    scientist.Name + " — " + KoffeeResearchDisplay.RosterStatus(scientist), button!))
+            Vessel vessel = FlightGlobals.ActiveVessel;
+            string maintenanceEngineer = vessel != null && vessel.id == snapshot.VesselId ? MaintenanceEva.BestEngineer(vessel) : "";
+            foreach (KoffeeCrewStatus crew in snapshot.Crew)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Toggle(crew.Name == navigation.SelectedCrew, crew.Name, button!, GUILayout.ExpandWidth(true)))
                 {
-                    if (navigation.SelectedScientist != scientist.Name) navigation.AffinitiesOpen = false;
-                    navigation.SelectedScientist = scientist.Name;
+                    if (navigation.SelectedCrew != crew.Name) navigation.AffinitiesOpen = false;
+                    navigation.SelectedCrew = crew.Name;
                 }
+                GUILayout.BeginVertical(GUILayout.MinWidth(165), GUILayout.ExpandWidth(true));
+                GUILayout.Label(KoffeeCrewDisplay.ProfessionLevel(crew), label!);
+                KoffeeStatusBars.Health(crew);
+                GUILayout.EndVertical();
+                if (crew.Name == maintenanceEngineer)
+                {
+                    if (GUILayout.Button(Localizer.Format("#Koffee_EvaMaintenance_Depart"), button!, GUILayout.Width(140)))
+                        MaintenanceEva.Depart(vessel!, crew.Name);
+                }
+                else if (!string.IsNullOrEmpty(maintenanceEngineer))
+                    GUILayout.Space(140 + button!.margin.left + button.margin.right);
+                GUILayout.EndHorizontal();
+            }
             GUILayout.EndScrollView();
-            KoffeeScientistStatus? selected = snapshot.Scientists.FirstOrDefault(s => s.Name == navigation.SelectedScientist);
+            KoffeeCrewStatus member = snapshot.Crew.FirstOrDefault(s => s.Name == navigation.SelectedCrew);
+            if (string.IsNullOrEmpty(member.Name)) return;
+            Text(KoffeeCrewDisplay.Row(member), true);
+            var hp = DeadlyScenario.Health(member.Name);
+            if (hp != null && member.HealthFraction.HasValue) Text(Localizer.Format("#Koffee_Health_" + hp.Status));
+            var eva = DeadlyScenario.Eva(member.Name);
+            if (eva != null && member.HealthFraction.HasValue)
+                Text(Localizer.Format("#Koffee_Health_EvaFilter", Duration(eva.Filter)));
+            Text(KoffeeCrewDisplay.State(member.RosterState));
+            Text(snapshot.VesselName);
+            Text(Kaffeinated(member));
+            if (member.IsEngineer)
+            {
+                navigation.AffinitiesOpen = Fold(navigation.AffinitiesOpen, Localizer.Format("#Koffee_Engineering_Profile"));
+                if (navigation.AffinitiesOpen)
+                    foreach (string line in EngineeringDisplay.Profile(member.Name)) Text(line);
+            }
+            KoffeeScientistStatus? selected = member.Scientist;
             if (selected == null) return;
             Text(Localizer.Format("#Koffee_Research_ScientistLevel", selected.Name, selected.Level.ToString(CultureInfo.InvariantCulture)), true);
             Text(KoffeeResearchDisplay.RosterStatus(selected));
@@ -285,6 +447,13 @@ namespace ShoAerospace.Koffee
             if (navigation.AffinitiesOpen && selected.Profile != null)
                 foreach (ScienceCategory category in ScienceCategories.All)
                     Text(KoffeeResearchDisplay.Category(category) + ": " + selected.Profile.Score(category).ToString(CultureInfo.InvariantCulture) + " / 10");
+        }
+
+        private static string Kaffeinated(KoffeeCrewStatus crew)
+        {
+            if (!crew.IsKaffeinated) return Localizer.Format("#Koffee_UI_NotKaffeinated");
+            string key = LabDisplay.TimeKey(crew.RemainingSeconds, out string hours, out string minutes);
+            return Localizer.Format("#Koffee_UI_Kaffeinated") + " — " + Localizer.Format(key, hours, minutes);
         }
 
         private bool Fold(bool open, string title)

@@ -22,3 +22,6 @@
 *.tga binary
 *.xcf binary
 *.dll binary
+
+# Lonapse meta rows require empty final TSV columns.
+GameData/ShoAerospace/Lonapse/*.tsv whitespace=-blank-at-eol

@@ -1,5 +1,8 @@
 # KSPedia de Koffee en español
 
+Esta edición anterior se descarga desde la release v0.1.2: https://github.com/Shodrem/Koffee-KSP-Mod/releases/tag/v0.1.2. No está actualizada para v0.1.3. El bundle compilado se distribuye como asset de release y se ha retirado del repositorio de fuentes.
+
+
 Guía opcional de 16 páginas. Esta carpeta se distribuye fuera de GameData para que puedas elegir el idioma.
 
 Con KSP cerrado, copia `kspedia_koffee.ksp` en `GameData/ShoAerospace/Koffee/KSPedia/` de tu instalación de KSP y acepta sustituir el archivo del mismo nombre.

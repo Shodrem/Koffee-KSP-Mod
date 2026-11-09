@@ -96,6 +96,10 @@ namespace ShoAerospace.Koffee.Brp
             {
                 rates.Clear(); converter.NextChangepoint = AppliedUT; return;
             }
+            // Solver rates are assigned before callbacks; do not depend on the
+            // relative callback order of the research and service recipes.
+            var service = processor.Converters.FirstOrDefault(c => c.Behaviour is KomfortPowerBehaviour);
+            if (service != null) KomfortRuntime.Forecast(Vessel, service.Rate);
             var current = StationExperimentBackground.PowerPlan(Vessel, evt.CurrentTime, BrpPowerProvider.Accounts(processor),
                 id => NativeLaboratory(processor, id) != null);
             if (!current.Consumers.OrderBy(p => p.Key).SequenceEqual(plan.Consumers.OrderBy(p => p.Key)) ||

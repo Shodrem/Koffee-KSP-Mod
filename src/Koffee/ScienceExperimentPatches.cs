@@ -71,6 +71,7 @@ namespace ShoAerospace.Koffee
 
         private static bool EntryPrefix(ModuleScienceExperiment __instance)
         {
+            if (ScienceReportExtraction.Resetting(__instance)) return false;
             if (!ScienceExperimentKoffeeRegistry.Contains(__instance.experimentID)) return true;
             if (attempts.TryGetValue(__instance, out Attempt? attempt) && attempt != null &&
                 (attempt.Running || attempt.Completing || attempt.WaitingForCompletion ||
@@ -157,7 +158,18 @@ namespace ShoAerospace.Koffee
         private static void CompletionPostfix(ModuleScienceExperiment __instance, ref IEnumerator __result)
         {
             if (!ScienceExperimentKoffeeRegistry.Contains(__instance.experimentID)) return;
-            __result = Complete(__instance, __result);
+            __result = ScienceReportPolicy.StockInstrument(__instance.experimentID)
+                ? CompleteStock(__instance, __result) : Complete(__instance, __result);
+        }
+
+        private static IEnumerator CompleteStock(ModuleScienceExperiment module, IEnumerator original)
+        {
+            try
+            {
+                if (!ScienceExperimentKoffeeService.CanRun(module.experimentID, module.part)) yield break;
+                while (original.MoveNext()) yield return original.Current;
+            }
+            finally { (original as IDisposable)?.Dispose(); }
         }
 
         private static IEnumerator Complete(ModuleScienceExperiment module, IEnumerator original)

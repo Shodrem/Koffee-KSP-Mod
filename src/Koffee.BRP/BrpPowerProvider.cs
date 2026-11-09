@@ -11,11 +11,22 @@ using BrpConverter = BackgroundResourceProcessing.Core.ResourceConverter;
 
 namespace ShoAerospace.Koffee.Brp
 {
-    public sealed class BrpPowerProvider : IStationBackgroundElectricity
+    public sealed class BrpPowerProvider : IStationBackgroundElectricity, IStationBackgroundSaveFlush
     {
         private readonly HashSet<Guid> missing = new HashSet<Guid>();
+        private readonly BrpRestoreQueue restores = new BrpRestoreQueue();
+        private static readonly HashSet<BrpPowerProvider> instances = new HashSet<BrpPowerProvider>();
+        internal static void AfterInitialize(Vessel __instance)
+        { foreach (var instance in instances.ToArray()) instance.restores.AfterInitialize(__instance); }
+        internal static void ContinueRestores()
+        { foreach (var instance in instances.ToArray()) instance.restores.Tick(); }
+        internal static void CancelRestores()
+        { foreach (var instance in instances.ToArray()) instance.restores.Clear(); EngineeringPowerPatches.ClearDiagnostics(); }
         private BrpPowerProvider()
         {
+            EngineeringPowerPatches.Install();
+            EmergencyGeneration.Install();
+            instances.Add(this);
             BackgroundResourceProcessor.onVesselRecord.Add(OnRecord);
             BackgroundResourceProcessor.onStateUpdate.Add(OnStateUpdate);
             BackgroundResourceProcessor.onVesselRestore.Add(OnRestore);
@@ -24,9 +35,17 @@ namespace ShoAerospace.Koffee.Brp
         // Called reflectively only after BRP's API has been checked. The core
         // assembly never acquires a reference to any BRP type.
         public static object Create() => new BrpPowerProvider();
+        public void FlushBeforeSave(Vessel vessel, double now)
+        {
+            Ensure(vessel, now);
+            // Let BRP's own authority settle to UT before KSP serializes crew,
+            // inventories and scenarios. Do not replay research after Save.
+            vessel.FindVesselModuleImplementing<BackgroundResourceProcessor>()?.UpdateBackgroundState();
+        }
 
         public void Ensure(Vessel vessel, double now)
         {
+            if (StationVesselScope.IsNaturalObject(vessel)) return;
             var processor = vessel.FindVesselModuleImplementing<BackgroundResourceProcessor>();
             if (processor == null)
             {
@@ -35,10 +54,18 @@ namespace ShoAerospace.Koffee.Brp
             }
             missing.Remove(vessel.id);
             Ensure(processor, now);
+            // Publish current reserve between solver changepoints. BRP must
+            // finish due boundaries before extending its authorized rate.
+            if (!vessel.loaded && processor.NextChangepoint > now &&
+                processor.Converters.All(c => c.NextChangepoint > now))
+                processor.UpdateBackgroundState();
         }
 
         private static void Ensure(BackgroundResourceProcessor processor, double now)
         {
+            if (StationVesselScope.IsNaturalObject(processor.Vessel)) return;
+            EnsureKomfort(processor, now);
+            EnsureEmergencyGeneration(processor, now);
             var existing = processor.Converters.FirstOrDefault(c => c.Behaviour is KoffeeResearchPowerBehaviour);
             if (existing?.Behaviour is KoffeeResearchPowerBehaviour current)
             {
@@ -73,14 +100,68 @@ namespace ShoAerospace.Koffee.Brp
             processor.MarkDirty();
         }
 
+        private static void EnsureKomfort(BackgroundResourceProcessor processor, double now)
+        {
+            var existing = processor.Converters.FirstOrDefault(c => c.Behaviour is KomfortPowerBehaviour);
+            if (existing?.Behaviour is KomfortPowerBehaviour current)
+            {
+                bool primed = current.Prime(processor.LastChangepoint);
+                bool optionsChanged = current.OptionsChanged(now);
+                double boundary = current.PendingBoundary(now);
+                if (primed || optionsChanged || !double.IsPositiveInfinity(boundary))
+                {
+                    foreach (var recipe in processor.Converters.Where(c => c.Behaviour is KomfortPowerBehaviour || c.Behaviour is KoffeeResearchPowerBehaviour || c.Behaviour is EmergencyGenerationBehaviour || c.Behaviour is EmergencyReactorGenerationBehaviour))
+                        recipe.NextChangepoint = primed ? current.AppliedUT : Math.Min(now, boundary);
+                    processor.MarkDirty(); processor.SuppressNoProgressError();
+                }
+                return;
+            }
+            var behaviour = new KomfortPowerBehaviour { Vessel = processor.Vessel, AppliedUT = now };
+            behaviour.Prime(now);
+            var converter = new BrpConverter(behaviour) { Priority = -10 };
+            processor.AddConverter(converter, new AddConverterOptions { LinkToAll = true });
+            converter.Inputs.Clear(); converter.NextChangepoint = now; processor.MarkDirty();
+        }
+
+        private static void EnsureEmergencyGeneration(BackgroundResourceProcessor processor, double now)
+        {
+            if (processor.Converters.Any(c => c.Behaviour is EmergencyGenerationBehaviour) ||
+                EmergencySupport.Capture(processor.Vessel).Count == 0) return;
+            var behaviour = new EmergencyGenerationBehaviour { Vessel = processor.Vessel };
+            var converter = new BrpConverter(behaviour);
+            processor.AddConverter(converter, new AddConverterOptions { LinkToAll = true });
+            converter.NextChangepoint = now; processor.MarkDirty();
+        }
+
         private void OnRecord(BackgroundResourceProcessor processor)
         {
+            if (StationVesselScope.IsNaturalObject(processor.Vessel)) return;
+            restores.BeforeRecord(processor);
+            BrpNativeIdentity.Preserve(processor);
             // Snapshot creation can precede the last loaded coordinator tick.
             // Copy the currently published modules without manufacturing work.
             foreach (var snapshot in processor.Vessel.protoVessel.protoPartSnapshots)
             {
                 Part? live = processor.Vessel.parts.FirstOrDefault(p => p.flightID == snapshot.flightID);
                 if (live == null) continue;
+                foreach (var service in live.Modules.OfType<ModuleKomfortService>())
+                {
+                    int index = live.Modules.OfType<ModuleKomfortService>().ToList().IndexOf(service);
+                    var target = snapshot.modules.Where(m => m.moduleName == nameof(ModuleKomfortService)).ElementAtOrDefault(index);
+                    if (target != null) { var node = target.moduleValues.CreateCopy(); service.OnSave(node); target.moduleValues = node; }
+                }
+                foreach (var emergency in live.Modules.OfType<ModuleEmergencySupport>())
+                {
+                    var target = snapshot.modules.FirstOrDefault(m => m.moduleName == nameof(ModuleEmergencySupport));
+                    if (target != null) { var node = target.moduleValues.CreateCopy(); emergency.OnSave(node); target.moduleValues = node; }
+                    if (emergency.UsesNfeReactor)
+                    {
+                        var reactor = EmergencyNfeReactor.Find(live);
+                        var saved = snapshot.modules.FirstOrDefault(m => m.moduleName == EmergencyNfeReactor.ModuleName);
+                        if (reactor != null && saved != null)
+                        { var node = saved.moduleValues.CreateCopy(); reactor.OnSave(node); saved.moduleValues = node; }
+                    }
+                }
                 foreach (var module in live.Modules.OfType<ModuleKoffeeExperiment>())
                 {
                     var target = snapshot.modules.FirstOrDefault(m => m.moduleName == nameof(ModuleKoffeeExperiment));
@@ -93,24 +174,20 @@ namespace ShoAerospace.Koffee.Brp
 
         private void OnStateUpdate(BackgroundResourceProcessor processor, ChangepointEvent change)
         {
+            if (StationVesselScope.IsNaturalObject(processor.Vessel)) return;
+            restores.NewPublication(processor);
+            // Publish service capacity before integrating the science interval.
+            foreach (var converter in processor.Converters)
+                if (converter.Behaviour is KomfortPowerBehaviour service) service.Publish(processor, change);
             foreach (var converter in processor.Converters)
                 if (converter.Behaviour is KoffeeResearchPowerBehaviour behaviour)
                     behaviour.Publish(processor, change);
+            EngineeringPowerPatches.Publish(processor, change);
         }
 
         private void OnRestore(BackgroundResourceProcessor processor)
         {
-            // BRP emits the final state update before applying inventories and
-            // this restore callback. Live PartModules may already have loaded
-            // their older snapshot; refresh the scientific state once here.
-            foreach (var snapshot in processor.Vessel.protoVessel.protoPartSnapshots)
-            {
-                var saved = snapshot.modules.FirstOrDefault(m => m.moduleName == nameof(ModuleKoffeeExperiment));
-                if (saved == null) continue;
-                Part? live = processor.Vessel.parts.FirstOrDefault(p => p.flightID == snapshot.flightID);
-                foreach (var module in live?.Modules.OfType<ModuleKoffeeExperiment>() ?? Enumerable.Empty<ModuleKoffeeExperiment>())
-                    module.OnLoad(saved.moduleValues);
-            }
+            if (!StationVesselScope.IsNaturalObject(processor.Vessel)) restores.Enqueue(processor);
         }
 
         internal static List<IResourceAccount> Accounts(BackgroundResourceProcessor processor) => processor.Inventories
@@ -135,6 +212,7 @@ namespace ShoAerospace.Koffee.Brp
 
         public void Dispose()
         {
+            instances.Remove(this); restores.Clear();
             BackgroundResourceProcessor.onVesselRecord.Remove(OnRecord);
             BackgroundResourceProcessor.onStateUpdate.Remove(OnStateUpdate);
             BackgroundResourceProcessor.onVesselRestore.Remove(OnRestore);

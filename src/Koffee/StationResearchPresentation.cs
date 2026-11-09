@@ -39,9 +39,10 @@ namespace ShoAerospace.Koffee
             Profile = profile;
             Affinity = affinity;
             Level = worker.experienceLevel;
-            RatePerMinute = KoffeeResearchRates.RatePerMinute(affinity, Level);
+            double komfort = module.vessel == null ? 1 : KomfortRuntime.CurrentFactor(module.vessel);
+            RatePerMinute = KoffeeResearchRates.RatePerMinute(affinity, Level) * komfort;
             RemainingSeconds = Complete ? 0 : StationResearchMath.RemainingSeconds(
-                RequiredPoints, AccumulatedPoints, KoffeeResearchRates.RatePerHour(affinity, Level));
+                RequiredPoints, AccumulatedPoints, KoffeeResearchRates.RatePerHour(affinity, Level) * komfort);
         }
     }
 }

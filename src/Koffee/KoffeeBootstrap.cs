@@ -17,7 +17,9 @@ namespace ShoAerospace.Koffee
         private Harmony? recoveryHarmony;
         private Harmony? selectionHarmony;
         private Harmony? dbsHarmony;
+        private Harmony? systemHeatHarmony;
         private Harmony? parameterHarmony;
+        private Harmony? deadlyHarmony;
         private Harmony? brpLogHarmony;
         private bool coreInitialized;
         private bool scienceInitialized;
@@ -33,11 +35,13 @@ namespace ShoAerospace.Koffee
             DontDestroyOnLoad(gameObject);
             Debug.Log("[Koffee] Mod cargado correctamente.");
             parameterHarmony = Install("GameParameters", KoffeeParameterDialog.Install);
+            deadlyHarmony = Install("Deadly", DeadlyRestrictions.Install);
             LoadConfigurations();
             InitializeCore();
             brpLogHarmony = Install("BrpLogging", StationBrpLogGuard.Install);
             StationBackgroundElectricity.Initialize();
             dbsHarmony = Install("DynamicBatteryStorage", StationDbsIntegration.Initialize);
+            systemHeatHarmony = Install("SystemHeat", KomfortSystemHeat.Initialize);
             InitializeScience();
             solarHarmony = Install("SolarAcquisition", StationSolarPublication.Install);
             InitializeLab();
@@ -54,6 +58,7 @@ namespace ShoAerospace.Koffee
             Load("core settings", KoffeeSettingsLoader.Load);
             Load("science experiment registry", ScienceExperimentRegistryLoader.Load);
             Load("science settings", ScienceSettingsLoader.Load);
+            Load("science report policies", ScienceReportPolicy.Load);
             Load("engineering settings", EngineeringSettingsLoader.Load);
             Load("engineering targets", EngineeringTargetLoader.Load);
             Load("station experiment catalog", StationExperimentCatalogLoader.Load);
@@ -92,6 +97,8 @@ namespace ShoAerospace.Koffee
             scienceHarmony = Install("Science", harmony =>
             {
                 ScienceExperimentPatches.Install(harmony);
+                ScienceReportPatches.Install(harmony);
+                ScienceReportDialog.Install(harmony);
                 SpaceObjectSciencePatches.Install(harmony);
                 EvaKoffeeSources.Install(harmony);
             });
@@ -171,7 +178,10 @@ namespace ShoAerospace.Koffee
             dbsHarmony?.UnpatchAll(HarmonyRoot + ".DynamicBatteryStorage");
             KoffeeParameterDialog.Shutdown();
             parameterHarmony?.UnpatchAll(HarmonyRoot + ".GameParameters");
+            deadlyHarmony?.UnpatchAll(HarmonyRoot + ".Deadly");
             StationDbsIntegration.Shutdown();
+            systemHeatHarmony?.UnpatchAll(HarmonyRoot + ".SystemHeat");
+            KomfortSystemHeat.Shutdown();
             brpLogHarmony?.UnpatchAll(HarmonyRoot + ".BrpLogging");
             ScienceExperimentPatches.Clear();
             StationSolarPublication.Clear();

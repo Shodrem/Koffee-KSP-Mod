@@ -14,6 +14,7 @@ namespace ShoAerospace.Koffee
     {
         None,
         NoManager,
+        ManagerOff,
         NoEngineerAssigned,
         EngineerAbsentOrInvalid,
         EngineerNeedsKoffee,

@@ -12,6 +12,10 @@ namespace ShoAerospace.Koffee
     {
         void Ensure(Vessel vessel, double now);
     }
+    internal interface IStationBackgroundSaveFlush
+    {
+        void FlushBeforeSave(Vessel vessel, double now);
+    }
 
     internal static class StationBackgroundElectricity
     {

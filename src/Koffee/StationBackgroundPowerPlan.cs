@@ -17,6 +17,7 @@ namespace ShoAerospace.Koffee
     {
         internal readonly List<StationBackgroundWork> Work = new List<StationBackgroundWork>();
         internal readonly Dictionary<uint, double> Consumers = new Dictionary<uint, double>();
+        internal double Factor = 1;
         internal double NextUT = double.PositiveInfinity;
         internal double Rate => Consumers.Values.Sum();
         internal void Add(ProtoPartSnapshot? part, bool laboratory = false)
@@ -25,7 +26,7 @@ namespace ShoAerospace.Koffee
             var consumer = part.partPrefab?.Modules?.OfType<ModuleKoffeePowerConsumer>().FirstOrDefault();
             double rate = laboratory ? consumer?.laboratoryElectricChargePerSecond ?? 0 : consumer?.electricChargePerSecond ?? 0;
             if (!ExperimentContainerState.Finite(rate) || rate < 0) throw new InvalidOperationException("Invalid background electrical tariff.");
-            Consumers[part.persistentId] = Math.Max(Consumers.TryGetValue(part.persistentId, out double previous) ? previous : 0, rate);
+            Consumers[part.persistentId] = Math.Max(Consumers.TryGetValue(part.persistentId, out double previous) ? previous : 0, rate * Factor);
         }
     }
 
@@ -36,7 +37,7 @@ namespace ShoAerospace.Koffee
         internal static StationBackgroundPowerPlan PowerPlan(Vessel vessel, double now,
             List<IResourceAccount> sources, Func<uint, bool> stockLaboratory)
         {
-            var result = new StationBackgroundPowerPlan { NextUT = KoffeeResearchRates.NextBoundary(now) };
+            var result = new StationBackgroundPowerPlan { NextUT = KomfortRuntime.NextBoundary(vessel, now) };
             var parts = vessel.protoVessel?.protoPartSnapshots?.Where(p => p != null).ToList();
             if (parts == null) return result;
             var labs = parts.Select(ReadLab).Where(l => l != null).Cast<BackgroundLab>().ToList();
@@ -45,6 +46,8 @@ namespace ShoAerospace.Koffee
             var slots = Allocate(experiments, labs);
             var manager = ExperimentManagerService.SelectSnapshots(parts, now, out _);
             if (manager == null) return result;
+            result.Factor = EngineeringContribution.ManagementFactor(vessel, manager.EngineerName, now, true);
+            result.NextUT = Math.Min(result.NextUT, EngineeringContribution.NextBoundary(vessel, manager.EngineerName, now));
             string body = StationExperimentRuntime.CurrentBody(vessel), situation = StationExperimentRuntime.CurrentSituation(vessel);
             var equipment = SnapshotEquipment(parts);
             var session = new StationKoffeeSession();
@@ -65,7 +68,8 @@ namespace ShoAerospace.Koffee
                     var worker = session.Begin(state.AssignedKerbalName, sources); reservations.Add(worker);
                     if (!engineer.EnsureTeam(worker, now)) continue;
                     double remaining = StationResearchMath.RemainingSeconds(state.ResearchPointsRequired,
-                        state.AccumulatedResearchPoints, KoffeeResearchRates.RatePerHourAt(state.ResearchAffinity, scientist!.experienceLevel, now));
+                        state.AccumulatedResearchPoints, KoffeeResearchRates.RatePerHourAt(state.ResearchAffinity, scientist!.experienceLevel, now) *
+                        KomfortRuntime.ProjectedFactor(vessel, now));
                     if (!(remaining > 0)) continue;
                     bool shared = stockLaboratory(lab!.Part.flightID);
                     result.Work.Add(new StationBackgroundWork { ContainerId = state.ContainerId, RunId = state.RunId!.Value,
@@ -78,12 +82,14 @@ namespace ShoAerospace.Koffee
                     if (!shared) result.Add(lab.Part, true);
                     else sharedParts.Add(lab.Part.persistentId);
                     foreach (string name in new[] { manager.EngineerName, state.AssignedKerbalName })
-                        if (KerbalKoffeeScenario.Store.TryGetStart(name, out double activation))
+                        if (KerbalKoffeeScenario.Store.TryGetStart(name, out double activation) && activation + KerbalWorkState.KaffeinatedDuration > now)
                             result.NextUT = Math.Min(result.NextUT, activation + KerbalWorkState.KaffeinatedDuration);
                 }
             }
             finally { for (int i = reservations.Count - 1; i >= 0; i--) reservations[i].Dispose(); }
             foreach (uint part in sharedParts) result.Consumers.Remove(part);
+            if (result.Consumers.Count > 0 && result.Factor < 1)
+                result.NextUT = Math.Min(result.NextUT, KomfortRuntime.PriceBoundary(vessel, now));
             return result;
         }
 
@@ -100,7 +106,10 @@ namespace ShoAerospace.Koffee
                 if (!powered.Contains(experiment.State.ContainerId)) continue;
                 using (var engineer = session.Begin(manager.EngineerName, sources))
                 using (var scientist = session.Begin(experiment.State.AssignedKerbalName, sources))
-                    if (engineer.EnsureTeam(scientist, now)) { engineer.Commit(); scientist.Commit(); }
+                    if (scientist.Ensure(now))
+                    {
+                        scientist.Commit(); engineer.Commit();
+                    }
             }
         }
 

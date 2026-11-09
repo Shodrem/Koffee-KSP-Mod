@@ -4,7 +4,7 @@ using KSP.Localization;
 
 namespace ShoAerospace.Koffee
 {
-    internal enum KoffeeFlightTab { Summary, Experiments, Scientists }
+    internal enum KoffeeFlightTab { Summary, Experiments, Crew }
     internal enum KoffeeFlightExperimentGroup { Running, Stopped, Completed, Ready, Unknown }
 
     // Presentation only: never advance work, reconcile profiles or renew coverage here.
@@ -75,28 +75,30 @@ namespace ShoAerospace.Koffee
     {
         internal KoffeeFlightTab Tab { get; set; }
         internal ModuleKoffeeExperiment? SelectedExperiment { get; private set; }
-        internal string SelectedScientist { get; set; } = "";
+        internal string SelectedCrew { get; set; } = "";
         internal bool SupplyOpen, PersonnelOpen, AffinitiesOpen;
         internal bool ResearchOpen = true, ConditionsOpen = true;
         private Guid vesselId;
+        private Game? game;
 
         // Return true only for a changed vessel; refreshes of the same ship preserve navigation.
         internal bool Reconcile(KoffeeStatusSnapshot snapshot)
         {
-            bool changed = vesselId != snapshot.VesselId;
+            bool changed = vesselId != snapshot.VesselId || !ReferenceEquals(game, snapshot.Game);
             if (changed)
             {
+                game = snapshot.Game;
                 vesselId = snapshot.VesselId;
                 SelectedExperiment = null;
-                SelectedScientist = "";
+                SelectedCrew = "";
                 SupplyOpen = PersonnelOpen = AffinitiesOpen = false;
                 ResearchOpen = ConditionsOpen = true;
             }
             if (!snapshot.Experiments.Any(e => ReferenceEquals(e.Module, SelectedExperiment)))
                 SelectedExperiment = null;
-            if (!snapshot.Scientists.Any(s => s.Name == SelectedScientist))
+            if (!snapshot.Crew.Any(s => s.Name == SelectedCrew))
             {
-                SelectedScientist = snapshot.Scientists.FirstOrDefault()?.Name ?? "";
+                SelectedCrew = snapshot.Crew.FirstOrDefault().Name ?? "";
                 AffinitiesOpen = false;
             }
             return changed;

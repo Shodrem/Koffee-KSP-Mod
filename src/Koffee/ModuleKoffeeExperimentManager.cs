@@ -15,6 +15,8 @@ namespace ShoAerospace.Koffee
         private MaterialPropertyBlock? ledProperties;
         private bool? ledLit;
 
+        [KSPField(isPersistant = true)] public bool managerEnabled = true;
+        [KSPField(isPersistant = true)] public bool energySupportRestore;
         [KSPField(isPersistant = true)] public string assignedEngineer = "";
         [KSPField(isPersistant = true)] public string topologySignature = "";
         [KSPField(isPersistant = true)] public double validSinceUT;
@@ -28,14 +30,36 @@ namespace ShoAerospace.Koffee
         [KSPField(guiActive = true, guiName = "#Koffee_Manager_Engineer")] public string engineerDisplay = "";
         [KSPField(guiActive = true, guiName = "#Koffee_Manager_Kaffeinated")] public string kaffeinated = "";
         [KSPField(guiActive = true, guiName = "#Koffee_Manager_Koffee")] public string cups = "";
+        [KSPField(guiActive = true, guiName = "#Koffee_Engineering_Systems")] public string engineeringDisplay = "";
         [KSPField(guiActive = true, guiName = "#Koffee_Manager_Count")] public string experimentCount = "";
 
+        public override void OnLoad(ConfigNode node)
+        {
+            base.OnLoad(node);
+            if (bool.TryParse(node.GetValue(nameof(managerEnabled)), out bool enabled)) managerEnabled = enabled;
+            if (bool.TryParse(node.GetValue(nameof(energySupportRestore)), out bool restore)) energySupportRestore = restore;
+            if (node.HasValue(nameof(assignedEngineer))) assignedEngineer = node.GetValue(nameof(assignedEngineer));
+            if (node.HasValue(nameof(topologySignature))) topologySignature = node.GetValue(nameof(topologySignature));
+            if (double.TryParse(node.GetValue(nameof(validSinceUT)), NumberStyles.Float, CultureInfo.InvariantCulture, out double ut)) validSinceUT = ut;
+            if (uint.TryParse(node.GetValue(nameof(activeManagerId)), out uint id)) activeManagerId = id;
+        }
+        public override void OnSave(ConfigNode node)
+        {
+            base.OnSave(node);
+            node.SetValue(nameof(managerEnabled), managerEnabled.ToString(), true);
+            node.SetValue(nameof(energySupportRestore), energySupportRestore.ToString(), true);
+            node.SetValue(nameof(assignedEngineer), assignedEngineer, true);
+            node.SetValue(nameof(topologySignature), topologySignature, true);
+            node.SetValue(nameof(validSinceUT), validSinceUT.ToString("R", CultureInfo.InvariantCulture), true);
+            node.SetValue(nameof(activeManagerId), activeManagerId.ToString(CultureInfo.InvariantCulture), true);
+        }
         public override void OnStart(StartState startState)
         {
             base.OnStart(startState);
             InitializeLed();
             if (startState == StartState.Editor)
             {
+                energySupportRestore = false;
                 assignedEngineer = topologySignature = "";
                 validSinceUT = 0;
                 activeManagerId = 0;
@@ -97,16 +121,17 @@ namespace ShoAerospace.Koffee
             ProtoCrewMember? assigned = vessel.GetVesselCrew().FirstOrDefault(c => c.name == assignedEngineer);
             kaffeinated = KerbalWorkState.FormatDuration(assigned == null ? 0 : KerbalWorkState.GetKaffeinatedRemaining(assigned));
             cups = KoffeeSources.Available(part).ToString(CultureInfo.InvariantCulture);
+            engineeringDisplay = EngineeringDisplay.Effect(vessel, ExperimentManagerService.ValidEngineer(assigned) ? assignedEngineer : "", EngineeringAffinity.Systems);
             var active = ExperimentManagerService.Select(vessel, Planetarium.GetUniversalTime(), false, out var reason);
-            var all = StationExperimentRuntime.Capture(vessel);
+            var all = StationExperimentRuntime.Capture(vessel, includeCandidates: false);
             experimentCount = all.Count.ToString(CultureInfo.InvariantCulture);
             bool conflict = !string.IsNullOrEmpty(assignedEngineer) && ExperimentManagerService.Managers(vessel)
                 .Any(m => m.part.persistentId < part.persistentId && m.assignedEngineer == assignedEngineer);
             bool working = all.Any(e => e.State?.Status == ExperimentContainerStatus.Running &&
                 !e.WorkComplete && e.PauseReason == StationExperimentPauseReason.None);
-            SetLed(!conflict && ExperimentManagerService.ValidEngineer(assigned) &&
+            SetLed(managerEnabled && !conflict && ExperimentManagerService.ValidEngineer(assigned) &&
                 active != null && active.Id == part.persistentId && working);
-            managerStatus = conflict ? Text("Conflict") : string.IsNullOrEmpty(assignedEngineer)
+            managerStatus = !managerEnabled ? Localizer.Format("#Koffee_Health_ManagerOff") : conflict ? Text("Conflict") : string.IsNullOrEmpty(assignedEngineer)
                 ? Localizer.Format("#Koffee_Station_Pause_NoEngineerAssigned")
                 : !ExperimentManagerService.ValidEngineer(assigned)
                 ? Localizer.Format("#Koffee_Station_Pause_EngineerAbsentOrInvalid") : active == null
@@ -118,6 +143,18 @@ namespace ShoAerospace.Koffee
             SetEvent(nameof(ReleaseEngineer), !string.IsNullOrEmpty(assignedEngineer));
         }
         private void SetEvent(string name, bool enabled) { if (Events[name] != null) Events[name].active = enabled; }
+        [KSPEvent(guiActive = true, guiActiveEditor = true, guiName = "#Koffee_Health_ManagerToggle")]
+        public void ToggleManager() => SetManagerEnabled(!managerEnabled);
+        internal void SetManagerEnabled(bool enabled, bool coordinated = false)
+        {
+            if (enabled == managerEnabled || enabled && DeadlyScenario.Active(vessel)) return;
+            if (!coordinated && vessel?.loaded == true && HighLogic.LoadedSceneIsFlight)
+                StationExperimentRuntime.Tick(vessel, Planetarium.GetUniversalTime(), capturePresentation: false);
+            managerEnabled = enabled; topologySignature = ""; validSinceUT = Planetarium.GetUniversalTime();
+            if (!enabled) SetLed(false);
+            if (!coordinated && vessel?.loaded == true && HighLogic.LoadedSceneIsFlight)
+            { Changed(); StationExperimentRuntime.Tick(vessel, Planetarium.GetUniversalTime(), capturePresentation: false); }
+        }
         private void Changed()
         {
             topologySignature = "";

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
@@ -14,6 +15,8 @@ namespace ShoAerospace.Koffee
         private static FieldInfo? enabled, handlers;
         private static PropertyInfo? handlerModule;
         private static bool installed;
+        private static readonly Dictionary<(Type Type, string Name), FieldInfo?> fields =
+            new Dictionary<(Type Type, string Name), FieldInfo?>();
         internal static bool Active
         {
             get
@@ -21,9 +24,14 @@ namespace ShoAerospace.Koffee
                 if (!installed || !(enabled?.GetValue(null) is bool on) || !on) return false;
                 var entries = handlers?.GetValue(null) as IEnumerable;
                 if (entries == null) return false; // Settings.Load has not run yet.
-                object[] ours = entries.Cast<object>().Where(e => Field(e, "handledModule") as string == nameof(ModuleKoffeePowerConsumer)).ToArray();
-                if (ours.Length != 1) return false;
-                object entry = ours[0];
+                object? entry = null;
+                foreach (object candidate in entries)
+                {
+                    if (Field(candidate, "handledModule") as string != nameof(ModuleKoffeePowerConsumer)) continue;
+                    if (entry != null) return false;
+                    entry = candidate;
+                }
+                if (entry == null) return false;
                 object? config = Field(entry, "config");
                 return Field(entry, "handlerModuleName") as string == "GenericFieldDataHandler" &&
                     Field(entry, "resourceType")?.ToString() == "Power" &&
@@ -38,9 +46,16 @@ namespace ShoAerospace.Koffee
         internal static void Shutdown()
         {
             installed = false; enabled = handlers = null; handlerModule = null;
+            fields.Clear();
         }
 
-        private static object? Field(object value, string name) => value.GetType().GetField(name)?.GetValue(value);
+        // Cache immutable reflection metadata, never mutable settings or values.
+        private static object? Field(object value, string name)
+        {
+            var key = (value.GetType(), name);
+            if (!fields.TryGetValue(key, out var field)) fields[key] = field = key.Item1.GetField(name);
+            return field?.GetValue(value);
+        }
 
         internal static void Initialize(Harmony harmony)
         {
@@ -67,6 +82,19 @@ namespace ShoAerospace.Koffee
                         throw new InvalidOperationException("Unsupported DBS lab reader.");
                     harmony.Patch(target, postfix: new HarmonyMethod(typeof(StationDbsIntegration), nameof(LaboratoryValue)));
                 }
+                try
+                {
+                    foreach (string name in new[] { "ModuleResourceConverterPowerHandler", "ModuleResourceHarvesterPowerHandler" })
+                    {
+                        Type native = assembly.GetType("DynamicBatteryStorage." + name, true)!;
+                        var target = native.GetMethod("GetValueFlight", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                        if (target == null || target.ReturnType != typeof(double) || target.GetParameters().Length != 0)
+                            throw new InvalidOperationException("Unsupported DBS native converter reader.");
+                        harmony.Patch(target, postfix: new HarmonyMethod(typeof(StationDbsIntegration), nameof(ConverterValue)));
+                    }
+                }
+                catch (Exception error)
+                { Debug.LogWarning("[Koffee][DBS] Native converter presentation remains nominal where unsupported; billing unchanged. " + error); }
                 installed = true;
                 Debug.Log("[Koffee][DBS] Optional handlers ready: " + assembly.GetName().FullName +
                     "; loaded warp billing requires Enabled and the effective Koffee CFG handler.");
@@ -76,6 +104,16 @@ namespace ShoAerospace.Koffee
                 installed = false;
                 Debug.LogError("[Koffee][DBS] Compatibility unavailable; stock warp policy retained. " + error);
             }
+        }
+
+        internal static void ConverterValue(object __instance, ref double __result)
+        {
+            // DBS already includes lastTimeFactor. Apply only the same-work
+            // weighted EC coefficient of the last successful stock processing.
+            // Negative consumer rows only; editor and producer rows stay stock.
+            if (!Active || !HighLogic.LoadedSceneIsFlight || __result >= 0) return;
+            if (handlerModule?.GetValue(__instance, null) is BaseConverter converter)
+                __result *= EngineeringKoffeeService.MonitorFactor(converter);
         }
 
         private static void LaboratoryValue(object __instance, ref double __result)

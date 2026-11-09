@@ -36,9 +36,19 @@ Resultados:
 
 Para utilizar las DLL compiladas, colocarlas en `GameData/ShoAerospace/Koffee/Plugins` de una instalación del mod que ya tenga los modelos, las texturas y las configuraciones de la release correspondiente.
 
+## Adaptador opcional de contratos
+
+Para compilar `KoffeeContracts.dll`, instala Contract Configurator 2.13.4.0 en la misma copia de KSP:
+
+```powershell
+dotnet build src/Koffee.Contracts/Koffee.Contracts.csproj -c Release "-p:KSPBT_GameRoot=C:/Games/KSP" -p:KSPBT_CopyDLLsToPluginFolder=false -p:KSPBT_InstallCKANDependencies=false -p:KSPBT_GenerateVersionFile=false
+```
+
+Resultado: `src/Koffee.Contracts/bin/Release/net48/KoffeeContracts.dll`. El adaptador es propio de Koffee; Contract Configurator se instala por separado. Lonapse, SystemHeat y DBS no son necesarios para compilar.
+
 ## Pruebas y verificación
 
-Los proyectos de `tests` contienen comprobaciones de lógica, configuración y compatibilidad con KSP. Algunas pruebas también verifican la presencia de modelos y texturas: para esas comprobaciones se necesita el contenido de la release, además de los fuentes. Las pruebas de integración que utilizan ensamblados stock requieren la instalación local de KSP indicada por cada proyecto.
+Las comprobaciones de lógica, configuración y compatibilidad se ejecutan en el entorno de desarrollo y no se incluyen en este repositorio de fuentes. La validación realizada para cada entrega se describe en sus notas de release.
 
 Las comprobaciones automáticas no sustituyen las pruebas dentro de KSP. Las herramientas y los documentos de desarrollo pueden mencionar rutas locales o recursos artísticos que no se publican en el repositorio de fuentes.
 

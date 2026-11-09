@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>KoffeeContracts</AssemblyName>
+    <KSPBT_GenerateDependencyAttributes>false</KSPBT_GenerateDependencyAttributes>
+    <KSPBT_CopyDLLsToPluginFolder>false</KSPBT_CopyDLLsToPluginFolder>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="KSPBuildTools" Version="1.1.1" />
+    <ProjectReference Include="../Koffee/Koffee.csproj" />
+    <ModReference Include="ContractConfigurator">
+      <DLLPath>GameData/ContractConfigurator/ContractConfigurator.dll</DLLPath>
+      <Private>false</Private>
+      <GenerateDependencyAttribute>false</GenerateDependencyAttribute>
+    </ModReference>
+  </ItemGroup>
+</Project>

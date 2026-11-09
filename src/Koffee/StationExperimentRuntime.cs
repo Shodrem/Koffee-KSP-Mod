@@ -74,14 +74,26 @@ namespace ShoAerospace.Koffee
 
     internal static class StationExperimentRuntime
     {
-        internal static IReadOnlyList<StationExperimentRuntimeSnapshot> Tick(Vessel vessel, double now, bool? electricalMode = null)
+        internal static IReadOnlyList<StationExperimentRuntimeSnapshot> Tick(Vessel vessel, double now,
+            bool? electricalMode = null, bool capturePresentation = true)
         {
-            if (vessel == null || !vessel.loaded || !ExperimentContainerState.Finite(now))
+            if (vessel == null || !vessel.loaded || !ExperimentContainerState.Finite(now) || StationVesselScope.IsNaturalObject(vessel))
                 return Array.Empty<StationExperimentRuntimeSnapshot>();
-            List<ModuleKoffeeLab> labs = Modules<ModuleKoffeeLab>(vessel).ToList();
+            KomfortRuntime.Observe(vessel, now, electricalMode);
+            if (vessel == null || vessel.isEVA && DeadlyScenario.Members(vessel).Length == 0) return Array.Empty<StationExperimentRuntimeSnapshot>();
             List<ModuleKoffeeExperiment> experiments = Modules<ModuleKoffeeExperiment>(vessel)
                 .OrderBy(module => module.State?.StartUT ?? double.MaxValue)
                 .ThenBy(module => module.State?.ContainerId ?? Guid.Empty).ToList();
+            if (experiments.Count == 0)
+            {
+                // Komfort, native lab billing and DBS still run on ships with no
+                // experiments. No research equipment/slot/presentation scan is needed.
+                ExperimentManagerService.Select(vessel, now, true, out _);
+                StationPowerPolicy.Observe(vessel, now, electricalMode);
+                StationElectricalDemand.Refresh(vessel);
+                return Array.Empty<StationExperimentRuntimeSnapshot>();
+            }
+            List<ModuleKoffeeLab> labs = Modules<ModuleKoffeeLab>(vessel).ToList();
             Dictionary<Guid, StationExperimentReservation> reservations =
                 BuildReservations(experiments, labs);
             string body = CurrentBody(vessel);
@@ -106,6 +118,7 @@ namespace ShoAerospace.Koffee
             StationStockPower? power = manager?.Part == null ? null : StationStockPower.For(
                 manager.Part.Modules.OfType<ModuleKoffeeExperimentManager>().First(), intervalApplies, now);
             var snapshots = new List<StationExperimentRuntimeSnapshot>(experiments.Count);
+            bool engineeringWork = false;
             foreach (ModuleKoffeeExperiment module in experiments)
             {
                 StationExperimentDefinition? definition = Definition(module);
@@ -141,31 +154,45 @@ namespace ShoAerospace.Koffee
                     if (!rebased || reason != StationExperimentPauseReason.None)
                         StationExperimentNotifications.Observe(module.State!, vessel.vesselName, reason);
                 }
+                engineeringWork |= module.State != null && state != null && module.State.AccumulatedUT > state.AccumulatedUT;
                 module.ElectricalWorkReady = module.State?.Status == ExperimentContainerStatus.Running &&
                     module.State.CheckpointVerified && !module.State.WorkComplete() &&
                     (reason == StationExperimentPauseReason.None || reason == StationExperimentPauseReason.NoElectricity);
-                snapshots.Add(new StationExperimentRuntimeSnapshot(module, definition, reason,
-                    reservation, body, situation, Scientists(vessel, labs, definition, AssignedScientists(experiments, module)),
-                    AssignedLaboratory(state)));
+                if (capturePresentation)
+                    snapshots.Add(new StationExperimentRuntimeSnapshot(module, definition, reason,
+                        reservation, body, situation, Scientists(vessel, labs, definition, AssignedScientists(experiments, module)),
+                        AssignedLaboratory(state)));
             }
+            // Required scientist renewals for every experiment have priority.
+            if (engineeringWork && intervalApplies && manager?.Part != null && experiments.Any(e => e.ElectricalWorkReady && Definition(e) != null &&
+                StationStockPower.Consumers(manager.Part.Modules.OfType<ModuleKoffeeExperimentManager>().First(),
+                    e, Definition(e)!, AssignedLaboratory(e.State)?.part).Values.Any(rate => rate > 0)) &&
+                EngineeringContribution.OptionalUseful(vessel, manager.EngineerName, now) &&
+                (EngineeringContribution.CoffeeAt(vessel, manager.EngineerName, now) || EngineeringContribution.MayBuyOptional(vessel, manager.Part, now)))
+                using (var renewal = session.Begin(vessel.GetVesselCrew().First(c => c.name == manager.EngineerName), manager.Part))
+                    if (renewal.Ensure(now)) renewal.Commit();
             StationElectricalDemand.Refresh(vessel);
             return snapshots;
         }
 
-        internal static IReadOnlyList<StationExperimentRuntimeSnapshot> Capture(Vessel vessel)
+        internal static IReadOnlyList<StationExperimentRuntimeSnapshot> Capture(Vessel vessel,
+            ModuleKoffeeExperiment? target = null, bool includeCandidates = true)
         {
             if (vessel == null || !vessel.loaded)
                 return Array.Empty<StationExperimentRuntimeSnapshot>();
-            List<ModuleKoffeeLab> labs = Modules<ModuleKoffeeLab>(vessel).ToList();
             List<ModuleKoffeeExperiment> experiments = Modules<ModuleKoffeeExperiment>(vessel)
                 .OrderBy(module => module.State?.StartUT ?? double.MaxValue)
                 .ThenBy(module => module.State?.ContainerId ?? Guid.Empty).ToList();
+            if (experiments.Count == 0) return Array.Empty<StationExperimentRuntimeSnapshot>();
+            List<ModuleKoffeeLab> labs = Modules<ModuleKoffeeLab>(vessel).ToList();
             Dictionary<Guid, StationExperimentReservation> reservations =
                 BuildReservations(experiments, labs);
             string body = CurrentBody(vessel);
             string situation = CurrentSituation(vessel);
             var equipment = StationExperimentEquipment.Capture(vessel);
-            return experiments.Select(module =>
+            // Reservations still include every container. Only presentation for
+            // the requested module is built; other PAWs do not need rebuilding.
+            return experiments.Where(module => target == null || ReferenceEquals(module, target)).Select(module =>
             {
                 StationExperimentDefinition? definition = Definition(module);
                 StationExperimentReservation? reservation = module.State != null &&
@@ -174,7 +201,9 @@ namespace ShoAerospace.Koffee
                         (StationExperimentReservation?)null;
                 return new StationExperimentRuntimeSnapshot(module, definition,
                     Reason(module, definition, labs, reservation, vessel, body, situation, true, equipment),
-                    reservation, body, situation, Scientists(vessel, labs, definition, AssignedScientists(experiments, module)),
+                    reservation, body, situation, includeCandidates
+                        ? Scientists(vessel, labs, definition, AssignedScientists(experiments, module))
+                        : Array.Empty<StationScientistCandidate>(),
                     AssignedLaboratory(module.State));
             }).ToArray();
         }
@@ -192,7 +221,7 @@ namespace ShoAerospace.Koffee
                 return reason;
             }
             double start = state.LastCheckpointUT ?? now;
-            bool rebasing = !state.CheckpointVerified || manager!.ValidSince > start ||
+            bool rebasing = !KomfortRuntime.Continuous(vessel, start, now) || !state.CheckpointVerified || manager!.ValidSince > start ||
                 state.CheckpointBody != body || state.CheckpointSituation != situation;
             ProtoCrewMember worker = reservation!.Value.Laboratory.part.protoModuleCrew
                 .First(c => c.name == state.AssignedKerbalName);
@@ -209,17 +238,28 @@ namespace ShoAerospace.Koffee
             using (var scientist = session.Begin(worker, module.part))
             using (var engineer = session.Begin(vessel.GetVesselCrew().First(c => c.name == manager!.EngineerName), manager!.Part!))
             {
-                StationResearchCredit credit = rebasing ? default : StationResearchInterval.Process(
+                StationResearchCredit credit = rebasing ? default : StationResearchInterval.ProcessWeighted(
                     state.ResearchPointsRequired, state.AccumulatedResearchPoints, state.ResearchAffinity, segments,
-                    (from, to, remainingSeconds) => electricity.Blocked ? 0 :
-                        engineer.TeamCoverage(scientist, from, to, remainingSeconds, electricity.Authorize),
-                    KoffeeResearchRates.At, KoffeeResearchRates.NextBoundary);
+                    (from, to, remaining) =>
+                    {
+                        if (electricity.Blocked) return default;
+                        double work = 0;
+                        double weighted = engineer.TeamCoverage(scientist, from, to, remaining, electricity.Authorize,
+                            (a, b) => KoffeeResearchRates.At(a) * KomfortRuntime.Integral(vessel, a, b),
+                            (a, b) => work += b - a);
+                        return new StationResearchCoverage(weighted, work);
+                    }, ut => KomfortRuntime.NextBoundary(vessel, ut));
                 // Electrical starvation does not invalidate the scientific context.
                 // Advance the checkpoint to now and retry new work on the next tick.
                 bool verified = electricity.ControlsWork || credit.Complete || ((rebasing || credit.FullyCovered) &&
                     engineer.EnsureTeam(scientist, now));
                 if (!module.ApplyResearchCheckpoint(now, credit, verified, body, situation, worker.experienceLevel)) return StationExperimentPauseReason.None;
                 electricity.Commit();
+                if (credit.Points > 0)
+                {
+                    module.responsibleManagerId = manager.Id;
+                    module.responsibleEngineer = manager.EngineerName;
+                }
                 if (credit.CoveredSeconds > 0 || (verified && !electricity.ControlsWork)) { scientist.Commit(); engineer.Commit(); }
                 if (electricity.Blocked) return StationExperimentPauseReason.NoElectricity;
                 return verified && (rebasing || credit.FullyCovered) ? StationExperimentPauseReason.None : StationExperimentPauseReason.TeamNeedsKoffee;
@@ -546,7 +586,7 @@ namespace ShoAerospace.Koffee
                     return false;
                 }
                 if (!module.TryStartRun(now, body, situation, slot, out error)) return false;
-                scientistActivation.Commit(); engineerActivation.Commit();
+                scientistActivation.Commit();
                 return true;
             }
         }
@@ -591,6 +631,7 @@ namespace ShoAerospace.Koffee
             GameEvents.onGameStateLoad.Add(OnLoad);
             GameEvents.onVesselWasModified.Add(OnComposition);
             GameEvents.onPartDie.Add(OnPartChanged);
+            GameEvents.onPartDie.Add(OnThermalPartDie);
             GameEvents.onPartUndock.Add(OnPartChanged);
             GameEvents.onPartCouple.Add(OnCouple);
             GameEvents.onPartActionUIDismiss.Add(OnDismiss);
@@ -599,12 +640,13 @@ namespace ShoAerospace.Koffee
         private void OnDestroy()
         {
             StationExperimentAnimationPreparation.Clear();
-            StationPowerPolicy.Clear(); StationStockPower.Clear(); StationLaboratoryPower.Clear();
+            KomfortRuntime.Clear(); StationPowerPolicy.Clear(); StationStockPower.Clear(); StationLaboratoryPower.Clear();
             GameEvents.onVesselSituationChange.Remove(OnSituation);
             GameEvents.onVesselSOIChanged.Remove(OnBody);
             GameEvents.onGameStateLoad.Remove(OnLoad);
             GameEvents.onVesselWasModified.Remove(OnComposition);
             GameEvents.onPartDie.Remove(OnPartChanged);
+            GameEvents.onPartDie.Remove(OnThermalPartDie);
             GameEvents.onPartUndock.Remove(OnPartChanged);
             GameEvents.onPartCouple.Remove(OnCouple);
             GameEvents.onPartActionUIDismiss.Remove(OnDismiss);
@@ -619,9 +661,9 @@ namespace ShoAerospace.Koffee
             double now = Planetarium.GetUniversalTime();
             // The event is emitted after the rate changes. Close the old mode's
             // interval first, then Observe records the new mode for subsequent work.
-            foreach (Vessel vessel in FlightGlobals.Vessels)
+            foreach (Vessel vessel in FlightGlobals.Vessels.ToArray())
                 if (vessel != null && vessel.loaded)
-                { StationExperimentRuntime.Tick(vessel, now, !wasHighWarp || StationDbsIntegration.Active); StationLaboratoryPower.OnWarp(vessel); }
+                { StationExperimentRuntime.Tick(vessel, now, !wasHighWarp || StationDbsIntegration.Active, capturePresentation: false); StationLaboratoryPower.OnWarp(vessel); }
             wasHighWarp = StationPowerPolicy.HighWarp;
         }
         private void OnSituation(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> change) =>
@@ -629,14 +671,15 @@ namespace ShoAerospace.Koffee
         private void OnBody(GameEvents.HostedFromToAction<Vessel, CelestialBody> change) =>
             StationSurfaceContinuity.Invalidate(change.host);
         private void OnComposition(Vessel vessel)
-        { StationExperimentAnimationPreparation.Invalidate(vessel); StationEquipmentContinuity.Invalidate(vessel); StationStockPower.Forget(vessel); }
+        { KomfortRuntime.Invalidate(vessel); StationExperimentAnimationPreparation.Invalidate(vessel); StationEquipmentContinuity.Invalidate(vessel); StationStockPower.Forget(vessel); }
+        private void OnThermalPartDie(Part part) => KomfortThermalDiagnostics.Destroyed(part);
         private void OnPartChanged(Part? part) { if (part?.vessel != null) OnComposition(part.vessel); }
         private void OnCouple(GameEvents.FromToAction<Part, Part> change)
         {
             OnPartChanged(change.from);
             if (!ReferenceEquals(change.from?.vessel, change.to?.vessel)) OnPartChanged(change.to);
         }
-        private void OnLoad(ConfigNode node) { StationExperimentAnimationPreparation.Clear(); StationSurfaceContinuity.Clear(); StationEquipmentContinuity.Clear(); StationPowerPolicy.Clear(); StationStockPower.Clear(); StationLaboratoryPower.Clear(); }
+        private void OnLoad(ConfigNode node) { EngineeringKoffeeService.Clear(); KomfortRuntime.Clear(); StationExperimentAnimationPreparation.Clear(); StationSurfaceContinuity.Clear(); StationEquipmentContinuity.Clear(); StationPowerPolicy.Clear(); StationStockPower.Clear(); StationLaboratoryPower.Clear(); }
 
         private void Update() => StationExperimentAnimationPreparation.Update();
 
@@ -644,8 +687,8 @@ namespace ShoAerospace.Koffee
         {
             if (!HighLogic.LoadedSceneIsFlight || !FlightGlobals.ready) return;
             double now = Planetarium.GetUniversalTime();
-            foreach (Vessel vessel in FlightGlobals.Vessels)
-                if (vessel != null && vessel.loaded) StationExperimentRuntime.Tick(vessel, now);
+            foreach (Vessel vessel in FlightGlobals.Vessels.ToArray())
+                if (vessel != null && vessel.loaded) StationExperimentRuntime.Tick(vessel, now, capturePresentation: false);
             StationExperimentBackgroundDriver.Update();
         }
     }

@@ -1,6 +1,4 @@
-using System;
 using HarmonyLib;
-using UnityEngine;
 
 namespace ShoAerospace.Koffee
 {
@@ -9,28 +7,36 @@ namespace ShoAerospace.Koffee
         internal static void Install(Harmony harmony)
         {
             harmony.Patch(AccessTools.DeclaredMethod(typeof(ResourceConverter), "ProcessRecipe"),
-                prefix: new HarmonyMethod(typeof(EngineeringPatches), nameof(Begin)),
-                postfix: new HarmonyMethod(typeof(EngineeringPatches), nameof(Observe)),
-                finalizer: new HarmonyMethod(typeof(EngineeringPatches), nameof(Finish)));
-            Debug.Log("[Koffee] Engineering hooks installed: ResourceConverter.ProcessRecipe.");
+                prefix: new HarmonyMethod(typeof(EngineeringPatches), nameof(Process)),
+                postfix: new HarmonyMethod(typeof(EngineeringPatches), nameof(AfterProcess)),
+                finalizer: new HarmonyMethod(typeof(EngineeringPatches), nameof(FinishProcess)));
+            harmony.Patch(AccessTools.DeclaredMethod(typeof(Part), "RequestResource", new[] { typeof(int), typeof(double), typeof(ResourceFlowMode) }),
+                prefix: new HarmonyMethod(typeof(EngineeringPowerDiagnostics), nameof(EngineeringPowerDiagnostics.BeforeDebit)),
+                postfix: new HarmonyMethod(typeof(EngineeringPowerDiagnostics), nameof(EngineeringPowerDiagnostics.AfterDebit)),
+                finalizer: new HarmonyMethod(typeof(EngineeringPowerDiagnostics), nameof(EngineeringPowerDiagnostics.FinishDebit)));
         }
 
-        private static void Begin(double deltaTime, Part resPart, PartModule resModule,
-            ref float efficiencyBonus, out EngineeringProcessingLease? __state) =>
-            __state = EngineeringKoffeeService.Begin(deltaTime, resPart, resModule,
-                ref efficiencyBonus);
-
-        private static void Observe(ConverterResults __result,
-            EngineeringProcessingLease? __state)
+        private static bool Process(ResourceConverter __instance, double deltaTime, ConversionRecipe recipe,
+            Part resPart, PartModule resModule, float efficiencyBonus, ref ConverterResults __result, out EngineeringPowerDiagnostics.Sample? __state)
         {
-            __state?.Observe(__result.TimeFactor);
+            __state = null;
+            if (EngineeringKoffeeService.IsProcessing(resModule)) return true;
+            if (!EngineeringKoffeeService.TryProcess(__instance, deltaTime, recipe, resPart, resModule, efficiencyBonus, out var result, out string reason))
+            {
+                if (HighLogic.LoadedSceneIsFlight && resModule is BaseConverter converter && resPart?.vessel?.loaded == true &&
+                    EngineeringModuleFilter.Matches(converter.GetType(), resPart.partInfo?.name ?? "", converter.UseSpecialistBonus, converter.ExperienceEffect))
+                {
+                    EngineeringKoffeeService.ForgetMonitor(converter);
+                    double end = Planetarium.GetUniversalTime();
+                    __state = EngineeringPowerDiagnostics.Begin(recipe, recipe, resPart, resModule, end - deltaTime, end, efficiencyBonus, reason,
+                        affinity: converter.GetType() == typeof(ModuleResourceHarvester) ? EngineeringAffinity.Extraction : EngineeringAffinity.Refining);
+                }
+                return true;
+            }
+            __result = result; return false;
         }
-
-        private static Exception? Finish(Exception? __exception,
-            EngineeringProcessingLease? __state)
-        {
-            __state?.Complete(__exception);
-            return __exception;
-        }
+        private static void AfterProcess(ConverterResults __result, EngineeringPowerDiagnostics.Sample? __state) => __state?.Complete(__result.TimeFactor);
+        private static System.Exception? FinishProcess(System.Exception? __exception, EngineeringPowerDiagnostics.Sample? __state)
+        { __state?.Dispose(); return __exception; }
     }
 }

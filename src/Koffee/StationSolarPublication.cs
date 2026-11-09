@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using UnityEngine;
@@ -30,10 +31,29 @@ namespace ShoAerospace.Koffee
             internal float PhysicsTime;
             internal Sample Snapshot() => (Sample)MemberwiseClone();
         }
+        // Cache API metadata, including absence, rather than scanning every loaded
+        // assembly during each solar callback. Values remain native, live reads.
+        private sealed class KopernicusMetadata
+        {
+            internal readonly Type? Type = AccessTools.TypeByName("Kopernicus.Components.KopernicusStar");
+            internal readonly FieldInfo? Stars, Fluxes, StarName;
+            internal KopernicusMetadata()
+            {
+                if (Type == null) return;
+                Stars = AccessTools.Field(Type, "Stars");
+                Fluxes = AccessTools.Field(Type, "SolarFlux");
+                StarName = AccessTools.Field(Type, "StarName");
+            }
+        }
+        private static KopernicusMetadata? kopernicus;
+        private static KopernicusMetadata Kopernicus => kopernicus ?? (kopernicus = new KopernicusMetadata());
+        internal static Type? KopernicusType => Kopernicus.Type;
+        private static readonly FieldInfo FluxField = AccessTools.Field(typeof(FlightIntegrator), "solarFlux");
+        private static readonly FieldInfo BodyField = AccessTools.Field(typeof(FlightIntegrator), "currentMainBody");
         private static ConditionalWeakTable<FlightIntegrator, Sample> integrators = new ConditionalWeakTable<FlightIntegrator, Sample>();
         private static ConditionalWeakTable<Vessel, Sample> publications = new ConditionalWeakTable<Vessel, Sample>();
         internal static void Clear()
-        { integrators = new ConditionalWeakTable<FlightIntegrator, Sample>(); publications = new ConditionalWeakTable<Vessel, Sample>(); }
+        { integrators = new ConditionalWeakTable<FlightIntegrator, Sample>(); publications = new ConditionalWeakTable<Vessel, Sample>(); kopernicus = null; }
         internal static void Install(Harmony harmony)
         {
             harmony.Patch(AccessTools.Method(typeof(FlightIntegrator), "FixedUpdate"),
@@ -54,7 +74,7 @@ namespace ShoAerospace.Koffee
                     harmony.Patch(AccessTools.DeclaredMethod(modular, name),
                         postfix: new HarmonyMethod(typeof(StationSolarPublication), nameof(ConstantsHook)));
             }
-            Type? star = AccessTools.TypeByName("Kopernicus.Components.KopernicusStar");
+            Type? star = KopernicusType;
             if (star != null)
                 harmony.Patch(AccessTools.Method(star, "SunBodyFlux"),
                     postfix: new HarmonyMethod(typeof(StationSolarPublication), nameof(KopernicusHook)));
@@ -102,7 +122,7 @@ namespace ShoAerospace.Koffee
             {
                 // If Kopernicus is present, a missing/invalid aggregate must not
                 // silently fall back to its primary-star boolean.
-                if (AccessTools.TypeByName("Kopernicus.Components.KopernicusStar") == null)
+                if (KopernicusType == null)
                     RecordSun(__instance, "StockFlightIntegrator", __instance.Vessel.directSunlight);
             }
             if ((__exception != null || !s.SunCalculated) && __instance.Vessel != null) publications.Remove(__instance.Vessel);
@@ -111,14 +131,14 @@ namespace ShoAerospace.Koffee
         internal static void KopernicusCalculated(object __0)
         {
             if (!(__0 is FlightIntegrator fi)) return;
-            Type? type = AccessTools.TypeByName("Kopernicus.Components.KopernicusStar");
-            var stars = type == null ? null : AccessTools.Field(type, "Stars")?.GetValue(null) as IEnumerable;
-            var fluxes = type == null ? null : AccessTools.Field(type, "SolarFlux")?.GetValue(null) as IDictionary;
+            var metadata = Kopernicus;
+            var stars = metadata.Stars?.GetValue(null) as IEnumerable;
+            var fluxes = metadata.Fluxes?.GetValue(null) as IDictionary;
             if (stars == null || fluxes == null) return;
             double sum = 0; var names = new HashSet<string>(StringComparer.Ordinal);
             foreach (object star in stars)
             {
-                string? name = AccessTools.Field(type!, "StarName")?.GetValue(star) as string;
+                string? name = metadata.StarName?.GetValue(star) as string;
                 if (name == null || !names.Add(name) || !fluxes.Contains(name) || !(fluxes[name] is double value) ||
                     !ExperimentContainerState.Finite(value) || value < 0) return;
                 sum += value;
@@ -128,9 +148,9 @@ namespace ShoAerospace.Koffee
                 Math.Abs(total - sum) > Math.Max(1e-6, Math.Abs(sum) * 1e-9)) return;
             RecordSun(fi, "KopernicusAggregate", sum > 0);
         }
-        private static double IntegratorFlux(FlightIntegrator fi) => (double)AccessTools.Field(typeof(FlightIntegrator), "solarFlux").GetValue(fi)!;
+        private static double IntegratorFlux(FlightIntegrator fi) => (double)FluxField.GetValue(fi)!;
         private static bool BodyMatches(FlightIntegrator fi) => ReferenceEquals(
-            AccessTools.Field(typeof(FlightIntegrator), "currentMainBody").GetValue(fi), fi.Vessel?.mainBody);
+            BodyField.GetValue(fi), fi.Vessel?.mainBody);
         private static void RecordSun(FlightIntegrator __instance, string source, bool illuminated)
         {
             Vessel vessel = __instance.Vessel;

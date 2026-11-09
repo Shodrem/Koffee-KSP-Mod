@@ -32,7 +32,7 @@ namespace ShoAerospace.Koffee
             var stars=bodies.Where(b=>b != null && b.isStar).ToArray();
             var sun=Planetarium.fetch.Sun;
             if (stars.Length != 1 || stars[0] != sun || string.IsNullOrWhiteSpace(sun.bodyName)) return null;
-            Type? type=AccessTools.TypeByName("Kopernicus.Components.KopernicusStar");
+            Type? type=StationSolarPublication.KopernicusType;
             if (source == "StockFlightIntegrator") return type == null ? sun : null;
             // Attribute a completed aggregate only when there is exactly one
             // registered star AND one flux, and its inherited Sun.sun is that body.

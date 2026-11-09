@@ -6,31 +6,20 @@ namespace ShoAerospace.Koffee
 {
     internal static class EngineeringSettingsLoader
     {
-        internal static EngineeringKoffeeSettings Current { get; private set; } =
-            EngineeringKoffeeSettings.Disabled;
-
+        internal static EngineeringKoffeeSettings Current { get; private set; } = EngineeringKoffeeSettings.Disabled;
         internal static void Load()
         {
-            ConfigNode[] nodes = GameDatabase.Instance.GetConfigNodes(KoffeeIdentifiers.EngineeringSettingsNode);
-            var values = new List<IReadOnlyDictionary<string, string?>>(nodes.Length);
-            foreach (ConfigNode node in nodes)
+            var values = new List<IReadOnlyDictionary<string, string?>>();
+            foreach (ConfigNode node in GameDatabase.Instance.GetConfigNodes(KoffeeIdentifiers.EngineeringSettingsNode))
             {
-                var entry = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase)
-                {
-                    ["engineerSelection"] = node.GetValue("engineerSelection")
-                };
-                for (int level = 0; level <= 5; level++)
-                {
-                    string key = "bonusLevel" + level;
-                    entry[key] = node.GetValue(key);
-                }
+                var entry = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+                foreach (string key in EngineeringKoffeeSettings.Keys) entry[key] = node.GetValue(key);
                 values.Add(entry);
             }
-
-            Current = EngineeringKoffeeSettings.Parse(values, out IReadOnlyList<string> errors);
+            Current = EngineeringKoffeeSettings.Parse(values, out var errors);
+            EngineeringPowerDiagnostics.Enabled = values.Count == 1 &&
+                string.Equals(GameDatabase.Instance.GetConfigNodes(KoffeeIdentifiers.EngineeringSettingsNode)[0].GetValue("engineeringPowerDiagnostics"), "true", StringComparison.OrdinalIgnoreCase);
             foreach (string error in errors) Debug.LogError("[Koffee] " + error);
-            Debug.Log("[Koffee] Engineering Koffee " + (Current.Enabled ? "enabled" : "disabled") +
-                "; selection=" + Current.Selection + ".");
         }
     }
 }

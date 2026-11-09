@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using KSP.Localization;
 using Debug = UnityEngine.Debug;
 
@@ -9,6 +10,15 @@ namespace ShoAerospace.Koffee
     {
         internal static bool CanRun(string id, Part consumer)
         {
+            if (ScienceReportPolicy.StockInstrument(id))
+            {
+                var stores = ModuleKoffeeScienceStore.Stores(consumer.vessel).ToArray();
+                bool available = ScienceReportTransfer.Live(consumer) && stores.Any(m => m.Operating);
+                if (!available && stores.Length > 0)
+                    ScreenMessages.PostScreenMessage(Localizer.Format("#Koffee_Station_Pause_ManagerOff"), 5f, ScreenMessageStyle.UPPER_CENTER);
+                else if (!available) ScienceReportUI.Message("NoManagers");
+                return available;
+            }
             if (!ScienceExperimentKoffeeRegistry.Contains(id)) return true;
             ProtoCrewMember? scientist = KerbalWorkAssignment.ExperimentScientist(consumer);
             if (scientist == null)

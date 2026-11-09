@@ -82,37 +82,32 @@ namespace ShoAerospace.Koffee
 
             internal bool EnsureTeam(Transaction other, double now)
             {
-                int ownMark = renewals.Count, otherMark = other.renewals.Count;
-                if (Activate(now).HasValue && other.Activate(now).HasValue) return true;
-                other.Rollback(otherMark);
-                Rollback(ownMark);
-                return false;
+                // The receiver is the Manager engineer. Only the scientist's
+                // coffee is mandatory. Optional engineering coffee is attempted
+                // after published, powered work, never ahead of the scientist.
+                return other.Ensure(now);
             }
 
             internal double TeamCoverage(Transaction other, double start, double end,
-                double remaining, Func<double, double, double>? authorize = null)
+                double remaining, Func<double, double, double>? authorize = null,
+                Func<double, double, double>? weightedSeconds = null, Action<double, double>? actualCoverage = null)
             {
                 double cursor = start, credited = 0;
                 int guard = 0;
                 while (cursor < end && credited < remaining && guard++ < 100000)
                 {
-                    // A later pre-existing activation cannot prove earlier coverage.
-                    double next = Math.Max(NextStart(cursor), other.NextStart(cursor));
+                    double next = other.NextStart(cursor);
                     if (next > cursor) { cursor = next; continue; }
-                    int ownMark = renewals.Count, otherMark = other.renewals.Count;
-                    if (!EnsureTeam(other, cursor)) break;
-                    KaffeinatedWindow a = history.At(cursor)!.Value;
-                    KaffeinatedWindow b = other.history.At(cursor)!.Value;
-                    double until = Math.Min(end, Math.Min(a.EndUT, b.EndUT));
-                    until = Math.Min(until, cursor + remaining - credited);
+                    int mark = other.renewals.Count;
+                    if (!other.Ensure(cursor)) break;
+                    double until = Math.Min(end, other.history.At(cursor)!.Value.EndUT);
+                    until = weightedSeconds == null ? Math.Min(until, cursor + remaining - credited) :
+                        KomfortRate.Limit(cursor, until, remaining - credited, weightedSeconds);
                     if (!(until > cursor)) break;
                     double authorized = authorize == null ? until - cursor : authorize(cursor, until);
-                    if (authorized <= 0)
-                    {
-                        other.Rollback(otherMark); Rollback(ownMark);
-                        break;
-                    }
-                    credited += authorized;
+                    if (authorized <= 0) { other.Rollback(mark); break; }
+                    actualCoverage?.Invoke(cursor, cursor + authorized);
+                    credited += weightedSeconds == null ? authorized : Math.Min(remaining - credited, weightedSeconds(cursor, cursor + authorized));
                     cursor += authorized;
                     if (cursor < until) break;
                 }

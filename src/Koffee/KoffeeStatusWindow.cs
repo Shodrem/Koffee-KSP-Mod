@@ -14,7 +14,10 @@ namespace ShoAerospace.Koffee
         private static Vector2 rememberedPosition = new Vector2(-1, -1);
         private static Vector2 rememberedFlightPosition = new Vector2(-1, -1);
         private readonly KoffeeFlightStatusView? flightView = HighLogic.LoadedSceneIsFlight ? new KoffeeFlightStatusView() : null;
-        private float CurrentWidth => flightView == null ? WindowWidth : KoffeeFlightStatusView.Width;
+        private static Vector2 rememberedRosterPosition = new Vector2(-1, -1);
+        private readonly KoffeeSpaceCenterView? rosterView = HighLogic.LoadedScene == GameScenes.SPACECENTER ? new KoffeeSpaceCenterView() : null;
+        private float CurrentWidth => rosterView != null ? KoffeeSpaceCenterView.Width :
+            flightView == null ? WindowWidth : KoffeeFlightStatusView.Width;
 
         private Rect windowRect = new Rect(0, 80, WindowWidth, 120);
         private Vector2 scrollPosition;
@@ -29,6 +32,8 @@ namespace ShoAerospace.Koffee
         private GUIStyle? rosterButton;
         private GUISkin? styledSkin;
         private float nextRefresh;
+        private Guid capturedVesselId;
+        private Game? capturedGame;
 
         internal bool IsOpen { get; private set; }
         internal Rect WindowRect => windowRect;
@@ -37,18 +42,33 @@ namespace ShoAerospace.Koffee
         {
             IsOpen = true;
             Invalidate();
+            RefreshIfNeeded();
         }
 
-        internal void Close() => IsOpen = false;
+        internal void Close() { IsOpen = false; rosterView?.CancelPending(); }
+
+        internal void CancelPendingFlight() => rosterView?.CancelPending();
+
+        internal bool ProcessFlight(Action releaseWindow) => rosterView?.ProcessFlight(releaseWindow) == true;
 
         internal void Invalidate() => nextRefresh = 0;
 
         internal void RefreshIfNeeded()
         {
-            bool vesselChanged = flightView != null && snapshot.VesselId != (FlightGlobals.ActiveVessel?.id ?? Guid.Empty);
-            if (!IsOpen || (!vesselChanged && Time.realtimeSinceStartup < nextRefresh)) return;
-            snapshot = KoffeeStatusViewModel.Capture();
-            flightView?.Refresh(snapshot);
+            Guid activeId = flightView != null ? FlightGlobals.ActiveVessel?.id ?? Guid.Empty : Guid.Empty;
+            bool vesselChanged = flightView != null && capturedVesselId != activeId;
+            bool gameChanged = !ReferenceEquals(capturedGame, HighLogic.CurrentGame);
+            if (!IsOpen || (!vesselChanged && !gameChanged && Time.realtimeSinceStartup < nextRefresh)) return;
+            if (rosterView != null) rosterView.Refresh();
+            else
+            {
+                snapshot = KoffeeStatusViewModel.Capture();
+                flightView?.Refresh(snapshot);
+            }
+            if (gameChanged && HighLogic.LoadedSceneIsEditor)
+            { selectedScientist = ""; rosterScroll = Vector2.zero; scientistPageScroll = Vector2.zero; }
+            capturedVesselId = activeId;
+            capturedGame = HighLogic.CurrentGame;
             nextRefresh = Time.realtimeSinceStartup + RefreshInterval;
         }
 
@@ -72,7 +92,8 @@ namespace ShoAerospace.Koffee
                     Localizer.Format("#Koffee_UI_Title"), skin.window,
                     GUILayout.Width(CurrentWidth));
                 ClampToScreen(scale);
-                if (flightView == null) rememberedPosition = new Vector2(windowRect.x, windowRect.y);
+                if (rosterView != null) rememberedRosterPosition = new Vector2(windowRect.x, windowRect.y);
+                else if (flightView == null) rememberedPosition = new Vector2(windowRect.x, windowRect.y);
                 else rememberedFlightPosition = new Vector2(windowRect.x, windowRect.y);
             }
             finally
@@ -93,6 +114,21 @@ namespace ShoAerospace.Koffee
 
         private void DrawContents(int id)
         {
+            if (rosterView != null)
+            {
+                rosterView.Draw();
+                return;
+            }
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Toggle(!ScienceReportUI.Visible, ScienceReportUI.Text("Work"), GUI.skin.button)) ScienceReportUI.Visible = false;
+            if (GUILayout.Toggle(ScienceReportUI.Visible, ScienceReportUI.Text("Title"), GUI.skin.button)) ScienceReportUI.Visible = true;
+            GUILayout.EndHorizontal();
+            if (ScienceReportUI.Visible)
+            {
+                ScienceReportUI.Draw();
+                GUI.DragWindow(new Rect(0, 0, CurrentWidth, 24));
+                return;
+            }
             if (flightView != null)
             {
                 flightView.Draw(snapshot);
@@ -100,7 +136,7 @@ namespace ShoAerospace.Koffee
             }
             GUILayout.BeginHorizontal();
             if (GUILayout.Toggle(selectedTab == 0, Localizer.Format("#Koffee_Research_VesselTab"), GUI.skin.button)) selectedTab = 0;
-            if (GUILayout.Toggle(selectedTab == 1, Localizer.Format("#Koffee_Research_ScientistsTab"), GUI.skin.button)) selectedTab = 1;
+            if (GUILayout.Toggle(selectedTab == 1, Localizer.Format(HighLogic.LoadedSceneIsEditor ? "#Koffee_EditorCrew_Tab" : "#Koffee_Research_ScientistsTab"), GUI.skin.button)) selectedTab = 1;
             GUILayout.EndHorizontal();
             Vector2 pageScroll = selectedTab == 1 ? scientistPageScroll : scrollPosition;
             pageScroll = GUILayout.BeginScrollView(pageScroll, false, true,
@@ -115,6 +151,7 @@ namespace ShoAerospace.Koffee
 
         private void DrawScientists()
         {
+            if (HighLogic.LoadedSceneIsEditor) { DrawEditorCrew(); return; }
             if (snapshot.Scientists.Count == 0)
             {
                 GUILayout.Label(Localizer.Format(HighLogic.LoadedSceneIsEditor ?
@@ -140,8 +177,43 @@ namespace ShoAerospace.Koffee
                     selected.Profile.Score(category).ToString(CultureInfo.InvariantCulture) + " / 10");
         }
 
+        private void DrawEditorCrew()
+        {
+            var crew = snapshot.EditorCrew;
+            if (crew.Count == 0) { GUILayout.Label(Localizer.Format("#Koffee_EditorCrew_Empty")); return; }
+            if (!crew.Any(c => c.Crew.Name == selectedScientist)) selectedScientist = crew[0].Crew.Name;
+            rosterScroll = GUILayout.BeginScrollView(rosterScroll, false, true, GUILayout.Height(140));
+            foreach (var member in crew)
+                if (GUILayout.Toggle(member.Crew.Name == selectedScientist, member.Crew.Name + " — " + member.Crew.Profession + " — " +
+                    Localizer.Format(member.Assigned ? "#Koffee_EditorCrew_Assigned" : "#Koffee_EditorCrew_Available"), rosterButton!))
+                    selectedScientist = member.Crew.Name;
+            GUILayout.EndScrollView();
+            var selected = crew.First(c => c.Crew.Name == selectedScientist);
+            GUILayout.Label(Localizer.Format("#Koffee_EditorCrew_Level", selected.Crew.Name, selected.Crew.Profession,
+                selected.Crew.Level.ToString(CultureInfo.InvariantCulture)), strongLabel!);
+            GUILayout.Label(Localizer.Format(selected.Assigned ? "#Koffee_EditorCrew_Assigned" : "#Koffee_EditorCrew_Available"), wrappedLabel!);
+            if (selected.Crew.IsEngineer)
+            {
+                foreach (string line in EngineeringDisplay.Profile(selected.Crew.Name)) GUILayout.Label(line, wrappedLabel!);
+                foreach (string line in EngineeringDisplay.EditorPotential(selected.Crew.Name)) GUILayout.Label(line, wrappedLabel!);
+            }
+            else if (selected.Crew.Scientist is KoffeeScientistStatus scientist)
+            {
+                GUILayout.Label(KoffeeResearchDisplay.Specialties(scientist.Profile), wrappedLabel!);
+                if (scientist.Profile != null)
+                    foreach (ScienceCategory category in ScienceCategories.All)
+                        GUILayout.Label(KoffeeResearchDisplay.Category(category) + ": " +
+                            scientist.Profile.Score(category).ToString(CultureInfo.InvariantCulture) + " / 10");
+            }
+        }
+
         private void DrawVessel()
         {
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                DrawEditorKomfort();
+                return;
+            }
             if (!snapshot.HasActiveVessel)
             {
                 GUILayout.Label(Localizer.Format("#Koffee_UI_NoVessel"));
@@ -164,6 +236,23 @@ namespace ShoAerospace.Koffee
                 DrawStationExperiments();
                 DrawSupply();
             }
+        }
+
+        private void DrawEditorKomfort()
+        {
+            KoffeeEditorKomfort? editor = snapshot.EditorKomfort;
+            if (editor?.HasShip != true)
+            {
+                GUILayout.Label(Localizer.Format("#Koffee_EditorKomfort_NoShip"), wrappedLabel!);
+                return;
+            }
+            GUILayout.Label(Localizer.Format("#Koffee_EditorKomfort_Value",
+                KoffeeCrewDisplay.Komfort(editor.Komfort)), strongLabel!);
+            GUILayout.Label(Localizer.Format("#Koffee_EditorKomfort_Crew", editor.CrewCount.HasValue ?
+                editor.CrewCount.Value.ToString(CultureInfo.InvariantCulture) : KoffeeResearchDisplay.Unknown), wrappedLabel!);
+            GUILayout.Label(Localizer.Format(editor.AssumesHomeConnection ? "#Koffee_EditorKomfort_AssumptionHome" :
+                HighLogic.CurrentGame?.Parameters.Difficulty.EnableCommNet == true ?
+                    "#Koffee_EditorKomfort_AssumptionNoAntenna" : "#Koffee_EditorKomfort_AssumptionNoHome"), wrappedLabel!);
         }
 
         private void DrawStationLaboratories()
@@ -309,7 +398,8 @@ namespace ShoAerospace.Koffee
         private void EnsureInitialPosition(float scale)
         {
             if (windowRect.x > 0) return;
-            Vector2 position = flightView == null ? rememberedPosition : rememberedFlightPosition;
+            Vector2 position = rosterView != null ? rememberedRosterPosition :
+                flightView == null ? rememberedPosition : rememberedFlightPosition;
             if (position.x >= 0 && position.y >= 0)
             {
                 windowRect.x = position.x;

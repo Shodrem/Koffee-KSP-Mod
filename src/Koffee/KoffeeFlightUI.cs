@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ShoAerospace.Koffee
 {
-    [KSPAddon(KSPAddon.Startup.FlightAndEditor, false)]
+    [KSPAddon(KSPAddon.Startup.FlightEditorAndKSC, false)]
     public sealed class KoffeeFlightUI : MonoBehaviour
     {
         private const string IconPath = "ShoAerospace/Koffee/Icons/KoffeeApp";
@@ -15,6 +15,8 @@ namespace ShoAerospace.Koffee
         private Texture2D? fallbackIcon;
         private bool controlsLocked;
         private bool stockUiVisible = true;
+        private bool transitioning;
+        private bool subscriptionsRemoved;
 
         private void Awake()
         {
@@ -24,18 +26,38 @@ namespace ShoAerospace.Koffee
                 return;
             }
             instance = this;
+            AddSubscriptions();
+        }
+
+        private void AddSubscriptions()
+        {
+            subscriptionsRemoved = false;
             GameEvents.onGUIApplicationLauncherReady.Add(OnLauncherReady);
             GameEvents.onGUIApplicationLauncherDestroyed.Add(OnLauncherDestroyed);
             GameEvents.onHideUI.Add(OnHideUI);
             GameEvents.onShowUI.Add(OnShowUI);
             GameEvents.onVesselChange.Add(OnVesselChanged);
             GameEvents.onVesselCrewWasModified.Add(OnVesselChanged);
+            GameEvents.onGameSceneLoadRequested.Add(OnSceneLoadRequested);
+            GameEvents.onGameStateLoad.Add(OnGameLoaded);
+            GameEvents.onEditorShipCrewModified.Add(OnEditorCrewChanged);
+            GameEvents.onEditorShipModified.Add(OnEditorShipChanged);
         }
 
         private void Start() => TryAddButton();
 
         private void Update()
         {
+            if (transitioning) return;
+            if (window.ProcessFlight(BeginTransition)) return;
+            // A stock exception before LoadScene may occur after releasing the
+            // window. Restore this scene's app so the localized error is visible.
+            if (transitioning)
+            {
+                transitioning = false;
+                AddSubscriptions();
+                window.Open();
+            }
             TryAddButton();
             window.RefreshIfNeeded();
             UpdateInputLock();
@@ -43,7 +65,9 @@ namespace ShoAerospace.Koffee
 
         private void OnGUI()
         {
-            if (stockUiVisible && (HighLogic.LoadedSceneIsFlight || HighLogic.LoadedSceneIsEditor)) window.Draw();
+            if (stockUiVisible && HighLogic.LoadedSceneIsFlight) MaintenanceEvaProgress.Draw();
+            if (stockUiVisible && (HighLogic.LoadedSceneIsFlight || HighLogic.LoadedSceneIsEditor ||
+                HighLogic.LoadedScene == GameScenes.SPACECENTER)) window.Draw();
         }
 
         private void OnLauncherReady() => TryAddButton();
@@ -58,12 +82,30 @@ namespace ShoAerospace.Koffee
         private void OnHideUI()
         {
             stockUiVisible = false;
+            window.CancelPendingFlight();
             RemoveInputLock();
         }
 
         private void OnShowUI() => stockUiVisible = true;
 
         private void OnVesselChanged(Vessel vessel) => window.Invalidate();
+
+        private void OnGameLoaded(ConfigNode node) => window.Invalidate();
+        private void OnEditorCrewChanged(VesselCrewManifest manifest) => window.Invalidate();
+        private void OnEditorShipChanged(ShipConstruct ship) => window.Invalidate();
+
+        private void OnSceneLoadRequested(GameScenes scene) => BeginTransition();
+
+        private void BeginTransition()
+        {
+            transitioning = true;
+            window.Close();
+            RemoveInputLock();
+            RemoveButton();
+            RemoveSubscriptions();
+        }
+
+        internal static void ShowReports() { instance?.OpenWindow(); }
 
         private void OpenWindow() => window.Open();
 
@@ -75,7 +117,8 @@ namespace ShoAerospace.Koffee
 
         private void TryAddButton()
         {
-            if (button != null || !(HighLogic.LoadedSceneIsFlight || HighLogic.LoadedSceneIsEditor) ||
+            if (button != null || !(HighLogic.LoadedSceneIsFlight || HighLogic.LoadedSceneIsEditor ||
+                HighLogic.LoadedScene == GameScenes.SPACECENTER) || transitioning ||
                 !ApplicationLauncher.Ready || ApplicationLauncher.Instance == null) return;
             Texture icon = GameDatabase.Instance.GetTexture(IconPath, false);
             if (icon == null)
@@ -86,7 +129,8 @@ namespace ShoAerospace.Koffee
             button = ApplicationLauncher.Instance.AddModApplication(
                 OpenWindow, CloseWindow, null, null, null, null,
                 ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW |
-                ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
+                ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH |
+                ApplicationLauncher.AppScenes.SPACECENTER,
                 icon);
             if (button == null) return;
             if (window.IsOpen) button.SetTrue(false);
@@ -116,7 +160,8 @@ namespace ShoAerospace.Koffee
             {
                 InputLockManager.SetControlLock(ControlTypes.CAMERACONTROLS |
                     ControlTypes.MAP_UI | ControlTypes.TWEAKABLES |
-                    (HighLogic.LoadedSceneIsEditor ? ControlTypes.EDITOR_LOCK : (ControlTypes)0), InputLockId);
+                    (HighLogic.LoadedSceneIsEditor ? ControlTypes.EDITOR_LOCK : (ControlTypes)0) |
+                    (HighLogic.LoadedScene == GameScenes.SPACECENTER ? ControlTypes.KSC_FACILITIES : (ControlTypes)0), InputLockId);
                 controlsLocked = true;
             }
             else if (!hovered) RemoveInputLock();
@@ -159,17 +204,29 @@ namespace ShoAerospace.Koffee
         private void OnDestroy()
         {
             if (instance != this) return;
+            RemoveSubscriptions();
+            window.Close();
+            RemoveInputLock();
+            RemoveButton();
+            if (fallbackIcon != null) Destroy(fallbackIcon);
+            fallbackIcon = null;
+            instance = null;
+        }
+
+        private void RemoveSubscriptions()
+        {
+            if (subscriptionsRemoved) return;
+            subscriptionsRemoved = true;
             GameEvents.onGUIApplicationLauncherReady.Remove(OnLauncherReady);
             GameEvents.onGUIApplicationLauncherDestroyed.Remove(OnLauncherDestroyed);
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
             GameEvents.onVesselChange.Remove(OnVesselChanged);
             GameEvents.onVesselCrewWasModified.Remove(OnVesselChanged);
-            RemoveInputLock();
-            RemoveButton();
-            if (fallbackIcon != null) Destroy(fallbackIcon);
-            fallbackIcon = null;
-            instance = null;
+            GameEvents.onGameSceneLoadRequested.Remove(OnSceneLoadRequested);
+            GameEvents.onGameStateLoad.Remove(OnGameLoaded);
+            GameEvents.onEditorShipCrewModified.Remove(OnEditorCrewChanged);
+            GameEvents.onEditorShipModified.Remove(OnEditorShipChanged);
         }
     }
 }
