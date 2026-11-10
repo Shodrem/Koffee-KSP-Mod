@@ -453,7 +453,14 @@ namespace ShoAerospace.Koffee
                 double to = DeadlyScenario.SafeBoundary(vessel, from, Math.Min(now, SettingsBoundary(from)));
                 if (OptionsAt(from).Enabled && previous.Sample.Crew > 0)
                     foreach (var equipment in previous.Sample.Equipment)
-                        if (equipment.Life?.Remaining > 0) to = Math.Min(to, from + equipment.Life.Remaining);
+                    {
+                        if (equipment.Life == null) continue;
+                        equipment.Life.ExpireUnrepresentableRemainder(from);
+                        if (equipment.Life.Remaining <= 0) { equipment.Capacity = 0; equipment.Rate = 0; }
+                        else to = Math.Min(to, equipment.Life.NextBoundary(from));
+                    }
+                // Resolve exhaustion before payments; never transact a zero-time interval.
+                if (!(to > from)) throw new InvalidOperationException("Komfort observation boundary must advance simulation time.");
                 bool hadDemand = previous.Sample.Crew > 0;
                 long deadlyRevision = DeadlyScenario.Revision;
                 if ((previous.Sample.Crew == 0 || previous.Sample.Equipment.Count == 0) &&
@@ -605,7 +612,7 @@ namespace ShoAerospace.Koffee
                     next = DeadlyScenario.SafeBoundary(vessel, ut, next);
                     if (observation.Sample.Crew > 0)
                         foreach (var equipment in observation.Sample.Equipment)
-                            if (equipment.Life?.Remaining > 0) next = Math.Min(next, ut + equipment.Life.Remaining);
+                            if (equipment.Life != null) next = Math.Min(next, equipment.Life.NextBoundary(ut));
                 }
                 foreach (var range in observation.History) if (range.End > ut) { next = Math.Min(next, range.End); break; }
                 foreach (var change in observation.HomeChanges) if (change.Key > ut) next = Math.Min(next, change.Key);

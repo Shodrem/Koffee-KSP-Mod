@@ -30,6 +30,16 @@ namespace ShoAerospace.Koffee
                 else saved.SetValue(nameof(module.lifeRemainingSeconds), value.ToString("R", CultureInfo.InvariantCulture), true);
             });
         }
+        // Forecasts stay pure. A sub-ULP remainder cannot delimit an interval.
+        internal double NextBoundary(double ut)
+        {
+            double end = ut + Remaining;
+            return Remaining > 0 && end > ut ? end : double.PositiveInfinity;
+        }
+        internal void ExpireUnrepresentableRemainder(double ut)
+        {
+            if (Remaining > 0 && ut + Remaining <= ut) Spend(Remaining);
+        }
         internal void Spend(double seconds)
         {
             if (seconds <= 0 || !ExperimentContainerState.Finite(seconds)) return;
