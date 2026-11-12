@@ -14,7 +14,8 @@ namespace ShoAerospace.Koffee
         { DepartureLevel = level; StartUT = LastUT = start; DailyRate = rate; Earning = earning; }
         private double Seconds(double now) => AccruedSeconds + (Earning && !Dead ? Math.Max(0, now - LastUT) : 0);
         // Round the total active mission time once, never each observation or pause.
-        internal double Amount(double now) => Dead ? 0 : Math.Ceiling(Seconds(now) / 21600d) * DailyRate;
+        internal double Days(double now) => Dead ? 0 : Math.Ceiling(Seconds(now) / 21600d);
+        internal double Amount(double now) => Days(now) * DailyRate;
         internal void Advance(double now)
         {
             if (!Valid(now) || now < LastUT) return;

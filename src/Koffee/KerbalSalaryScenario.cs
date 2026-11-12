@@ -11,6 +11,7 @@ namespace ShoAerospace.Koffee
         private Game? game;
         private readonly KerbalSalaryLedger ledger = new KerbalSalaryLedger();
         private double nextObservation;
+        private readonly System.Collections.Generic.HashSet<ProtoVessel> recovering = new System.Collections.Generic.HashSet<ProtoVessel>();
         private static KerbalSalaryScenario? Current => current != null && ReferenceEquals(current.game, HighLogic.CurrentGame) ? current : null;
         private KoffeeGameParameters Settings => game!.Parameters.CustomParams<KoffeeGameParameters>();
         private bool Enabled => game?.Mode == Game.Modes.CAREER && Settings.SalaryEnabled;
@@ -19,12 +20,12 @@ namespace ShoAerospace.Koffee
         {
             base.OnAwake(); game = HighLogic.CurrentGame; current = this;
             GameEvents.onLaunch.Add(Launched); GameEvents.onCrewKilled.Add(Killed);
-            GameEvents.onVesselRecovered.Add(Recovered); GameEvents.onKerbalNameChanged.Add(Renamed);
+            GameEvents.onVesselRecoveryProcessingComplete.Add(Recovered); GameEvents.onKerbalNameChanged.Add(Renamed);
         }
         public void OnDestroy()
         {
             GameEvents.onLaunch.Remove(Launched); GameEvents.onCrewKilled.Remove(Killed);
-            GameEvents.onVesselRecovered.Remove(Recovered); GameEvents.onKerbalNameChanged.Remove(Renamed);
+            GameEvents.onVesselRecoveryProcessingComplete.Remove(Recovered); GameEvents.onKerbalNameChanged.Remove(Renamed);
             if (ReferenceEquals(current, this)) current = null;
         }
         public override void OnLoad(ConfigNode node) { base.OnLoad(node); ledger.Load(node); nextObservation = 0; }
@@ -90,21 +91,51 @@ namespace ShoAerospace.Koffee
             }
             Debug.Log("[Koffee] Salary forfeited on death: " + name);
         }
-        private void Recovered(ProtoVessel vessel, bool quick)
+        private void Recovered(ProtoVessel vessel, KSP.UI.Screens.MissionRecoveryDialog? dialog, float recoveryFactor)
+        {
+            if (vessel == null || !recovering.Add(vessel)) return;
+            try { Settle(vessel, dialog); }
+            finally { recovering.Remove(vessel); }
+        }
+        private void Settle(ProtoVessel vessel, KSP.UI.Screens.MissionRecoveryDialog? dialog)
         {
             if (Current != this || vessel == null || game?.Mode != Game.Modes.CAREER) return;
             var body = FlightGlobals.Bodies.FirstOrDefault(b => b.flightGlobalsIndex == vessel.orbitSnapShot?.ReferenceBodyIndex);
             if (body == null || body.bodyName != "Kerbin") return;
+            var receipt = new SalaryRecoveryReceipt();
+            double now = Planetarium.GetUniversalTime();
             foreach (var crew in vessel.GetVesselCrew())
             {
                 if (crew == null || !ledger.Entries.TryGetValue(crew.name, out var entry) || entry.Dead) continue;
                 if (crew.rosterStatus == ProtoCrewMember.RosterStatus.Dead) { Death(crew.name); continue; }
                 if (Enabled && Funding.Instance == null) continue;
-                double amount = entry.Amount(Planetarium.GetUniversalTime());
-                // Consume before currency callbacks, so a reentrant recovery cannot pay twice.
-                ledger.Entries.Remove(crew.name);
-                if (Enabled) Funding.Instance!.AddFunds(-amount, TransactionReasons.CrewRecruited);
-                Debug.Log("[Koffee] Salary settled on Kerbin recovery: " + crew.name + " = " + (Enabled ? amount : 0));
+                if (Enabled) receipt.Crew.Add(new SalaryRecoveryRow(crew.name, entry.Days(now), entry.DailyRate, entry.Amount(now)));
+                else
+                {
+                    ledger.Entries.Remove(crew.name);
+                    Debug.Log("[Koffee] Salary cleared while disabled: " + crew.name);
+                }
+            }
+            if (receipt.Crew.Count == 0) return;
+            bool captured = true;
+            foreach (var row in receipt.Crew)
+            {
+                // Consume only this payment before its callbacks. Unprocessed
+                // crew keep their records if a currency listener throws.
+                ledger.Entries.Remove(row.Name);
+                bool observed = true;
+                row.Charged = row.Salary == 0 ? 0 : SalaryPaymentCapture.Charge(row.Salary, out observed);
+                captured &= observed;
+                Debug.Log("[Koffee] Salary settled on Kerbin recovery: " + row.Name + " = " + row.Charged);
+            }
+            if (!captured) Debug.LogWarning("[Koffee] Salary paid; effective currency capture unavailable, receipt omitted.");
+            if (dialog != null) dialog.totalFunds = Funding.Instance!.Funds;
+            if (dialog != null && captured)
+            {
+                receipt.RecoveredFunds = dialog.fundsEarned;
+                receipt.NetFunds = receipt.RecoveredFunds - receipt.Charged;
+                receipt.TotalFunds = Funding.Instance!.Funds;
+                SalaryRecoveryUI.Attach(dialog, receipt);
             }
         }
         private void Renamed(ProtoCrewMember crew, string oldName, string newName)

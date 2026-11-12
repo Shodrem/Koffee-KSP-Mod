@@ -14,6 +14,7 @@ namespace ShoAerospace.Koffee
         private Harmony? labHarmony;
         private Harmony? engineeringHarmony;
         private Harmony? tooltipHarmony;
+        private Harmony? salaryRecoveryHarmony;
         private Harmony? recoveryHarmony;
         private Harmony? selectionHarmony;
         private Harmony? dbsHarmony;
@@ -34,6 +35,7 @@ namespace ShoAerospace.Koffee
             instance = this;
             DontDestroyOnLoad(gameObject);
             Debug.Log("[Koffee] Mod cargado correctamente.");
+            salaryRecoveryHarmony = Install("SalaryRecovery", SalaryRecoveryUI.Install);
             parameterHarmony = Install("GameParameters", KoffeeParameterDialog.Install);
             deadlyHarmony = Install("Deadly", DeadlyRestrictions.Install);
             LoadConfigurations();
@@ -173,6 +175,7 @@ namespace ShoAerospace.Koffee
             labHarmony?.UnpatchAll(HarmonyRoot + ".Lab");
             engineeringHarmony?.UnpatchAll(HarmonyRoot + ".Engineering");
             tooltipHarmony?.UnpatchAll(HarmonyRoot + ".ScientistTooltip");
+            salaryRecoveryHarmony?.UnpatchAll(HarmonyRoot + ".SalaryRecovery");
             recoveryHarmony?.UnpatchAll(HarmonyRoot + ".StationRecovery");
             selectionHarmony?.UnpatchAll(HarmonyRoot + ".ExperimentSelection");
             dbsHarmony?.UnpatchAll(HarmonyRoot + ".DynamicBatteryStorage");

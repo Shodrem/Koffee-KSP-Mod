@@ -1,4 +1,4 @@
-Koffee v0.1.7 for Kerbal Space Program 1.12.5
+Koffee v0.1.8 for Kerbal Space Program 1.12.5
 
 Close KSP before installing. For an upgrade, remove the previous
 GameData/ShoAerospace/Koffee folder first, then copy the GameData folder from this
@@ -13,7 +13,7 @@ against BRP 0.3.4; later versions have not been tested.
 
 The package includes Koffee.dll, Koffee.BRP.dll and KoffeeContracts.dll, the runtime
 configuration, models, textures, icons, Lonapse dialogue data and the current
-23-page English KSPedia. The older Spanish guide is not updated for this version.
+24-page English KSPedia. The older Spanish guide is not updated for this version.
 
 Source code: https://github.com/Shodrem/Koffee-KSP-Mod
 Downloads: https://github.com/Shodrem/Koffee-KSP-Mod/releases
