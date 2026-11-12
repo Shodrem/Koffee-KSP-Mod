@@ -100,6 +100,10 @@ namespace ShoAerospace.Koffee
                             var hp = DeadlyScenario.Health(crew.Name);
                             if (hp != null && crew.HealthFraction.HasValue) GUILayout.Label(Localizer.Format("#Koffee_Health_" + hp.Status), label!);
                             GUILayout.Label(KoffeeCrewDisplay.State(crew.RosterState), label!);
+                            if (KerbalSalaryScenario.TryRead(crew.Name, out double salary, out double rate, out int departureLevel))
+                                GUILayout.Label(Localizer.Format("#Koffee_Salary_Accrued",
+                                    salary.ToString("N2", CultureInfo.CurrentCulture), rate.ToString("N2", CultureInfo.CurrentCulture),
+                                    departureLevel.ToString(CultureInfo.InvariantCulture)), label!);
                             if (crew.IsEngineer)
                                 foreach (string line in EngineeringDisplay.Profile(crew.Name)) GUILayout.Label(line, label!);
                             if (crew.Scientist != null)

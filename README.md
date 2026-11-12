@@ -24,6 +24,6 @@ Para jugar, descarga el ZIP instalable de [Releases](https://github.com/Shodrem/
 
 Instala las dependencias por separado: ModuleManager y HarmonyKSP. BackgroundResourceProcessing (BRP) 0.3.4 es opcional (debería funcionar con versiones posteriores). El adaptador incluido se recompila contra BRP 0.3.4; las versiones posteriores no se han probado. Dynamic Battery Storage (DBS), Contract Configurator, SystemHeat y Lonapse también son integraciones opcionales. Estos mods se instalan por separado y no se distribuyen con Koffee.
 
-La release v0.1.3 incorpora Komfort, Deadly Mode, nuevas piezas y la KSPedia inglesa actualizada de 23 páginas. La guía española de versiones anteriores no está actualizada para esta entrega. Para actualizar, con KSP cerrado, elimina la carpeta anterior `GameData/ShoAerospace/Koffee` antes de copiar el nuevo `GameData`; conserva tus partidas.
+La release v0.1.7 añade sueldos de misión persistentes en Carrera y la KSPedia inglesa de 24 páginas, con una referencia de salarios. Conserva Komfort, Deadly Mode, las piezas y el soporte opcional BRP 0.3.4. La guía española de versiones anteriores no está actualizada para esta entrega. Para actualizar, con KSP cerrado, elimina la carpeta anterior `GameData/ShoAerospace/Koffee` antes de copiar el nuevo `GameData`; conserva tus partidas.
 
 Las dependencias externas y sus licencias se detallan en [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

@@ -41,8 +41,26 @@ namespace ShoAerospace.Koffee
             set { if (Array.IndexOf(durations, value) >= 0) duration = value; }
         }
 
-        public override IList ValidValues(MemberInfo member) => member.Name == nameof(ExperimentDuration)
-            ? Array.AsReadOnly(durations) : base.ValidValues(member);
+        private static readonly float[] salaryBaseSteps = { 0, 2, 4, 6, 8, 10, 12, 14, 16 };
+        private static readonly float[] salaryLevelSteps = { 0, 1, 2, 3, 4, 5 };
+        public override IList ValidValues(MemberInfo member)
+        {
+            // Stock uses list indices and wholeNumbers=true for these sliders.
+            // Map legacy values onto the list when preparing the settings draft.
+            if (member.Name == nameof(SalaryBase))
+            {
+                salaryBase = NearestSalaryStep(salaryBase, 16, 2);
+                return Array.AsReadOnly(salaryBaseSteps);
+            }
+            if (member.Name == nameof(SalaryPerLevel))
+            {
+                salaryPerLevel = NearestSalaryStep(salaryPerLevel, 5, 1);
+                return Array.AsReadOnly(salaryLevelSteps);
+            }
+            return member.Name == nameof(ExperimentDuration) ? Array.AsReadOnly(durations) : base.ValidValues(member);
+        }
+        private static float NearestSalaryStep(float value, int maximum, int step) =>
+            (float)(Math.Round(Math.Min(maximum, value) / step, MidpointRounding.AwayFromZero) * step);
         internal double DurationMultiplier => factors[Array.IndexOf(durations, duration)];
         internal double Multiplier => rp;
 
@@ -52,6 +70,26 @@ namespace ShoAerospace.Koffee
             get => Localizer.Format("#Koffee_Settings_LaunchReloadNotice");
             set { }
         }
+        [GameParameters.CustomParameterUI("#Koffee_Salary_Enable", toolTip = "#Koffee_Salary_EnableHelp", autoPersistance = true)]
+        public bool SalaryEnabled { get; set; } = true;
+
+        private float salaryBase = 6f, salaryPerLevel = 2f;
+        [GameParameters.CustomParameterUI("#Koffee_Salary_Base", toolTip = "#Koffee_Salary_RateHelp", autoPersistance = true)]
+        public float SalaryBase
+        {
+            get => salaryBase;
+            set { if (ValidSalary(value)) salaryBase = value; }
+        }
+        [GameParameters.CustomParameterUI("#Koffee_Salary_PerLevel", toolTip = "#Koffee_Salary_RateHelp", autoPersistance = true)]
+        public float SalaryPerLevel
+        {
+            get => salaryPerLevel;
+            set { if (ValidSalary(value)) salaryPerLevel = value; }
+        }
+        private static bool ValidSalary(float value) => !float.IsNaN(value) && !float.IsInfinity(value) && value >= 0 && value <= 1000000;
+        internal double SalaryBaseValue => salaryBase;
+        internal double SalaryPerLevelValue => salaryPerLevel;
+
         internal double EffectiveMultiplier => pendingPreviousRate ?? Multiplier;
 
         private readonly struct Boundary

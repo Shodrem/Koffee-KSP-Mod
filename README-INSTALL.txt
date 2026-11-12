@@ -1,4 +1,4 @@
-Koffee v0.1.6 for Kerbal Space Program 1.12.5
+Koffee v0.1.7 for Kerbal Space Program 1.12.5
 
 Close KSP before installing. For an upgrade, remove the previous
 GameData/ShoAerospace/Koffee folder first, then copy the GameData folder from this

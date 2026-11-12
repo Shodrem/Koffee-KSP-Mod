@@ -54,6 +54,7 @@ namespace ShoAerospace.Koffee
             var backup = AccessTools.Field(typeof(DifficultyOptionsMenu), "backupPars").GetValue(menu) as GameParameters;
             if (!ReferenceEquals(edited, HighLogic.CurrentGame.Parameters) || backup == null) return;
             double now = Planetarium.GetUniversalTime();
+            KerbalSalaryScenario.SettingsChanged(now);
             edited!.CustomParams<KoffeeGameParameters>().Accept(backup.CustomParams<KoffeeGameParameters>(), now);
             bool komfortChanged = !edited.CustomParams<KomfortGameParameters>().Current.Equals(backup.CustomParams<KomfortGameParameters>().Current);
             edited.CustomParams<KomfortGameParameters>().Accept(backup.CustomParams<KomfortGameParameters>(), now);
