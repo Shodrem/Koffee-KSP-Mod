@@ -9,7 +9,7 @@ El código del repositorio permite revisar y compilar las DLL distribuidas con e
 - HarmonyKSP 2.2.1 instalado en esa copia de KSP: `GameData/000_Harmony/0Harmony.dll`. Proyecto: <https://github.com/KSPModdingLibs/HarmonyKSP>.
 - Acceso a NuGet para restaurar los paquetes declarados en los proyectos, incluido KSPBuildTools 1.1.1. Este paquete obtiene las referencias de .NET Framework 4.8, KSP y Unity desde la instalación indicada.
 
-Para compilar también el adaptador opcional `Koffee.BRP.dll`, instalar BackgroundResourceProcessing 0.3.2 en esa misma copia del juego. Proyecto: <https://github.com/Phantomical/BackgroundResourceProcessing>.
+Para compilar también el adaptador opcional `Koffee.BRP.dll`, instalar BackgroundResourceProcessing 0.3.4 en esa misma copia del juego. BRP es opcional (debería funcionar con versiones posteriores); esta entrega se compila y comprueba con 0.3.4, sin garantizar compatibilidad con futuras versiones. Proyecto: <https://github.com/Phantomical/BackgroundResourceProcessing>.
 
 ## Compilar el núcleo
 
