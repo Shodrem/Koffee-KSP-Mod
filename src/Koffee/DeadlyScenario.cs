@@ -361,7 +361,11 @@ namespace ShoAerospace.Koffee
             foreach (var pair in vessels.Where(p => p.Value.Pending != DeadlyNotice.None || p.Value.ShortagePending).ToArray())
             {
                 var e = pair.Value;
-                if (e.State.Emergency) e.ShortagePending = false;
+                // A queued current-shortage warning becomes obsolete on recovery,
+                // including when it was serialized during a scene transition.
+                // Critical health and death notices remain independently pending.
+                if (e.State.Emergency || !e.State.Episode && !e.Members.Any(n => Eva(n)?.Air.Episode == true))
+                    e.ShortagePending = false;
                 if (!e.ShortagePending && e.Pending == DeadlyNotice.None) continue;
                 string message = e.ShortagePending ? Localizer.Format("#Koffee_Health_NoticeShortage", e.Name) : "";
                 if (e.Pending != DeadlyNotice.None)

@@ -19,7 +19,7 @@ namespace ShoAerospace.Koffee.Brp
         private Game? baselineGame;
         private object? baselineProto;
         private GameScenes baselineScene;
-        private bool failed;
+        private bool failed, ratesKnown;
         private KomfortOptions? observedOptions;
         private DeadlyOptions? observedDeadly;
         internal double PendingBoundary(double now)
@@ -43,7 +43,7 @@ namespace ShoAerospace.Koffee.Brp
             if (ReferenceEquals(baselineGame, HighLogic.CurrentGame) && ReferenceEquals(baselineProto, Vessel.protoVessel) &&
                 baselineScene == HighLogic.LoadedScene) return false;
             baselineGame = HighLogic.CurrentGame; baselineProto = Vessel.protoVessel; baselineScene = HighLogic.LoadedScene;
-            AppliedUT = Math.Max(now, AppliedUT); start = AppliedUT; fraction = 0;
+            AppliedUT = Math.Max(now, AppliedUT); start = AppliedUT; fraction = 0; ratesKnown = false;
             OptionsChanged(now);
             KomfortRuntime.Invalidate(Vessel);
             KomfortRuntime.Observe(Vessel, AppliedUT, backgroundFraction: 0);
@@ -76,6 +76,16 @@ namespace ShoAerospace.Koffee.Brp
             fraction = converter.Rate;
             if (!ExperimentContainerState.Finite(fraction) || fraction < 0 || fraction > 1)
             { failed = true; fraction = 0; }
+            if (!failed && !ratesKnown)
+            {
+                // BRP publishes the old state before its first rate callback.
+                // Default zero after load/Prime is unknown, not a power failure.
+                // Begin evidence at the solver UT; do not charge the preceding gap.
+                AppliedUT = start;
+                KomfortRuntime.Invalidate(Vessel);
+                KomfortRuntime.Observe(Vessel, start, backgroundFraction: fraction);
+                ratesKnown = true;
+            }
             KomfortRuntime.Forecast(Vessel, fraction);
             end = DeadlyScenario.SafeBoundary(Vessel, start, Math.Min(KomfortRuntime.NextBoundary(Vessel, start), KomfortMaintenance.NextBoundary(Vessel, start, fraction)));
             converter.NextChangepoint = end;
@@ -83,7 +93,7 @@ namespace ShoAerospace.Koffee.Brp
         internal void Publish(BackgroundResourceProcessor processor, ChangepointEvent change)
         {
             double to = Math.Min(change.CurrentChangepoint, end);
-            if (failed || to <= AppliedUT || to < start || !ExperimentContainerState.Finite(to)) return;
+            if (failed || !ratesKnown || to <= AppliedUT || to < start || !ExperimentContainerState.Finite(to)) return;
             long revision = DeadlyScenario.Revision;
             KomfortRuntime.Observe(Vessel, to, backgroundFraction: fraction,
                 authorizedFrom: Math.Max(start, Math.Max(AppliedUT, change.LastChangepoint)), maintenanceAccounts: BrpPowerProvider.Accounts(processor));
