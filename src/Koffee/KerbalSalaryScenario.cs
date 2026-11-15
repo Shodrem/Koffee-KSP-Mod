@@ -28,10 +28,11 @@ namespace ShoAerospace.Koffee
             GameEvents.onVesselRecoveryProcessingComplete.Remove(Recovered); GameEvents.onKerbalNameChanged.Remove(Renamed);
             if (ReferenceEquals(current, this)) current = null;
         }
-        public override void OnLoad(ConfigNode node) { base.OnLoad(node); ledger.Load(node); nextObservation = 0; }
+        public override void OnLoad(ConfigNode node) { base.OnLoad(node); ledger.Load(node); DiscardExcludedSalaries(); nextObservation = 0; }
         public override void OnSave(ConfigNode node)
         {
             base.OnSave(node);
+            DiscardExcludedSalaries();
             if (Current == this) ledger.SetEnabled(Enabled, Planetarium.GetUniversalTime());
             ledger.Save(node);
         }
@@ -41,13 +42,27 @@ namespace ShoAerospace.Koffee
             amount = dailyRate = 0; level = 0;
             var owner = Current;
             if (owner == null || owner.game?.Mode != Game.Modes.CAREER ||
+                owner.ExcludeFromSalary(owner.game.CrewRoster?.Kerbals().FirstOrDefault(c => c.name == name)) ||
                 !owner.ledger.Entries.TryGetValue(name, out var entry) || entry.Dead) return false;
             amount = entry.Amount(Planetarium.GetUniversalTime()); dailyRate = entry.DailyRate; level = entry.DepartureLevel;
             return true;
         }
+        private bool ExcludeFromSalary(ProtoCrewMember? crew)
+        {
+            if (crew == null) return true;
+            if (crew.type == ProtoCrewMember.KerbalType.Crew) return false;
+            // Discard stale salaries if a professional became a tourist or a save contains one.
+            ledger.Entries.Remove(crew.name);
+            return true;
+        }
+        private void DiscardExcludedSalaries()
+        {
+            foreach (var crew in game?.CrewRoster?.Kerbals() ?? Enumerable.Empty<ProtoCrewMember>())
+                ExcludeFromSalary(crew);
+        }
         private void BeginMission(ProtoCrewMember crew, double now)
         {
-            if (crew == null || crew.type != ProtoCrewMember.KerbalType.Crew || crew.rosterStatus == ProtoCrewMember.RosterStatus.Dead) return;
+            if (ExcludeFromSalary(crew) || crew.rosterStatus == ProtoCrewMember.RosterStatus.Dead) return;
             ledger.Start(crew.name, crew.experienceLevel, now,
                 Settings.SalaryBaseValue + Settings.SalaryPerLevelValue * crew.experienceLevel, Enabled);
         }
@@ -70,14 +85,14 @@ namespace ShoAerospace.Koffee
             if (now < nextObservation && now >= nextObservation - 1) return;
             nextObservation = now + 1;
             foreach (var crew in game.CrewRoster?.Kerbals() ?? Enumerable.Empty<ProtoCrewMember>())
-                if (crew.rosterStatus == ProtoCrewMember.RosterStatus.Dead && ledger.Entries.ContainsKey(crew.name)) Death(crew.name);
+                if (!ExcludeFromSalary(crew) && crew.rosterStatus == ProtoCrewMember.RosterStatus.Dead && ledger.Entries.ContainsKey(crew.name)) Death(crew.name);
             ledger.SetEnabled(Enabled, now);
         }
         private void Killed(EventReport report)
         {
             if (Current != this || game?.Mode != Game.Modes.CAREER || report == null) return;
             var crew = game.CrewRoster?.Kerbals().FirstOrDefault(c => c.name == report.sender);
-            if (crew == null || crew.type != ProtoCrewMember.KerbalType.Crew) return;
+            if (crew == null || ExcludeFromSalary(crew)) return;
             ledger.Start(crew.name, crew.experienceLevel, Planetarium.GetUniversalTime(), 0, false);
             Death(crew.name);
         }
@@ -106,7 +121,7 @@ namespace ShoAerospace.Koffee
             double now = Planetarium.GetUniversalTime();
             foreach (var crew in vessel.GetVesselCrew())
             {
-                if (crew == null || !ledger.Entries.TryGetValue(crew.name, out var entry) || entry.Dead) continue;
+                if (ExcludeFromSalary(crew) || !ledger.Entries.TryGetValue(crew.name, out var entry) || entry.Dead) continue;
                 if (crew.rosterStatus == ProtoCrewMember.RosterStatus.Dead) { Death(crew.name); continue; }
                 if (Enabled && Funding.Instance == null) continue;
                 if (Enabled) receipt.Crew.Add(new SalaryRecoveryRow(crew.name, entry.Days(now), entry.DailyRate, entry.Amount(now)));

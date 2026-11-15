@@ -198,13 +198,16 @@ namespace ShoAerospace.Koffee
             foreach (var unit in units)
             {
                 var state = unit.State;
-                if (state == null || !state.InProgress || state.Paused || !state.KitsPaid || MaintenanceEva.Nearby(unit.Definition.part, state.Engineer) == null) continue;
+                if (state == null || !state.InProgress || state.Paused || !state.KitsPaid ||
+                    !(MaintenanceEva.Nearby(unit.Definition.part, state.Engineer) is ProtoCrewMember engineer)) continue;
                 PrepareRepair(state, state.Engineer, EngineeringContribution.CoffeeAt(FlightGlobals.ActiveVessel, state.Engineer, end - seconds), komfort, unit.Definition.MaintenanceBaseHours);
                 state.ProgressSeconds = Math.Min(state.Duration, state.ProgressSeconds + seconds);
                 state.RemainingHours = Math.Max(state.RemainingHours,
                     state.RepairStartHours + (state.RepairTargetHours - state.RepairStartHours) * state.Progress);
                 if (!state.LowAutonomy) state.LowAutonomyWarned = false;
-                if (state.ProgressSeconds >= state.Duration)
+                bool finished = state.ProgressSeconds >= state.Duration;
+                bool preventive = state.RepairStartHours > 0;
+                if (finished)
                 {
                     state.RemainingHours = state.RepairTargetHours; state.InProgress = false;
                     state.ProgressSeconds = 0; state.Paused = false; state.KitsPaid = false;
@@ -213,6 +216,7 @@ namespace ShoAerospace.Koffee
                     completed = true;
                 }
                 unit.Store(state);
+                if (finished) KoffeeLonapse.MaintenanceCompleted(unit.Definition.part, engineer, preventive, end);
             }
             return completed;
         }

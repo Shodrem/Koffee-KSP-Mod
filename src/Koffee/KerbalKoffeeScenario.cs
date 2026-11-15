@@ -22,6 +22,7 @@ namespace ShoAerospace.Koffee
                 subscribed = true;
             }
             EngineeringRenewalCoordinator.Clear();
+            KoffeeLonapse.Reset();
             Store.Clear();
         }
 
@@ -30,6 +31,7 @@ namespace ShoAerospace.Koffee
             base.OnLoad(node);
             owner = HighLogic.CurrentGame;
             EngineeringRenewalCoordinator.Clear();
+            KoffeeLonapse.Reset();
             var records = new List<KoffeeStateRecord>();
             foreach (ConfigNode kerbal in node.GetNodes(KoffeeIdentifiers.SavedKerbalNode))
             {
@@ -47,6 +49,8 @@ namespace ShoAerospace.Koffee
             Debug.Log("[Koffee] Loaded " + records.Count + " saved Kaffeinated state(s).");
         }
 
+        public void Update() => KoffeeLonapse.Update();
+
         private void OnVesselRecovered(ProtoVessel vessel, bool quick)
         {
             if (vessel == null || owner == null || !ReferenceEquals(owner, HighLogic.CurrentGame)) return;
@@ -61,6 +65,7 @@ namespace ShoAerospace.Koffee
 
         internal void OnDestroy()
         {
+            KoffeeLonapse.Reset();
             if (!subscribed) return;
             GameEvents.onVesselRecovered.Remove(OnVesselRecovered);
             subscribed = false;

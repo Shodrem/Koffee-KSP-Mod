@@ -92,9 +92,11 @@ namespace ShoAerospace.Koffee
             // A renewal must not erase coverage another worker still needs this frame.
             if (TryGetKaffeinatedWindow(kerbal, out KaffeinatedWindow previousWindow))
                 EngineeringRenewalCoordinator.RememberCommitted(kerbal, previousWindow);
+            var notice = KoffeeLonapse.BeforeCoffee(kerbal, consumer, activationUT);
             ResourcePayment? payment = ResourcePayment.TryTake(
                 KoffeeSettingsLoader.Current.ActivationCost, sources ?? KoffeeSources.Find(consumer));
             if (payment == null) return null;
+            notice?.Debited(KoffeeSettingsLoader.Current.ActivationCost);
 
             double? previousStartUT = KerbalKoffeeScenario.Store.TryGetStart(
                 kerbal.name, out double existingStartUT)
@@ -104,7 +106,7 @@ namespace ShoAerospace.Koffee
             {
                 KerbalKoffeeScenario.Store.SetStart(kerbal.name, activationUT);
                 return KaffeinationAttempt.Activated(
-                    kerbal, previousStartUT, activationUT, untilUT, payment);
+                    kerbal, previousStartUT, activationUT, untilUT, payment, notice);
             }
             catch
             {
@@ -131,6 +133,7 @@ namespace ShoAerospace.Koffee
         private readonly ProtoCrewMember kerbal;
         private readonly double? previousStartUT;
         private readonly ResourcePayment? payment;
+        private readonly KoffeeLonapse.CoffeeObservation? notice;
         private bool settled;
 
         internal bool NewlyActivated => payment != null;
@@ -138,11 +141,12 @@ namespace ShoAerospace.Koffee
         internal double UntilUT { get; }
 
         private KaffeinationAttempt(ProtoCrewMember kerbal, double? previousStartUT,
-            double startUT, double untilUT, ResourcePayment? payment)
+            double startUT, double untilUT, ResourcePayment? payment, KoffeeLonapse.CoffeeObservation? notice = null)
         {
             this.kerbal = kerbal;
             this.previousStartUT = previousStartUT;
             this.payment = payment;
+            this.notice = notice;
             StartUT = startUT;
             UntilUT = untilUT;
         }
@@ -151,8 +155,8 @@ namespace ShoAerospace.Koffee
             new KaffeinationAttempt(kerbal, null, 0, 0, null);
 
         internal static KaffeinationAttempt Activated(ProtoCrewMember kerbal,
-            double? previousStartUT, double startUT, double untilUT, ResourcePayment payment) =>
-            new KaffeinationAttempt(kerbal, previousStartUT, startUT, untilUT, payment);
+            double? previousStartUT, double startUT, double untilUT, ResourcePayment payment, KoffeeLonapse.CoffeeObservation? notice = null) =>
+            new KaffeinationAttempt(kerbal, previousStartUT, startUT, untilUT, payment, notice);
 
         internal void Commit()
         {
@@ -165,6 +169,7 @@ namespace ShoAerospace.Koffee
                     " whole cup(s) for " + kerbal.name + "; " + payment.Summary);
                 Debug.Log("[Koffee] " + kerbal.name + " Kaffeinated until UT " +
                     UntilUT.ToString("R", CultureInfo.InvariantCulture));
+                notice?.Committed();
             }
         }
 

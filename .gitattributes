@@ -25,3 +25,6 @@
 
 # Lonapse meta rows require empty final TSV columns.
 GameData/ShoAerospace/Lonapse/*.tsv whitespace=-blank-at-eol
+
+# Preserve existing CRLF project files without whitespace false positives.
+*.csproj whitespace=cr-at-eol

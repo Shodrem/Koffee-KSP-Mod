@@ -22,8 +22,28 @@ Este repositorio publica los fuentes de producción, las configuraciones y los d
 
 Para jugar, descarga el ZIP instalable de [Releases](https://github.com/Shodrem/Koffee-KSP-Mod/releases): contiene las DLL compiladas, los modelos, las texturas y las configuraciones necesarias dentro de `GameData`, junto con sus licencias. Los archivos fuente, Blender, FBX, pruebas y herramientas de desarrollo quedan fuera del paquete instalable.
 
-Instala las dependencias por separado: ModuleManager y HarmonyKSP. BackgroundResourceProcessing (BRP) 0.3.4 es opcional (debería funcionar con versiones posteriores). El adaptador incluido se recompila contra BRP 0.3.4; las versiones posteriores no se han probado. Dynamic Battery Storage (DBS), Contract Configurator, SystemHeat y Lonapse también son integraciones opcionales. Estos mods se instalan por separado y no se distribuyen con Koffee.
+## Mod compatibility
 
-La release v0.1.9 corrige el aviso falso de filtrado de aire insuficiente que podía aparecer con BRP al volver de una nave al Centro Espacial. Espera una tasa eléctrica observada y descarta avisos pendientes si el filtrado ya se ha recuperado. Es compatible con partidas y naves existentes; no requiere otro lanzamiento. Incluye el desglose salarial de v0.1.8. Conserva los sueldos persistentes en Carrera y la KSPedia inglesa de 24 páginas de v0.1.7. Conserva Komfort, Deadly Mode, las piezas y el soporte opcional BRP 0.3.4. La guía española de versiones anteriores no está actualizada para esta entrega. Para actualizar, con KSP cerrado, elimina la carpeta anterior `GameData/ShoAerospace/Koffee` antes de copiar el nuevo `GameData`; conserva tus partidas.
+- ModuleManager 4.2.3 — required configuration patches.
+- HarmonyKSP 2.2.1.0 — required runtime hooks.
+- Background Resource Processing 0.3.4 — unloaded-vessel resource and electrical accounting.
+- Dynamic Battery Storage 2.3.7.0 — electrical accounting integration.
+- Contract Configurator 2.13.4.0 — Koffee contracts.
+- SystemHeat 0.9.1 — climate and emergency-support heat.
+- Near Future Electrical 2.0.1 — emergency fission backend with SystemHeat.
+- Lonapse 1.0.0 — bilingual crew dialogue.
+- Station Parts Expansion Redux 2.0.11 — habitat/lab Komfort and coffee storage.
+- B9 Part Switch 2.21.0.4 — SSPX coffee storage subtype.
+- Planetside Exploration Technologies 1.0.2 — habitat Komfort patches.
+- Connected Living Space 2.0.2.0 — crew-part passage metadata.
+- Community Tech Tree 3.4.5 — technology placement and upgrades.
+- Community Category Kit 112.0.1 — Koffee part category.
+- ReStock 1.5.1 — crew parachute sizing with RealChute.
+- RealChute 1.4.9.5 — ReStock crew parachute sizing patch.
+- Parallax Continued 1.0.6 — STS-25 scaled-body resource integration.
+
+ModuleManager and HarmonyKSP are required; the other integrations are optional. These are the current inspected compatibility targets, not promises for every newer version or every mod combination. Automated checks cover the relevant code/API and configuration paths; there is no new in-game validation of the full mod list. Install external mods separately; none is bundled.
+
+La release v0.2.0 amplía las conversaciones de la tripulación y corrige los salarios de turistas. Conserva las piezas, mejoras de servicios, Komfort, Deadly Mode y el arreglo BRP de v0.1.9. Consulta las [notas de la versión](RELEASE-v0.2.0.md) para instalación y límites de validación.
 
 Las dependencias externas y sus licencias se detallan en [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
